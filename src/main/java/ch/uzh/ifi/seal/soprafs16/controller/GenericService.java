@@ -9,25 +9,16 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ch.uzh.ifi.seal.soprafs16.controller.beans.JsonUriWrapper;
-
 public abstract class GenericService {
-	
+
 	Logger logger = LoggerFactory.getLogger(GenericService.class);
-	
-	protected JsonUriWrapper getJsonUrl(String uri) {
-		JsonUriWrapper wrapper = new JsonUriWrapper();
-		wrapper.setUri(uri);
-		
-		return wrapper;
-	}
-	
+
 	@ExceptionHandler(TransactionSystemException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public void handleTransactionSystemException(Exception exception, HttpServletRequest request) {
 		logger.error("", exception);
 	}
-	
+
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public void handleException(Exception exception, HttpServletRequest request) {

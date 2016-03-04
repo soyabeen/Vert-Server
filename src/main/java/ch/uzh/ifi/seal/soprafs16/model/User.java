@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import ch.uzh.ifi.seal.soprafs16.controller.beans.user.UserStatus;
+import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 
 @Entity
 public class User implements Serializable {
