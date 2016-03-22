@@ -12,16 +12,35 @@ import java.util.LinkedList;
  */
 public class Round {
 
+    private Game game;
+    private LinkedList<Card> cardStack;
     private LinkedList<Turn> turns;
     private EndEvent end;
 
-    public Round(LinkedList<Turn> turns, EndEvent end) {
+    public Round(Game game, LinkedList<Turn> turns, EndEvent end) {
+        this.game = game;
         this.turns = turns;
         this.end = end;
     }
 
     public void executeActionPhase() {
         throw new IllegalStateException("Method not yet implemented!");
+    }
+
+    /**
+     * Add a new card to the played card stack.
+     * @param playedCard Played card from a player.
+     */
+    public void addNewlyPlayedCard(Card playedCard) {
+        cardStack.add(playedCard);
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public LinkedList<Card> getCardStack() {
+        return cardStack;
     }
 
     /**
