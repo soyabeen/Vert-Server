@@ -12,15 +12,26 @@ import java.util.LinkedList;
  */
 public class Round {
 
+    // Game to which the round belongs.
     private Game game;
     private LinkedList<Card> cardStack;
     private LinkedList<Turn> turns;
     private EndEvent end;
 
-    public Round(Game game, LinkedList<Turn> turns, EndEvent end) {
+    public Round() {
+    }
+
+    /**
+     * Create a new Round event with the given configuration.
+     *
+     * @param game The game to which the round belongs.
+     * @param turns The turns for that round.
+     * @param endEvent The end event.
+     */
+    public Round(Game game, LinkedList<Turn> turns, EndEvent endEvent) {
         this.game = game;
         this.turns = turns;
-        this.end = end;
+        this.end = endEvent;
     }
 
     public void executeActionPhase() {
