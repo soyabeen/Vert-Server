@@ -39,7 +39,7 @@ public abstract class Meeple implements Positionable {
 
     /**
      * Sets the horizontal position of the meeple.
-     * @param car The number of the car starting from the tail.
+     * @param car The number of the car starting from the head.
      */
     public void setCar(int car) {
         this.car = car;
@@ -65,16 +65,14 @@ public abstract class Meeple implements Positionable {
 
     @Override
     public void moveToHead(int nrOfCarsToMove) {
-        car += nrOfCarsToMove;
+        if (nrOfCarsToMove > car) {
+            car = 0;
+        }
+        car -= nrOfCarsToMove;
     }
 
     @Override
     public void moveToTail(int nrOfCarsToMove) {
-        if (nrOfCarsToMove > car) {
-            car = 0;
-        } else {
-            car -= nrOfCarsToMove;
-        }
-
+        car += nrOfCarsToMove;
     }
 }
