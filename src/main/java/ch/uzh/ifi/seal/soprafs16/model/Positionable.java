@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 /**
  * Defines the functionality for positioning an object on the game board (train).
+ * <p/>
  * Created by soyabeen on 22.03.16.
  */
 public interface Positionable {
@@ -36,5 +37,6 @@ public interface Positionable {
      * @param nrOfCarsToMove Number of cars to move.
      */
     public void moveToTail(int nrOfCarsToMove);
+
 
 }
