@@ -29,6 +29,6 @@ public class CharacterService {
     }
 
     public List<Character> listCharacters() {
-        return Arrays.asList(Character.values());
+        return new ArrayList<>(Arrays.asList(Character.values()));
     }
 }

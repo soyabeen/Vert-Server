@@ -76,6 +76,12 @@ public class CharacterServiceTest {
         game.addUser(user2);
         game = gameRepo.save(game);
 
+        user1.setGame(game);
+        userRepo.save(user1);
+
+        user2.setGame(game);
+        userRepo.save(user2);
+
 
         logger.warn("saved game id:  "+       game.getId());
         List<Character> result = characterService.listAvailableCharactersByGame(game.getId());
