@@ -15,6 +15,9 @@ import java.io.Serializable;
 @Entity
 public class Loot implements Positionable, Serializable {
 
+    protected  Loot() {
+    }
+
     @Id
     @GeneratedValue
     private Long id;
@@ -46,6 +49,7 @@ public class Loot implements Positionable, Serializable {
     /**
      * @return int The current car of the train for the positionable object.
      */
+    @Override
     public int getCar() {
         return car;
     }
@@ -53,6 +57,7 @@ public class Loot implements Positionable, Serializable {
     /**
      * @return Level The level of the car for llot.
      */
+    @Override
     public Level getLevel() {
         return level;
     }
@@ -61,6 +66,7 @@ public class Loot implements Positionable, Serializable {
      * Moves loot n cars in the direction of the locomotive.
      * @param nrOfCarsToMove Number of cars to move.
      */
+    @Override
     public void moveToHead(int nrOfCarsToMove) {
         car -= nrOfCarsToMove;
     }
@@ -69,6 +75,7 @@ public class Loot implements Positionable, Serializable {
      * Moves loot n cars in the direction of the trains tail.
      * @param nrOfCarsToMove Number of cars to move.
      */
+    @Override
     public void moveToTail(int nrOfCarsToMove) {
         car += nrOfCarsToMove;
     }
