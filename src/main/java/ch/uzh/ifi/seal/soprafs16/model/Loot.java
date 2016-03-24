@@ -1,29 +1,37 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 /**
  * Defines a loot on train or at player.
  * Created by mirkorichter on 22.03.16.
  */
+@Entity
 public class Loot implements Positionable{
     
     /**
      * Defines type of this loot.
      */
+    @Column(nullable = false)
     private LootType type;
     
     /**
      * Defines value of this loot.
      */
+    @Column(nullable = false)
     private int value;
     
     /**
      * Train car level on which loot is.
      */
+    @Column(nullable = false)
     private Positionable.Level level;
     
     /**
      * Car on which loot is.
      */
+    @Column()
     private int car;
     
     /**
