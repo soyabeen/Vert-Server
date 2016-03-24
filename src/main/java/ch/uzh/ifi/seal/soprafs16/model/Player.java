@@ -17,7 +17,7 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    @Column
+    @OneToMany
     private List<Loot> loots;
 
     @Column
