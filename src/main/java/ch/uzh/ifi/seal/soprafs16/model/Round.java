@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 
 import javax.persistence.*;
+
 import java.util.LinkedList;
 
 /**
@@ -12,6 +13,7 @@ import java.util.LinkedList;
  * <p/>
  * Created by soyabeen on 22.03.16.
  */
+@Entity
 public class Round {
 
     private static final long serialVersionUID = 1L;
@@ -20,13 +22,15 @@ public class Round {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne
     private Game game;
 
     @OneToMany
     private LinkedList<Card> cardStack;
 
-    @OneToMany
+    @ElementCollection(targetClass=Turn.class)
+    @CollectionTable(name="round_turn")
+    @Column(name="turns")
     private LinkedList<Turn> turns;
 
     @Enumerated(EnumType.STRING)
