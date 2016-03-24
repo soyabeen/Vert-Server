@@ -15,9 +15,6 @@ import java.io.Serializable;
 @Entity
 public class Loot implements Positionable, Serializable {
 
-    protected  Loot() {
-    }
-
     @Id
     @GeneratedValue
     private Long id;
@@ -45,6 +42,9 @@ public class Loot implements Positionable, Serializable {
      */
     @Column()
     private int car;
+
+    protected  Loot() {
+    }
     
     /**
      * @return int The current car of the train for the positionable object.
