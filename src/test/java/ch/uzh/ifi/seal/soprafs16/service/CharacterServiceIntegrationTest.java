@@ -31,9 +31,9 @@ import static org.hamcrest.CoreMatchers.*;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class CharacterServiceTest {
+public class CharacterServiceIntegrationTest {
 
-    Logger logger  = LoggerFactory.getLogger(CharacterServiceTest.class);
+    Logger logger  = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
     @Autowired
     private CharacterService characterService;
