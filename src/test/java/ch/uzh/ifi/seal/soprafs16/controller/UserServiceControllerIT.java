@@ -49,9 +49,7 @@ public class UserServiceControllerIT {
         List<User> usersBefore = template.getForObject(base + "/user", List.class);
         Assert.assertEquals(0, usersBefore.size());
 
-        User request = new User();
-        request.setName("Mike Meyers");
-        request.setUsername("mm");
+        User request = new User("Mike Meyers", "mm");
 
         HttpEntity<User> httpEntity = new HttpEntity<User>(request);
 
