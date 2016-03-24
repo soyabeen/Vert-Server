@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.service.CharacterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class GameCharacterServiceController
     Logger                 logger  = LoggerFactory.getLogger(GameCharacterServiceController.class);
 
 
+    @Autowired
+    public CharacterService charService;
+
     private final String   CONTEXT = "/games/{gameId}/characters";
 
 
@@ -33,7 +37,7 @@ public class GameCharacterServiceController
         if ("AVAILABLE".equals(filter)) {
             return gameId + " BELLE\n";
         }
-        return gameId + " BELLE\n" + gameId + " DOC";
+        return charService.listCharactersForGame(gameId).toString();
     }
 
 
