@@ -2,6 +2,9 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Ability;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,31 +12,37 @@ import java.util.List;
  * Defines the state of a playing character.
  * Created by alexanderhofmann on 22/03/16.
  */
+@Entity
 public class Player extends Meeple {
 
     /**
      * Bullets the player has left.
      */
+    @Column
     private int bullets;
 
     /**
      * List of loots.
      */
+    @Column
     private List<Loot> loots;
 
     /**
      * Player's special ability.
      */
+    @Column
     private Ability ability;
 
     /**
      * Player's deck.
      */
+    @Column
     private CardDeck deck;
 
     /**
      * Player's hand.
      */
+    @Column
     private List<Card> hand;
 
     /**

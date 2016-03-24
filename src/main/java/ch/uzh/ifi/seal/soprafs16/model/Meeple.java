@@ -1,30 +1,42 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Defines the state of a Meeple.
  * Created by alexanderhofmann on 22/03/16.
  */
-public abstract class Meeple implements Positionable {
+@Entity
+public abstract class Meeple implements Positionable, Serializable {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     /**
      * Owner of the meeple.
      */
+    @OneToOne(mappedBy="meeple")
     private User owner;
 
     /**
      * Horizontal position of the meeple.
      */
+    @Column
     private int car;
 
     /**
      * Vertical position on top or inside of a car of the meeple.
      */
+    @Column
     private Positionable.Level level;
 
     /**
      * Returns the owner.
      * @return owner The owner of the meeple.
      */
+
     public User getOwner() {
         return owner;
     }
