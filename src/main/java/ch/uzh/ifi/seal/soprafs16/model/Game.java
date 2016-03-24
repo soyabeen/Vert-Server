@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -41,7 +43,12 @@ public class Game implements Serializable {
     
     @ManyToMany(mappedBy="games")
     private List<User> users;
-    
+
+	public Game() {
+		this.users = new ArrayList<>();
+		this.moves = new LinkedList<>();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -100,5 +107,9 @@ public class Game implements Serializable {
    
 	public User getNextPlayer() {
 		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
+	}
+
+	public void addUser(User user) {
+		users.add(user);
 	}
 }

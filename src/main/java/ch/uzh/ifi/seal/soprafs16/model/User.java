@@ -37,7 +37,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Player player;
 
 	protected User() {
