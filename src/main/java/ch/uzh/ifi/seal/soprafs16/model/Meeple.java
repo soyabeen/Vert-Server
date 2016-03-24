@@ -18,7 +18,7 @@ public abstract class Meeple implements Positionable, Serializable {
     /**
      * Owner of the meeple.
      */
-    @OneToOne(mappedBy="meeple")
+    @OneToOne(mappedBy="player")
     private User owner;
 
     /**
