@@ -17,18 +17,25 @@ import java.util.LinkedList;
 @Entity
 public class Round {
 
-    // Game to which the round belongs.
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @ManyToOne
     private Game game;
 
-    @OneToOne
+    @OneToMany
     private LinkedList<Card> cardStack;
 
-    @OneToMany
+    @ElementCollection(targetClass=Turn.class)
+    @CollectionTable(name="round_turn")
+    @Column(name="turns")
     private LinkedList<Turn> turns;
 
-    @OneToMany
-    private EndEvent end;
+    @Enumerated(EnumType.STRING)
+    private RoundEndEvent end;
 
     public Round() {
     }
