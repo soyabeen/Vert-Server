@@ -43,5 +43,9 @@ $RECYCLE.BIN/
 .iml/
 !.idea/runConfigurations/
 
+# Sonar properties
+sonar-project.properties
+
 # Logfiles
 logs
+
