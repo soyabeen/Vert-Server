@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import ch.uzh.ifi.seal.soprafs16.constant.Ability;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class Player extends Meeple {
     private List<Loot> loots;
 
     @Column
-    private Ability ability;
+    private Character character;
 
     @Column
     private CardDeck deck;
@@ -86,18 +86,18 @@ public class Player extends Meeple {
     }
 
     /**
-     * Gets the player's special ability.
-     * @return player's ability.
+     * Gets the player's special character.
+     * @return player's character.
      */
-    public Ability getAbility() {
-        return ability;
+    public Character getCharacter() {
+        return character;
     }
 
     /**
-     * Sets the player's special ability.
-     * @param ability Player's special ability.
+     * Sets the player's special character.
+     * @param character Player's special character.
      */
-    public void setAbility(Ability ability) {
-        this.ability = ability;
+    public void setCharacter(Character character) {
+        this.character = character;
     }
 }

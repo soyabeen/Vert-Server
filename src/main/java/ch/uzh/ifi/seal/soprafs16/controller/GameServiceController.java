@@ -160,7 +160,7 @@ public class GameServiceController
 
         Game game = gameRepo.findOne(gameId);
         if (game != null) {
-            return game.getPlayers();
+            return game.getUsers();
         }
 
         return null;
@@ -175,10 +175,10 @@ public class GameServiceController
         User player = userRepo.findByToken(userToken);
 
         if (game != null && player != null
-                && game.getPlayers().size() < GameConstants.MAX_PLAYERS) {
-            game.getPlayers().add(player);
+                && game.getUsers().size() < GameConstants.MAX_PLAYERS) {
+            game.getUsers().add(player);
             logger.debug("Game: " + game.getName() + " - player added: " + player.getUsername());
-            return CONTEXT + "/" + gameId + "/player/" + (game.getPlayers().size() - 1);
+            return CONTEXT + "/" + gameId + "/player/" + (game.getUsers().size() - 1);
         } else {
             logger.error("Error adding player with token: " + userToken);
         }
@@ -192,7 +192,7 @@ public class GameServiceController
 
         Game game = gameRepo.findOne(gameId);
 
-        return game.getPlayers().get(playerId);
+        return game.getUsers().get(playerId);
     }
 
 }

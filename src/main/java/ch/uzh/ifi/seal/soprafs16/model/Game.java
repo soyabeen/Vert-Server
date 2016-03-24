@@ -1,14 +1,11 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 
@@ -39,9 +36,14 @@ public class Game implements Serializable {
     @OneToMany(mappedBy="game")
     private List<Move> moves;
     
-    @ManyToMany(mappedBy="games")
-    private List<User> players;
-    
+    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
+    private List<User> users;
+
+	public Game() {
+		this.users = new ArrayList<>();
+		this.moves = new LinkedList<>();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -74,12 +76,12 @@ public class Game implements Serializable {
 		this.moves = moves;
 	}
 
-	public List<User> getPlayers() {
-		return players;
+	public List<User> getUsers() {
+		return users;
 	}
 
-	public void setPlayers(List<User> players) {
-		this.players = players;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	public GameStatus getStatus() {
@@ -99,6 +101,10 @@ public class Game implements Serializable {
 	}
    
 	public User getNextPlayer() {
-		return getPlayers().get((getCurrentPlayer() + 1) % getPlayers().size());
+		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
+	}
+
+	public void addUser(User user) {
+		users.add(user);
 	}
 }

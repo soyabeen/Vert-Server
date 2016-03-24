@@ -31,14 +31,14 @@ public class User implements Serializable {
 	@Column(nullable = false) 
 	private UserStatus status;
 
-    @ManyToMany
-    private List<Game> games;
+    @ManyToOne
+    private Game game;
 	
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
-	@OneToOne
-	private Meeple meeple;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Player player;
 
 	protected User() {
 	}
@@ -72,12 +72,12 @@ public class User implements Serializable {
 		this.username = username;
 	}
 
-	public List<Game> getGames() {
-		return games;
+	public Game getGames() {
+		return game;
 	}
 
-	public void setGames(List<Game> games) {
-		this.games = games;
+	public void setGame(Game game) {
+		this.game = game;
 	}
 
 	public List<Move> getMoves() {
@@ -102,5 +102,13 @@ public class User implements Serializable {
 
 	public void setStatus(UserStatus status) {
 		this.status = status;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

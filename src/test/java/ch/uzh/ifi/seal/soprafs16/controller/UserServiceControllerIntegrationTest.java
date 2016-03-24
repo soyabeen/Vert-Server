@@ -28,7 +28,7 @@ import ch.uzh.ifi.seal.soprafs16.model.User;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({ "server.port=0" })
-public class UserServiceControllerIT {
+public class UserServiceControllerIntegrationTest {
 
     @Value("${local.server.port}")
     private int          port;
