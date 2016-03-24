@@ -38,7 +38,7 @@ public class GameServiceController
     private MoveRepository moveRepo;
 
 
-    private final String   CONTEXT = "/game";
+    private final String   CONTEXT = "/games";
 
     /*
      * Context: /game
