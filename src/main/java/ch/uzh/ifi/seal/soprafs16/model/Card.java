@@ -27,13 +27,13 @@ public class Card implements Serializable {
      */
 
     @ManyToOne
-    private Meeple owner;
+    private Player owner;
 
     /**
      * Returns owner of this card.
      * @return owner.
      */
-    public Meeple getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
@@ -41,7 +41,7 @@ public class Card implements Serializable {
      * Sets owner for this card
      * @param owner player or game
      */
-    public void setOwner(Meeple owner) {
+    public void setOwner(Player owner) {
         this.owner = owner;
     }
 
