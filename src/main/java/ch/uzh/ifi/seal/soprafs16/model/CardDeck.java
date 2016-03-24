@@ -1,8 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,10 @@ import java.util.Random;
 @Entity
 public class CardDeck implements Serializable {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+    
     /**
      * List of cards in this deck.
      */

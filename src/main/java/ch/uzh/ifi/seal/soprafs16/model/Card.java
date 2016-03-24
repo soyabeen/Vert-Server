@@ -12,6 +12,10 @@ import java.io.Serializable;
 @Entity
 public class Card implements Serializable {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
     /**
      * Defines type of this card.
      */
