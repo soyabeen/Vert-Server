@@ -4,7 +4,6 @@ import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.List;
 
