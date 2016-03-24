@@ -12,7 +12,7 @@ import java.util.List;
  * Created by alexanderhofmann on 22/03/16.
  */
 @Entity
-public class Player extends Meeple implements Serializable {
+public class Player extends Meeple {
 
     @Id
     @GeneratedValue
