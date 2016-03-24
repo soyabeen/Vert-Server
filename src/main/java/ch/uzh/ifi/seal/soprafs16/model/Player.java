@@ -4,8 +4,6 @@ import ch.uzh.ifi.seal.soprafs16.constant.Ability;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +12,7 @@ import java.util.List;
  * Created by alexanderhofmann on 22/03/16.
  */
 @Entity
-public class Player extends Meeple implements Serializable {
+public class Player extends Meeple {
 
     @Column
     private int bullets;

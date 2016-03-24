@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -12,7 +13,7 @@ import java.util.Random;
  * Created by mirkorichter on 22.03.16.
  */
 @Entity
-public class CardDeck {
+public class CardDeck implements Serializable {
 
     /**
      * List of cards in this deck.
