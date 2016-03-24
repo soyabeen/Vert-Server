@@ -27,10 +27,21 @@ public class Player extends Meeple {
     private Ability ability;
 
     /**
+     * Player's deck.
+     */
+    private CardDeck deck;
+
+    /**
+     * Player's hand.
+     */
+    private List<Card> hand;
+
+    /**
      * Default constructor.
      */
     public Player() {
         this.loots = new ArrayList<>();
+        this.hand = new ArrayList<>();
     }
 
     /**
