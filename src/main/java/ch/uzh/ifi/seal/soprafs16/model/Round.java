@@ -6,7 +6,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class represents a round card as well as a train station card.
@@ -27,12 +27,12 @@ public class Round implements Serializable {
     private Game game;
 
     @OneToMany
-    private LinkedList<Card> cardStack;
+    private List<Card> cardStack;
 
     @ElementCollection(targetClass=Turn.class)
     @CollectionTable(name="round_turn")
     @Column(name="turns")
-    private LinkedList<Turn> turns;
+    private List<Turn> turns;
 
     @Enumerated(EnumType.STRING)
     private RoundEndEvent end;
@@ -47,7 +47,7 @@ public class Round implements Serializable {
      * @param turns The turns for that round.
      * @param endEvent The end event.
      */
-    public Round(Game game, LinkedList<Turn> turns, RoundEndEvent endEvent) {
+    public Round(Game game, List<Turn> turns, RoundEndEvent endEvent) {
         this.game = game;
         this.turns = turns;
         this.end = endEvent;
@@ -69,7 +69,7 @@ public class Round implements Serializable {
         return game;
     }
 
-    public LinkedList<Card> getCardStack() {
+    public List<Card> getCardStack() {
         return cardStack;
     }
 

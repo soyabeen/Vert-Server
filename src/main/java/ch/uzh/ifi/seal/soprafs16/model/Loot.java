@@ -4,6 +4,8 @@ import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -12,7 +14,11 @@ import java.io.Serializable;
  */
 @Entity
 public class Loot implements Positionable, Serializable {
-    
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     /**
      * Defines type of this loot.
      */
