@@ -2,6 +2,10 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import org.hibernate.cfg.NotYetImplementedException;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.LinkedList;
 
 /**
@@ -10,12 +14,20 @@ import java.util.LinkedList;
  * <p/>
  * Created by soyabeen on 22.03.16.
  */
+@Entity
 public class Round {
 
     // Game to which the round belongs.
+    @ManyToOne
     private Game game;
+
+    @OneToOne
     private LinkedList<Card> cardStack;
+
+    @OneToMany
     private LinkedList<Turn> turns;
+
+    @OneToMany
     private EndEvent end;
 
     public Round() {
