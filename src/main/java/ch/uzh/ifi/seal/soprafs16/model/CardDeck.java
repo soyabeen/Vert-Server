@@ -22,7 +22,7 @@ public class CardDeck implements Serializable {
      * List of cards in this deck.
      */
     @OneToMany
-    private List<Card> deck = new ArrayList<Card>(10);
+    private List<Card> deck = new ArrayList<>(10);
 
     /**
      * Add a card to this deck.
@@ -37,9 +37,9 @@ public class CardDeck implements Serializable {
      * @param numOfCards defines how many cards to draw.
      * @return returns ArrayList of cards on hand of player.
      */
-    public ArrayList<Card> drawCard(int numOfCards) {
-        ArrayList<Card> drawnCards = new ArrayList<Card>();
-        ArrayList<Integer> random = new ArrayList<Integer>();
+    public List<Card> drawCard(int numOfCards) {
+        List<Card> drawnCards = new ArrayList<>();
+        List<Integer> random = new ArrayList<>();
 
         for(int i = 0; i < deck.size(); i++) {
             random.add(i);
@@ -48,7 +48,7 @@ public class CardDeck implements Serializable {
         Collections.shuffle(drawnCards);
 
         for(int i = 0; i < numOfCards; i++) {
-            drawnCards.add(deck.get((random.get(i))));
+            drawnCards.add(deck.get(random.get(i)));
         }
         return drawnCards;
     }
