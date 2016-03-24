@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import org.hibernate.cfg.NotYetImplementedException;
+import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
+import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 
 /**
@@ -12,11 +14,23 @@ import java.util.LinkedList;
  */
 public class Round {
 
-    // Game to which the round belongs.
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
     private Game game;
+
+    @OneToMany
     private LinkedList<Card> cardStack;
+
+    @OneToMany
     private LinkedList<Turn> turns;
-    private EndEvent end;
+
+    @Enumerated(EnumType.STRING)
+    private RoundEndEvent end;
 
     public Round() {
     }
@@ -28,7 +42,7 @@ public class Round {
      * @param turns The turns for that round.
      * @param endEvent The end event.
      */
-    public Round(Game game, LinkedList<Turn> turns, EndEvent endEvent) {
+    public Round(Game game, LinkedList<Turn> turns, RoundEndEvent endEvent) {
         this.game = game;
         this.turns = turns;
         this.end = endEvent;
@@ -52,41 +66,6 @@ public class Round {
 
     public LinkedList<Card> getCardStack() {
         return cardStack;
-    }
-
-    /**
-     * Types of a turn in a round.
-     */
-    enum Turn implements Modified {
-        NORMAL {
-            @Override
-            public void handleRoundModification() {
-                throw new IllegalStateException("Method not yet implemented!");
-            }
-        },
-        HIDDEN {
-            @Override
-            public void handleRoundModification() {
-                throw new IllegalStateException("Method not yet implemented!");
-            }
-        }, DOUBLE_TURNS {
-            @Override
-            public void handleRoundModification() {
-                throw new IllegalStateException("Method not yet implemented!");
-            }
-        }, REVERSE {
-            @Override
-            public void handleRoundModification() {
-                throw new IllegalStateException("Method not yet implemented!");
-            }
-        }
-    }
-
-    /**
-     * Possible round end events.
-     */
-    enum EndEvent {
-        ANGRY_MARSHAL, PIVOTTABLE_POLE, BRAKING, GET_IT_ALL, REBELLION, PICKPOCKETING, MARSHALS_REVENGE, HOSTAGE
     }
 
 }
