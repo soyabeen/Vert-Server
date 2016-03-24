@@ -38,7 +38,7 @@ public class User implements Serializable {
     private List<Move> moves;
 
 	@OneToOne
-	private Meeple meeple;
+	private Player player;
 
 	protected User() {
 	}
@@ -102,5 +102,13 @@ public class User implements Serializable {
 
 	public void setStatus(UserStatus status) {
 		this.status = status;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

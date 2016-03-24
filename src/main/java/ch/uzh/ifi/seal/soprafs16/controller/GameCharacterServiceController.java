@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.GameConstants;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.User;
@@ -33,11 +34,11 @@ public class GameCharacterServiceController
 
     @RequestMapping(value = CONTEXT)
     @ResponseStatus(HttpStatus.OK)
-    public String getCharacters(@PathVariable Long gameId, @RequestParam(value="filter", required=false) String filter) {
+    public List<Character> getCharacters(@PathVariable Long gameId, @RequestParam(value="filter", required=false) String filter) {
         if ("AVAILABLE".equals(filter)) {
-            return gameId + " BELLE\n";
+            return charService.listAvailableCharactersByGame(gameId);
         }
-        return charService.listCharactersForGame(gameId).toString();
+        return charService.listCharacters();
     }
 
 

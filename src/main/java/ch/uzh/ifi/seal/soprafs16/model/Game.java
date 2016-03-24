@@ -40,7 +40,7 @@ public class Game implements Serializable {
     private List<Move> moves;
     
     @ManyToMany(mappedBy="games")
-    private List<User> players;
+    private List<User> users;
     
 	public Long getId() {
 		return id;
@@ -74,12 +74,12 @@ public class Game implements Serializable {
 		this.moves = moves;
 	}
 
-	public List<User> getPlayers() {
-		return players;
+	public List<User> getUsers() {
+		return users;
 	}
 
-	public void setPlayers(List<User> players) {
-		this.players = players;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	public GameStatus getStatus() {
@@ -99,6 +99,6 @@ public class Game implements Serializable {
 	}
    
 	public User getNextPlayer() {
-		return getPlayers().get((getCurrentPlayer() + 1) % getPlayers().size());
+		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
 	}
 }
