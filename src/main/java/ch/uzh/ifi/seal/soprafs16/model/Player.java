@@ -16,33 +16,18 @@ import java.util.List;
 @Entity
 public class Player extends Meeple implements Serializable {
 
-    /**
-     * Bullets the player has left.
-     */
     @Column
     private int bullets;
 
-    /**
-     * List of loots.
-     */
     @Column
     private List<Loot> loots;
 
-    /**
-     * Player's special ability.
-     */
     @Column
     private Ability ability;
 
-    /**
-     * Player's deck.
-     */
     @Column
     private CardDeck deck;
-
-    /**
-     * Player's hand.
-     */
+    
     @Column
     private List<Card> hand;
 

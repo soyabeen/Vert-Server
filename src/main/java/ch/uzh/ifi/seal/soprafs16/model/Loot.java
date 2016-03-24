@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.LootType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.io.Serializable;
