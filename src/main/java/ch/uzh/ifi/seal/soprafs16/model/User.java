@@ -40,7 +40,8 @@ public class User implements Serializable {
 	@OneToOne
 	private Meeple meeple;
 
-	protected User() {}
+	protected User() {
+	}
 
 	public User(String name, String username) {
 		this.name = name;

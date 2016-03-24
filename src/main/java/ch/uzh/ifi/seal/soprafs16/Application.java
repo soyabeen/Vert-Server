@@ -11,7 +11,8 @@ public class Application {
     /**
      * Spring needs this!!!
      */
-    public Application() {}
+    public Application() {
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
