@@ -5,7 +5,7 @@ package ch.uzh.ifi.seal.soprafs16.constant;
  * Created by mirkorichter on 22.03.16.
  */
 public enum LootType {
-    jewel,
-    purse,
-    strongbox
+    JEWEL,
+    PURSE,
+    STRONGBOX
 }
