@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
         jcenter()
         maven {
-          url "https://plugins.gradle.org/m2/"
+            url "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
@@ -18,12 +18,18 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco'
 
 uploadArchives.dependsOn bootRepackage
 
 jar {
     baseName = 'group-00-service'
     version =  '0.0.1-SNAPSHOT'
+}
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+    reportsDir = file("$buildDir/jacoco")
 }
 
 repositories {
@@ -42,6 +48,7 @@ dependencies {
     testCompile('junit:junit:4.12')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.hamcrest:hamcrest-all:1.3')
+    testCompile("org.mockito:mockito-core:1.+")
 }
 
 test {
@@ -62,7 +69,7 @@ task wrapper(type: Wrapper) {
 }
 
 task stage {
-  dependsOn 'build'
+    dependsOn 'build'
 }
 
 defaultTasks 'bootRepackage', 'build'
