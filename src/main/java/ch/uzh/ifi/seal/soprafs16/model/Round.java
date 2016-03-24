@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -14,7 +15,7 @@ import java.util.LinkedList;
  * Created by soyabeen on 22.03.16.
  */
 @Entity
-public class Round {
+public class Round implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -2,13 +2,14 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.io.Serializable;
 
 /**
  * Defines a loot on train or at player.
  * Created by mirkorichter on 22.03.16.
  */
 @Entity
-public class Loot implements Positionable{
+public class Loot implements Positionable, Serializable {
     
     /**
      * Defines type of this loot.

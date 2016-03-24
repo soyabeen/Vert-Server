@@ -1,19 +1,26 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Defines a card.
  * Created by mirkorichter on 22.03.16.
  */
-public class Card {
+@Entity
+public class Card implements Serializable {
 
     /**
      * Defines type of this card.
      */
+    @Column
     private CardType type;
 
     /**
      * Defines owner of this card
      */
+    @Column
+    @OneToOne
     private long owner;
 
     /**
