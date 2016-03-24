@@ -2,9 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Ability;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,10 @@ import java.util.List;
  */
 @Entity
 public class Player extends Meeple implements Serializable {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @Column
     private int bullets;

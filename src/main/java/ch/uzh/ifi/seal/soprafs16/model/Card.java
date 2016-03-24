@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
