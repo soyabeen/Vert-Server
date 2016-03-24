@@ -37,8 +37,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
-	//TODO: Remove transient when we implement JPA for our new model.
-	@Transient
+	@OneToOne
 	private Meeple meeple;
 
 	public Long getId() {
