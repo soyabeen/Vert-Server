@@ -25,15 +25,15 @@ public class Card implements Serializable {
     /**
      * Defines owner of this card
      */
-    @Column
+
     @OneToOne
-    private long owner;
+    private Meeple owner;
 
     /**
      * Returns owner of this card.
      * @return owner.
      */
-    public long getOwner() {
+    public Meeple getOwner() {
         return owner;
     }
 
@@ -41,7 +41,7 @@ public class Card implements Serializable {
      * Sets owner for this card
      * @param owner player or game
      */
-    public void setOwner(long owner) {
+    public void setOwner(Meeple owner) {
         this.owner = owner;
     }
 

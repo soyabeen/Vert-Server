@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Created by alexanderhofmann on 22/03/16.
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Meeple implements Positionable, Serializable {
 
     @Id
