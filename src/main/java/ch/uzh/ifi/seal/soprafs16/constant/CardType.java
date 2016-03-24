@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.model;
+package ch.uzh.ifi.seal.soprafs16.constant;
 
 /**
  * All possible type of card.

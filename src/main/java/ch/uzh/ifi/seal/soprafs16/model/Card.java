@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+
 /**
  * Defines a card.
  * Created by mirkorichter on 22.03.16.
