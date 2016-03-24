@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -16,12 +17,12 @@ public class CardDeck implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     /**
      * List of cards in this deck.
      */
     @OneToMany
-    private ArrayList<Card> deck = new ArrayList<Card>(10);
+    private List<Card> deck = new ArrayList<Card>(10);
 
     /**
      * Add a card to this deck.
