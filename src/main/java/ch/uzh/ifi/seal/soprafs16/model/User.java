@@ -40,6 +40,10 @@ public class User implements Serializable {
 	@OneToOne
 	private Meeple meeple;
 
+	protected User() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}

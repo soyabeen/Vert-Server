@@ -33,8 +33,8 @@ public class Player extends Meeple {
      * Default constructor.
      */
     public Player() {
-        this.loots = new ArrayList<Loot>();
-        this.hand = new ArrayList<Card>();
+        this.loots = new ArrayList<>();
+        this.hand = new ArrayList<>();
     }
 
     /**

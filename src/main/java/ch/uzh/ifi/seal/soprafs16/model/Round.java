@@ -37,7 +37,7 @@ public class Round implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoundEndEvent end;
 
-    public Round() {
+    protected Round() {
     }
 
     /**
