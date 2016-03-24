@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class GameServiceController
     private UserRepository userRepo;
     @Autowired
     private GameRepository gameRepo;
+    @Autowired
+    private MoveRepository moveRepo;
+
 
     private final String   CONTEXT = "/game";
 
@@ -123,9 +127,14 @@ public class GameServiceController
 
     @RequestMapping(value = CONTEXT + "/{gameId}/move", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void addMove(@RequestBody Move move) {
+    public Move addMove(@RequestBody Move move, @PathVariable Long gameId) {
         logger.debug("addMove: " + move);
         // TODO Mapping into Move + execution of move
+
+        move.setGame(gameRepo.findOne(gameId));
+        move = moveRepo.save(move);
+
+        return move;
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/move/{moveId}")

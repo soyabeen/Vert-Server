@@ -1,26 +1,39 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Defines a card.
  * Created by mirkorichter on 22.03.16.
  */
-public class Card {
+@Entity
+public class Card implements Serializable {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     /**
      * Defines type of this card.
      */
+    @Column
     private CardType type;
 
     /**
      * Defines owner of this card
      */
-    private long owner;
+
+    @ManyToOne
+    private Player owner;
 
     /**
      * Returns owner of this card.
      * @return owner.
      */
-    public long getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
@@ -28,7 +41,7 @@ public class Card {
      * Sets owner for this card
      * @param owner player or game
      */
-    public void setOwner(long owner) {
+    public void setOwner(Player owner) {
         this.owner = owner;
     }
 

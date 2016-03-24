@@ -5,6 +5,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
  * <p/>
  * Created by soyabeen on 22.03.16.
  */
+@FunctionalInterface
 public interface Modified {
 
     /**

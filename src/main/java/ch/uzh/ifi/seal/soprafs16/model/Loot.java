@@ -1,34 +1,55 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.LootType;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
+
 /**
  * Defines a loot on train or at player.
  * Created by mirkorichter on 22.03.16.
  */
-public class Loot implements Positionable{
-    
+@Entity
+public class Loot implements Positionable, Serializable {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     /**
      * Defines type of this loot.
      */
+    @Column(nullable = false)
     private LootType type;
     
     /**
      * Defines value of this loot.
      */
+    @Column(nullable = false)
     private int value;
     
     /**
      * Train car level on which loot is.
      */
+    @Column(nullable = false)
     private Positionable.Level level;
     
     /**
      * Car on which loot is.
      */
+    @Column()
     private int car;
+
+    protected  Loot() {
+    }
     
     /**
      * @return int The current car of the train for the positionable object.
      */
+    @Override
     public int getCar() {
         return car;
     }
@@ -36,6 +57,7 @@ public class Loot implements Positionable{
     /**
      * @return Level The level of the car for llot.
      */
+    @Override
     public Level getLevel() {
         return level;
     }
@@ -44,6 +66,7 @@ public class Loot implements Positionable{
      * Moves loot n cars in the direction of the locomotive.
      * @param nrOfCarsToMove Number of cars to move.
      */
+    @Override
     public void moveToHead(int nrOfCarsToMove) {
         car -= nrOfCarsToMove;
     }
@@ -52,6 +75,7 @@ public class Loot implements Positionable{
      * Moves loot n cars in the direction of the trains tail.
      * @param nrOfCarsToMove Number of cars to move.
      */
+    @Override
     public void moveToTail(int nrOfCarsToMove) {
         car += nrOfCarsToMove;
     }
