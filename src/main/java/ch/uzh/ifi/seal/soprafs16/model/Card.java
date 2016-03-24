@@ -26,7 +26,7 @@ public class Card implements Serializable {
      * Defines owner of this card
      */
 
-    @OneToOne
+    @ManyToOne
     private Meeple owner;
 
     /**

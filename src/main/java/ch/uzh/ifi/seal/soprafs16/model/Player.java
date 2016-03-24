@@ -26,7 +26,7 @@ public class Player extends Meeple {
     @Column
     private CardDeck deck;
     
-    @Column
+    @OneToMany(mappedBy = "owner")
     private List<Card> hand;
 
     /**
