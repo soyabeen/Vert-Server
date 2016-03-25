@@ -49,3 +49,7 @@ sonar-project.properties
 # Logfiles
 logs
 
+
+*.exec
+
+*.txt
