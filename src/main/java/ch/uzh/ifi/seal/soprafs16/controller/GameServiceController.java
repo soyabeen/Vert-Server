@@ -166,7 +166,7 @@ public class GameServiceController
         return null;
     }
 
-    @RequestMapping(value = CONTEXT + "/{gameId}/player", method = RequestMethod.POST)
+   /* @RequestMapping(value = CONTEXT + "/{gameId}/player", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public String addPlayer(@PathVariable Long gameId, @RequestParam("token") String userToken) {
         logger.debug("addPlayer: " + userToken);
@@ -183,7 +183,7 @@ public class GameServiceController
             logger.error("Error adding player with token: " + userToken);
         }
         return null;
-    }
+    }*/
 
     @RequestMapping(value = CONTEXT + "/{gameId}/player/{playerId}")
     @ResponseStatus(HttpStatus.OK)
