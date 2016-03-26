@@ -36,6 +36,13 @@ public class PlayerService {
     }
 
     public String createPlayerForGame(long gameId, String userToken) {
+        /**
+         * If a player is added to a game, it won't persist.
+         * If a game is added to a player it persists. -> probably because of JPA relations?
+         * Can someone explain this to me? o.O?
+         *
+         * TODO: fix method so a player is saved to a game
+         */
         logger.debug("addPlayer: " + userToken);
 
         Game game = gameRepo.findOne(gameId);
@@ -43,7 +50,9 @@ public class PlayerService {
 
         if (game != null && player != null
                 && game.getUsers().size() < GameConstants.MAX_PLAYERS) {
-            game.getUsers().add(player);
+            //game.getUsers().add(player);
+            player.setGame(game);
+            userRepo.save(player);
             logger.debug("Game: " + game.getName() + " - player added: " + player.getUsername());
             return String.valueOf((game.getUsers().size() - 1));
         } else {
