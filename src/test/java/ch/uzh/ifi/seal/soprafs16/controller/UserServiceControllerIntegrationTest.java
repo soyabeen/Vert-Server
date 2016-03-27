@@ -51,7 +51,7 @@ public class UserServiceControllerIntegrationTest {
 
         User request = new User("Mike Meyers", "mm");
 
-        HttpEntity<User> httpEntity = new HttpEntity<User>(request);
+        HttpEntity<User> httpEntity = new HttpEntity<>(request);
 
         ResponseEntity<User> response = template.exchange(base + "/users/", HttpMethod.POST, httpEntity, User.class);
         Assert.assertSame(1L, response.getBody().getId());

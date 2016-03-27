@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,12 +49,15 @@ public class PositionServiceIntegrationTest {
     @Autowired
     private LootRepository lootRepo;
 
+    @Autowired
+    private PlayerRepository playerRepo;
+
     @Test
     public void getPositionablesTest() {
         Game game = new Game();
         game.setStatus(GameStatus.PENDING);
-        game.setName("getAvailableCharacters");
-        game.setOwner("getAvailableCharacters");
+        game.setName("getAvailableCharactersa");
+        game.setOwner("getAvailableCharactersa");
         game = gameRepo.save(game);
 
         List<Positionable> result = positionService.listPositionablesForGame(game.getId());
@@ -65,18 +69,22 @@ public class PositionServiceIntegrationTest {
         lootRepo.save(loot2);
 
         User user1 = new User("hans1", "wurst1");
-        user1.setPlayer(new Player());
+        Player p1 = new Player();
+        user1.setPlayer(p1);
         user1.getPlayer().setCharacter(Character.BELLE);
         user1.setStatus(UserStatus.ONLINE);
         user1.setToken("blablaasd");
+        playerRepo.save(p1);
         userRepo.save(user1);
 
         User user2 = new User("daisy1", "duck1");
-        user2.setPlayer(new Player());
+        Player p2 = new Player();
+        user2.setPlayer(p2);
         user2.getPlayer().addLoot(loot1);
         user2.getPlayer().setCharacter(Character.GHOST);
         user2.setStatus(UserStatus.ONLINE);
         user2.setToken("blabladasdads");
+        playerRepo.save(p2);
         userRepo.save(user2);
 
         game.addUser(user1);
@@ -84,10 +92,8 @@ public class PositionServiceIntegrationTest {
         game.addLoot(loot2);
         game = gameRepo.save(game);
 
-        user1.setGame(game);
         userRepo.save(user1);
 
-        user2.setGame(game);
         userRepo.save(user2);
 
         result = positionService.listPositionablesForGame(game.getId());

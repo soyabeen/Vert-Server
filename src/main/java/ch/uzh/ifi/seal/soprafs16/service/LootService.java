@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
@@ -26,15 +27,24 @@ public class LootService {
     private PlayerService playerService;
 
     public List<Loot> listLootsForGame(Long gameId) {
-        List<Loot> loots = new ArrayList<>();
-        loots.addAll(gameRepo.findOne(gameId).getLoots());
+        logger.debug("listLootsForGame");
 
-        List<Player> players = playerService.listPlayersForGame(gameId);
-        for (Player player : players) {
-            loots.addAll(player.getLoots());
+        List<Loot> result = new ArrayList<>();
+        Game game = gameRepo.findOne(gameId);
+
+        if (game != null) {
+            result.addAll(game.getLoots());
+
+            List<Player> players = playerService.listPlayersForGame(gameId);
+
+            for (Player player : players) {
+                result.addAll(player.getLoots());
+            }
+        } else {
+            logger.error("No game found");
         }
 
-        return loots;
+        return result;
     }
 
 }

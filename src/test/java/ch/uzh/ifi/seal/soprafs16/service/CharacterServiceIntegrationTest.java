@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,6 +45,9 @@ public class CharacterServiceIntegrationTest {
     @Autowired
     private UserRepository userRepo;
 
+    @Autowired
+    private PlayerRepository playerRepo;
+
     @Test
     public void getAll7UnfilteredCharacters() {
         Assert.assertThat(characterService.listCharacters().size(), is(7));
@@ -54,18 +58,22 @@ public class CharacterServiceIntegrationTest {
     public void getAvailableCharacters() {
 
         User user1 = new User("hans", "wurst");
-        user1.setPlayer(new Player());
+        Player p1 = new Player();
+        user1.setPlayer(p1);
         user1.getPlayer().setCharacter(Character.BELLE);
         user1.setStatus(UserStatus.ONLINE);
         user1.setToken("blabla");
+        playerRepo.save(p1);
         userRepo.save(user1);
 
 
         User user2 = new User("daisy", "duck");
-        user2.setPlayer(new Player());
+        Player p2 = new Player();
+        user2.setPlayer(p2);
         user2.getPlayer().setCharacter(Character.GHOST);
         user2.setStatus(UserStatus.ONLINE);
         user2.setToken("blabladasd");
+        playerRepo.save(p2);
         userRepo.save(user2);
 
         Game game = new Game();
@@ -76,10 +84,8 @@ public class CharacterServiceIntegrationTest {
         game.addUser(user2);
         game = gameRepo.save(game);
 
-        user1.setGame(game);
         userRepo.save(user1);
 
-        user2.setGame(game);
         userRepo.save(user2);
 
 

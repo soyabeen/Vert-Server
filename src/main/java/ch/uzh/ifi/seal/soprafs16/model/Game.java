@@ -34,7 +34,7 @@ public class Game implements Serializable {
     @OneToMany(mappedBy="game")
     private List<Move> moves;
     
-    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<User> users;
 
 	@OneToMany(fetch = FetchType.EAGER)
@@ -111,9 +111,9 @@ public class Game implements Serializable {
 		this.currentPlayer = currentPlayer;
 	}
    
-	public User getNextPlayer() {
-		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
-	}
+	//public User getNextPlayer() {
+	//	return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
+	//}
 
 	public void addUser(User user) {
 		users.add(user);
