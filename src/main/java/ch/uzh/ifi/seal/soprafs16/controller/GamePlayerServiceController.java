@@ -27,6 +27,7 @@ public class GamePlayerServiceController
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String createPlayerForGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
+        //TODO: What if null was returned from createPlayerForGame()? How do we handle this? (Error Message? Ignore?)
         return CONTEXT + "/" + gameId + "/player/" + ( playerService.createPlayerForGame(gameId, userToken) );
     }
 

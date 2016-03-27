@@ -20,6 +20,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.*;
 
 /**
@@ -85,5 +88,33 @@ public class PlayerServiceUTest {
         game = gameRepo.findOne(game.getId());
         Assert.assertThat(game.getUsers().size(), is(2));
 
+    }
+
+    @Test
+    public void testListPlayersForGame() {
+
+        // Create a game for testing purpose
+        Game game = new Game();
+        game.setStatus(GameStatus.PENDING);
+        game.setName("testListPlayerForGame");
+        game.setOwner("testListPlayerForGame");
+        game = gameRepo.save(game);
+
+        List<Player> result = playerService.listPlayersForGame(game.getId());
+        Assert.assertThat(result, is(gameRepo.findOne(game.getId()).getUsers()));
+
+        // Create a User for testing purpose
+        User user = new User("el", "barto");
+        user.setPlayer(new Player());
+        user.getPlayer().setCharacter(Character.DJANGO);
+        user.setStatus(UserStatus.ONLINE);
+        user.setToken("barto");
+        userRepo.save(user);
+
+        playerService.createPlayerForGame(game.getId(), user.getToken());
+        List<Player> testResult = playerService.listPlayersForGame(game.getId());
+
+        Assert.assertThat( testResult.get(0).getCharacter(), is(user.getPlayer().getCharacter()) );
+        Assert.assertThat( testResult.get(0).getOwner().getId(), is(user.getId()) );
     }
 }

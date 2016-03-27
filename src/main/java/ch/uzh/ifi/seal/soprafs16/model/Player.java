@@ -100,4 +100,6 @@ public class Player extends Meeple {
     public void setCharacter(Character character) {
         this.character = character;
     }
+
+    //TODO: add equals method (or implement comparable)
 }
