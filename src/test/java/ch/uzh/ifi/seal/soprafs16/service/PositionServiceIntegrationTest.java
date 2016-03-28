@@ -10,7 +10,9 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,8 +20,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,7 +40,6 @@ import static org.hamcrest.CoreMatchers.*;
 public class PositionServiceIntegrationTest {
 
     private static final Logger logger  = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
-
 
     @Autowired
     private PositionService positionService;

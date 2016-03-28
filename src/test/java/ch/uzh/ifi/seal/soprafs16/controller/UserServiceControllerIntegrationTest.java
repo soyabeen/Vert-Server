@@ -3,12 +3,15 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 import java.net.URL;
 import java.util.List;
 
-//import static org.hamcrest.Matchers.is;
-//import static org.hamcrest.MatcherAssert.assertThat;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -16,8 +19,11 @@ import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
@@ -30,23 +36,35 @@ import ch.uzh.ifi.seal.soprafs16.model.User;
 @IntegrationTest({ "server.port=0" })
 public class UserServiceControllerIntegrationTest {
 
+    private static final Logger logger  = LoggerFactory.getLogger(UserServiceControllerIntegrationTest.class);
+
     @Value("${local.server.port}")
     private int          port;
 
     private URL          base;
     private RestTemplate template;
 
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private GameRepository gameRepo;
+
     @Before
     public void setUp()
             throws Exception {
         this.base = new URL("http://localhost:" + port + "/");
         this.template = new TestRestTemplate();
+
+        gameRepo.deleteAll();
+        userRepo.deleteAll();
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testCreateUserSuccess() {
         List<User> usersBefore = template.getForObject(base + "/users", List.class);
+        logger.debug(usersBefore.toString());
         Assert.assertEquals(0, usersBefore.size());
 
         User request = new User("Mike Meyers", "mm");
@@ -54,7 +72,10 @@ public class UserServiceControllerIntegrationTest {
         HttpEntity<User> httpEntity = new HttpEntity<>(request);
 
         ResponseEntity<User> response = template.exchange(base + "/users/", HttpMethod.POST, httpEntity, User.class);
-        Assert.assertSame(1L, response.getBody().getId());
+        logger.debug("User found: " + response.getBody().getId());
+
+        //Can't rely on this test being run as first test.
+        //Assert.assertSame(request.getId(), response.getBody().getId());
 
         List<User> usersAfter = template.getForObject(base + "/users", List.class);
         Assert.assertEquals(1, usersAfter.size());
@@ -64,5 +85,4 @@ public class UserServiceControllerIntegrationTest {
         Assert.assertEquals(request.getName(), userResponse.getName());
         Assert.assertEquals(request.getUsername(), userResponse.getUsername());
     }
-
 }
