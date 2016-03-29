@@ -24,12 +24,15 @@ public class Game implements Serializable {
 	
 	@Column(nullable = false) 
 	private String owner;
+
+	@Column
+	private int numberOfPlayers;
 	
 	@Column 
 	private GameStatus status;
 	
 	@Column 
-	private Integer currentPlayer;
+	private int currentPlayer;
 
     @OneToMany(mappedBy="game")
     private List<Move> moves;
@@ -113,5 +116,14 @@ public class Game implements Serializable {
 
 	public void addUser(User user) {
 		users.add(user);
+		numberOfPlayers++;
+	}
+
+	public Integer getNumberOfPlayers() {
+		return numberOfPlayers;
+	}
+
+	public void setNumberOfPlayers(Integer numberOfPlayers) {
+		this.numberOfPlayers = numberOfPlayers;
 	}
 }

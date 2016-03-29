@@ -13,15 +13,11 @@ import java.util.List;
 @Entity
 public class Player extends Meeple {
 
+    @Column
+    private Character character;
 
     @Column
     private int bullets;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Loot> loots;
-
-    @Column
-    private Character character;
 
     @Column
     private CardDeck deck;
@@ -29,12 +25,20 @@ public class Player extends Meeple {
     @OneToMany(mappedBy = "owner")
     private List<Card> hand;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Loot> loots;
+
+    @Transient
+    private int MAX_BULLETS;
+
     /**
      * Default constructor.
      */
     public Player() {
         this.loots = new ArrayList<>();
         this.hand = new ArrayList<>();
+        bullets = MAX_BULLETS;
+
     }
 
     /**
