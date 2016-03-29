@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,12 +59,16 @@ public class GameServiceController
     public String addGame(@RequestBody Game game, @RequestParam("token") String userToken) {
         logger.debug("addGame: " + game);
 
+        logger.debug("User Token: " + userToken);
         User owner = userRepo.findByToken(userToken);
+
+        logger.debug("User Found?: " + (null != owner ? "True":"False"));
 
         if (owner != null) {
             // TODO Mapping into Game
             game = gameRepo.save(game);
 
+            logger.debug("Game Id: "  + game.getId());
             return CONTEXT + "/" + game.getId();
         }
 
@@ -150,9 +155,9 @@ public class GameServiceController
         return null;
     }
 
-    /*
+   /* *//*
      * Context: /game/{game-id}/player
-     */
+     *//*
     @RequestMapping(value = CONTEXT + "/{gameId}/player")
     @ResponseStatus(HttpStatus.OK)
     public List<User> listPlayers(@PathVariable Long gameId) {
@@ -164,7 +169,7 @@ public class GameServiceController
         }
 
         return null;
-    }
+    }*/
 
    /* @RequestMapping(value = CONTEXT + "/{gameId}/player", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)

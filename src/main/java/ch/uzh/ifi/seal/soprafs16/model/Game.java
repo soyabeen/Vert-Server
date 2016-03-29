@@ -8,6 +8,9 @@ import java.util.List;
 import javax.persistence.*;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Game implements Serializable {
@@ -35,9 +38,9 @@ public class Game implements Serializable {
 
     @OneToMany(mappedBy="game")
     private List<Move> moves;
-    
-    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
-    private List<User> users;
+
+	@OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+	private List<User> users;
 
 	public Game() {
 		this.users = new ArrayList<>();
@@ -100,9 +103,9 @@ public class Game implements Serializable {
 		this.currentPlayer = currentPlayer;
 	}
    
-	public User getNextPlayer() {
-		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
-	}
+//	public User getNextPlayer() {
+//		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
+//	}
 
 	public void addUser(User user) {
 		users.add(user);

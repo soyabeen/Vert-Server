@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.*;
 
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class User implements Serializable {
@@ -31,9 +34,6 @@ public class User implements Serializable {
 	@Column(nullable = false) 
 	private UserStatus status;
 
-    @ManyToOne
-    private Game game;
-	
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 

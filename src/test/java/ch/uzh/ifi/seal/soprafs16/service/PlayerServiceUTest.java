@@ -114,6 +114,7 @@ public class PlayerServiceUTest {
         playerService.createPlayerForGame(game.getId(), user.getToken());
         List<Player> testResult = playerService.listPlayersForGame(game.getId());
 
+        // Compare if defined user character and id is the same as the result from the method
         Assert.assertThat( testResult.get(0).getCharacter(), is(user.getPlayer().getCharacter()) );
         Assert.assertThat( testResult.get(0).getOwner().getId(), is(user.getId()) );
     }
