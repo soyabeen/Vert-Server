@@ -22,6 +22,9 @@ public class RoundConfigurator {
         initConfigurations();
     }
 
+    /**
+     * Define the round configurations for the 2-4 player round cards and the train station cards.
+     */
     private void initConfigurations() {
         roundConfigs = new ArrayList<>();
         roundConfigs.add(new RoundConfiguration(1, new Turn[]{Turn.NORMAL, Turn.DOUBLE_TURNS, Turn.NORMAL}, RoundEndEvent.NONE));
