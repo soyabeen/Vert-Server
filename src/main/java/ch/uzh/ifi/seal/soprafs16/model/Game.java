@@ -110,10 +110,6 @@ public class Game implements Serializable {
 	public void setCurrentPlayer(Integer currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
-   
-	//public User getNextPlayer() {
-	//	return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
-	//}
 
 	public void addUser(User user) {
 		users.add(user);

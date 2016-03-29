@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.controller;
+package ch.uzh.ifi.seal.soprafs16.service;
 
 import javax.servlet.http.HttpServletRequest;
 

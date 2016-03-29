@@ -19,11 +19,8 @@ import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
@@ -73,9 +70,6 @@ public class UserServiceControllerIntegrationTest {
 
         ResponseEntity<User> response = template.exchange(base + "/users/", HttpMethod.POST, httpEntity, User.class);
         logger.debug("User found: " + response.getBody().getId());
-
-        //Can't rely on this test being run as first test.
-        //Assert.assertSame(request.getId(), response.getBody().getId());
 
         List<User> usersAfter = template.getForObject(base + "/users", List.class);
         Assert.assertEquals(1, usersAfter.size());
