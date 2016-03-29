@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,22 +47,18 @@ public class PlayerServiceUTest {
     @Autowired
     private UserRepository userRepo;
 
+    @Autowired
+    private PlayerRepository playerRepo;
+
     @Test
-    public void testCreatePlayerForGame() {
+    public void testCreatePlayerForUser() {
 
-        // Create a game for testing purpose
-        Game game = new Game();
-        game.setStatus(GameStatus.PENDING);
-        game.setName("testCreatePlayerForGame");
-        game.setOwner("testCreatePlayerForGame");
-        game = gameRepo.save(game);
-
-        logger.debug("Game saved to repo: " + game.getName());
+        // Create Player for User
+        Player player_donald = new Player();
+        player_donald.setCharacter(Character.GHOST);
 
         // Create a User for testing purpose
         User user = new User("duck", "donald");
-        user.setPlayer(new Player());
-        user.getPlayer().setCharacter(Character.DJANGO);
         user.setStatus(UserStatus.ONLINE);
         user.setToken("donald");
         userRepo.save(user);
@@ -75,7 +72,7 @@ public class PlayerServiceUTest {
         userRepo.save(user2);
 
         // Call test method
-        playerService.createPlayerForGame(game.getId(), user.getToken());
+        playerService.createPlayerForUser(user.getToken(), );
 
         // Reload game from repo
         game = gameRepo.findOne(game.getId());

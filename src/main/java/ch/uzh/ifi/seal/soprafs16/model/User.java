@@ -37,7 +37,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Player player;
 
 	protected User() {
@@ -70,14 +70,6 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public Game getGames() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
 	}
 
 	public List<Move> getMoves() {

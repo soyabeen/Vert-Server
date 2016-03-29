@@ -181,8 +181,13 @@ public class GameServiceController
 
         if (game != null && player != null
                 && game.getUsers().size() < GameConstants.MAX_PLAYERS) {
-            game.getUsers().add(player);
+            //game.getUsers().add(player);
+            game.addUser(player);
+            game = gameRepo.save(game);
+
             logger.debug("Game: " + game.getName() + " - player added: " + player.getUsername());
+            logger.debug("Game: " + gameId + " saved");
+
             return CONTEXT + "/" + gameId + "/player/" + (game.getUsers().size() - 1);
         } else {
             logger.error("Error adding player with token: " + userToken);
