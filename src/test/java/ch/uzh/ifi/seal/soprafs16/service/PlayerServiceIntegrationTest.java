@@ -118,6 +118,15 @@ public class PlayerServiceIntegrationTest {
         response = template.postForObject(builder.build().encode().toUri(), HttpMethod.POST, String.class);
         Assert.assertThat(response, is(badResponse));
 
+        // check if user has already chosen a player
+        builder = UriComponentsBuilder.fromHttpUrl(context)
+                .queryParam("token", user1.getToken())
+                .queryParam("character", Character.DOC);
+        response = template.postForObject(builder.build().encode().toUri(), HttpMethod.POST, String.class);
+        Player createdPlayer2 = playerRepo.findOne(Long.parseLong(response));
+        Assert.assertNotNull(createdPlayer2);
+        Assert.assertThat(createdPlayer2.getCharacter(), is(Character.BELLE));
+
         // game doesn't exist
         builder = UriComponentsBuilder.fromHttpUrl(base + "games/2/players")
                 .queryParam("token", user2.getToken())
