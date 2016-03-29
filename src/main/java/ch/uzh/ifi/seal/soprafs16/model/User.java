@@ -34,6 +34,9 @@ public class User implements Serializable {
 	@Column(nullable = false) 
 	private UserStatus status;
 
+	@Column
+	private Long gameId;
+
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
@@ -102,5 +105,13 @@ public class User implements Serializable {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
 	}
 }

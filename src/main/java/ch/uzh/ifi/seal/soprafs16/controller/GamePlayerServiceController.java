@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,15 @@ public class GamePlayerServiceController
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createPlayerForGame(@PathVariable Long gameId, @RequestParam("token") String userToken,
-                                      @RequestBody Player playerchar) {
-        //TODO: What if null was returned from createPlayerForGame()? How do we handle this? (Error Message? Ignore?)
-        return CONTEXT + "/" + gameId + "/player/" + ( playerService.createPlayerForGame(gameId, userToken, playerchar) );
+    public String createPlayerForUser(@PathVariable Long gameId, @RequestParam("token") String userToken,
+                                      @RequestBody JSONPObject character) {
+        Player createdPlayer = playerService.createPlayer(character);
+        return "/games/" + gameId + "/player/" + ( playerService.createPlayerForUser(userToken, character) );
     }
 
     @RequestMapping(value = CONTEXT)
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public List<Player> listPlayersForGame(@PathVariable  long gameId) {
+    public List<Player> listPlayersForGame(@PathVariable Long gameId) {
         return playerService.listPlayersForGame(gameId);
     }
 

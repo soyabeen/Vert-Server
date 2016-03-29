@@ -33,7 +33,7 @@ import static org.hamcrest.CoreMatchers.*;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class PlayerServiceUTest {
+public class PlayerServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
@@ -61,32 +61,17 @@ public class PlayerServiceUTest {
         User user = new User("duck", "donald");
         user.setStatus(UserStatus.ONLINE);
         user.setToken("donald");
-        userRepo.save(user);
-
-        // Create another User for testing purpose
-        User user2 = new User("duck", "daisy");
-        user2.setPlayer(new Player());
-        user2.getPlayer().setCharacter(Character.GHOST);
-        user2.setStatus(UserStatus.ONLINE);
-        user2.setToken("daisy");
-        userRepo.save(user2);
+        user = userRepo.save(user);
 
         // Call test method
-        playerService.createPlayerForUser(user.getToken(), );
+        String result = playerService.createPlayerForUser(user.getToken(), player_donald);
 
-        // Reload game from repo
-        game = gameRepo.findOne(game.getId());
-        Assert.assertThat(game.getUsers().size(), is(1));
+        user = userRepo.findByToken(user.getToken());
 
-        // Call test method again
-        playerService.createPlayerForGame(game.getId(), user2.getToken());
-
-        // Reload game from repo
-        game = gameRepo.findOne(game.getId());
-        Assert.assertThat(game.getUsers().size(), is(2));
-
+        Assert.assertThat(String.valueOf(user.getPlayer().getId()), is(result));
     }
 
+    /*
     @Test
     public void testListPlayersForGame() {
 
@@ -114,5 +99,5 @@ public class PlayerServiceUTest {
         // Compare if defined user character and id is the same as the result from the method
         Assert.assertThat( testResult.get(0).getCharacter(), is(user.getPlayer().getCharacter()) );
         Assert.assertThat( testResult.get(0).getOwner().getId(), is(user.getId()) );
-    }
+    }*/
 }
