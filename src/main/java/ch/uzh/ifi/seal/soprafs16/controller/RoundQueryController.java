@@ -21,9 +21,9 @@ public class RoundQueryController extends GenericController {
     @Autowired
     private RoundService roundService;
 
-    @RequestMapping(value = CONTEXT + "{roundId}")
+    @RequestMapping(value = CONTEXT + "/{roundId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Round getRoundById(@PathVariable Long gameId, @PathVariable Long roundId) {
-        return null;
+        return roundService.getRoundById(gameId, roundId);
     }
 }
