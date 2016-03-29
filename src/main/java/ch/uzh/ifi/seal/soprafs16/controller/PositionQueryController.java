@@ -16,8 +16,8 @@ import java.util.List;
  * Created by alexanderhofmann on 26/03/16.
  */
 @RestController
-public class PositionServiceController extends GenericService {
-    private static final Logger logger = LoggerFactory.getLogger(PositionServiceController.class);
+public class PositionQueryController extends GenericService {
+    private static final Logger logger = LoggerFactory.getLogger(PositionQueryController.class);
 
     @Autowired
     private PositionService positionService;

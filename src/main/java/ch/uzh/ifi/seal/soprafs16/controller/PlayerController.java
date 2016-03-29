@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
@@ -14,16 +12,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static ch.uzh.ifi.seal.soprafs16.controller.UserServiceController.CONTEXT;
-
 /**
  * Created by antoio on 3/26/16.
  */
 @RestController
-public class GamePlayerServiceController
+public class PlayerController
         extends GenericService {
 
-    Logger  logger = LoggerFactory.getLogger(GamePlayerServiceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlayerController.class);
 
 
     @Autowired
@@ -33,10 +29,12 @@ public class GamePlayerServiceController
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createPlayerForUser(@PathVariable Long gameId, @RequestParam("token") String userToken,
-                                      @RequestBody JSONPObject character) {
-        Player createdPlayer = playerService.createPlayer(character);
-        return "/games/" + gameId + "/player/" + ( playerService.createPlayerForUser(userToken, character) );
+
+    public String createPlayerForGame(@PathVariable Long gameId, @RequestParam("token") String userToken,
+                                      @RequestBody Player playerchar, @RequestBody JSONPObject object) {
+        //TODO: What if null was returned from createPlayerForGame()? How do we handle this? (Error Message? Ignore?)
+        //return CONTEXT + "/" + gameId + "/player/" + ( playerService.createPlayerForUser(gameId, userToken, playerchar));
+        return null;
     }
 
     @RequestMapping(value = CONTEXT)
@@ -44,6 +42,4 @@ public class GamePlayerServiceController
     public List<Player> listPlayersForGame(@PathVariable Long gameId) {
         return playerService.listPlayersForGame(gameId);
     }
-
-
 }

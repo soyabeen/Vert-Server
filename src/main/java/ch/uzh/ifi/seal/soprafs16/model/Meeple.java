@@ -69,6 +69,4 @@ public abstract class Meeple implements Positionable, Serializable {
     public void moveToTail(int nrOfCarsToMove) {
         car += nrOfCarsToMove;
     }
-
-    public Long getId() { return this.id; }
 }

@@ -13,18 +13,18 @@ import java.util.List;
 
 
 @RestController
-public class GameCharacterServiceController
+public class CharacterQueryController
         extends GenericService {
 
     @SuppressWarnings("unused")
-    private static final Logger logger = LoggerFactory.getLogger(GameCharacterServiceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CharacterQueryController.class);
 
     private static final String CONTEXT = "/games/{gameId}/characters";
 
     @Autowired
     public CharacterService charService;
 
-    @RequestMapping(value = CONTEXT)
+    @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Character> getCharacters(@PathVariable Long gameId, @RequestParam(value="filter", required=false) String filter) {
         if ("AVAILABLE".equals(filter)) {

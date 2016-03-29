@@ -31,9 +31,9 @@ import ch.uzh.ifi.seal.soprafs16.model.User;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({ "server.port=0" })
-public class UserServiceControllerIntegrationTest {
+public class UserQueryControllerIntegrationTest {
 
-    private static final Logger logger  = LoggerFactory.getLogger(UserServiceControllerIntegrationTest.class);
+    private static final Logger logger  = LoggerFactory.getLogger(UserQueryControllerIntegrationTest.class);
 
     @Value("${local.server.port}")
     private int          port;

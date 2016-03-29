@@ -20,15 +20,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
@@ -41,9 +37,9 @@ import static org.hamcrest.CoreMatchers.is;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({ "server.port=0" })
-public class GameCharacterServiceControllerIntegrationTest {
+public class CharacterQueryControllerIntegrationTest {
 
-    private static final Logger logger  = LoggerFactory.getLogger(GameCharacterServiceControllerIntegrationTest.class);
+    private static final Logger logger  = LoggerFactory.getLogger(CharacterQueryControllerIntegrationTest.class);
 
     @Value("${local.server.port}")
     private int          port;
