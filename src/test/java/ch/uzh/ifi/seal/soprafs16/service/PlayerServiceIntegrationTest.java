@@ -51,9 +51,6 @@ public class PlayerServiceIntegrationTest {
     private RestTemplate template;
 
     @Autowired
-    private PlayerService playerService;
-
-    @Autowired
     private GameRepository gameRepo;
 
     @Autowired
@@ -129,5 +126,56 @@ public class PlayerServiceIntegrationTest {
         Assert.assertThat(response, is(badResponse));
 
         //TODO: Check if game is already full
+    }
+
+    @Test
+    public void testListPlayersForGame() {
+        Game game = new Game();
+        game.setStatus(GameStatus.PENDING);
+        game.setName("gameName1");
+        game.setOwner("gameOwner1");
+        game = gameRepo.save(game);
+        String context = base + "games/" + game.getId() + "/players";
+
+        User user1 = new User("duck1", "donald1");
+        user1.setStatus(UserStatus.ONLINE);
+        user1.setToken(UUID.randomUUID().toString());
+        user1 = userRepo.save(user1);
+
+        User user2 = new User("Duck1", "Avenger1");
+        user2.setStatus(UserStatus.ONLINE);
+        user2.setToken(UUID.randomUUID().toString());
+        user2 = userRepo.save(user2);
+
+        Player player1 = new Player();
+        player1.setCharacter(Character.BELLE);
+        Player player2 = new Player();
+        player2.setCharacter(Character.GHOST);
+        player1 = playerRepo.save(player1);
+        player2 = playerRepo.save(player2);
+
+        user1.setPlayer(player1);
+        user2.setPlayer(player2);
+
+        user1 = userRepo.save(user1);
+        user2 = userRepo.save(user2);
+
+        game.addUser(user1);
+        game.addUser(user2);
+
+        gameRepo.save(game);
+
+        Player[] response = template.getForObject(context, Player[].class);
+
+        Assert.assertThat(response.length, is(2));
+        Assert.assertThat(player1.getId(), is(response[0].getId()));
+        Assert.assertThat(player2.getId(), is(response[1].getId()));
+        Assert.assertThat(player1.getCharacter(), is(Character.BELLE));
+        Assert.assertThat(player2.getCharacter(), is(Character.GHOST));
+
+        // test wrong game id
+        context = base + "games/" + -1 + "/players";
+        response = template.getForObject(context, Player[].class);
+        Assert.assertThat(response.length, is(0));
     }
 }

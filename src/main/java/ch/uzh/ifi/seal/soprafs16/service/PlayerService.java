@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +53,7 @@ public class PlayerService {
         Game game = gameRepo.findOne(gameId);
 
         if (game != null) {
-            result.addAll(game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList()));
+            result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
         } else {
             logger.error("No game found for id: " + gameId);
         }
