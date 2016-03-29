@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
  *
  * Created by alexanderhofmann on 24/03/16.
  */
-public class CharacterServiceUTest {
+public class CharacterServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
