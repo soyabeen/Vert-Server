@@ -17,7 +17,7 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Loot> loots;
 
     @Column
@@ -100,4 +100,6 @@ public class Player extends Meeple {
     public void setCharacter(Character character) {
         this.character = character;
     }
+
+    //TODO: add equals method (or implement comparable)
 }

@@ -2,10 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -45,7 +42,13 @@ public class Loot implements Positionable, Serializable {
 
     protected  Loot() {
     }
-    
+
+    public Loot(LootType type, int value, Level level) {
+        this.type = type;
+        this.value = value;
+        this.level = level;
+    }
+
     /**
      * @return int The current car of the train for the positionable object.
      */

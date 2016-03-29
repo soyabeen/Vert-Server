@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.*;
 
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class User implements Serializable {
@@ -31,13 +34,13 @@ public class User implements Serializable {
 	@Column(nullable = false) 
 	private UserStatus status;
 
-    @ManyToOne
-    private Game game;
-	
+	@Column
+	private Long gameId;
+
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Player player;
 
 	protected User() {
@@ -72,14 +75,6 @@ public class User implements Serializable {
 		this.username = username;
 	}
 
-	public Game getGames() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
 	public List<Move> getMoves() {
 		return moves;
 	}
@@ -110,5 +105,13 @@ public class User implements Serializable {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
 	}
 }
