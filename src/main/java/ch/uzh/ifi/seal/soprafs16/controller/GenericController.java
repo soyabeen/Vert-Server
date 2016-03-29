@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.service;
+package ch.uzh.ifi.seal.soprafs16.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,9 +9,9 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-public abstract class GenericService {
+public abstract class GenericController {
 
-	Logger logger = LoggerFactory.getLogger(GenericService.class);
+	Logger logger = LoggerFactory.getLogger(GenericController.class);
 
 	@ExceptionHandler(TransactionSystemException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)

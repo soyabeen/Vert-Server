@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 @RestController
 public class PlayerController
-        extends GenericService {
+        extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerController.class);
 

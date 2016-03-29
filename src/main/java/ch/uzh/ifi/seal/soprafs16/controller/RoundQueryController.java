@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by soyabeen on 26.03.16.
  */
 @RestController
-public class RoundQueryController extends GenericService {
+public class RoundQueryController extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoundQueryController.class);
 

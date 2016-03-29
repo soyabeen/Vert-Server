@@ -3,22 +3,19 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 
 @RestController
 @RequestMapping(UserCommandController.CONTEXT)
 public class UserCommandController
-        extends GenericService {
+        extends GenericController {
 
     private static final Logger logger  = LoggerFactory.getLogger(UserCommandController.class);
 
