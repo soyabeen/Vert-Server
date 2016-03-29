@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class UserQueryControllerIntegrationTest {
 
     @Before
     public void setUp()
-            throws Exception {
+            throws MalformedURLException {
         this.base = new URL("http://localhost:" + port + "/");
         this.template = new TestRestTemplate();
 

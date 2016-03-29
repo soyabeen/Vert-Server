@@ -9,7 +9,6 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,9 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepo;
+
+    @Autowired
+    private CharacterService characterService;
 
     @Autowired
     private LootRepository lootRepo;
@@ -69,7 +71,8 @@ public class PlayerService {
 
         Game game = gameRepo.findOne(gameId);
 
-        if (game != null && GameConstants.MAX_PLAYERS >= game.getNumberOfPlayers()) {
+        if (game != null && GameConstants.MAX_PLAYERS >= game.getNumberOfPlayers()
+                && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
             // get User
             User user = userRepo.findByToken(userToken);
 
@@ -85,7 +88,8 @@ public class PlayerService {
 
             return user.getPlayer().getId();
         } else {
-            logger.error("No game found or game is already full for id: " + gameId);
+            //TODO: Find better way to handle this
+            logger.error("No game found/game is full/character not available for id: " + gameId);
         }
 
         return -1L;

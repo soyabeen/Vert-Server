@@ -1,104 +1,79 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
-import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by antoio on 3/26/16.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@IntegrationTest({"server.port=0"})
 public class PlayerServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
 
-    @Autowired
+    @InjectMocks
     private PlayerService playerService;
 
-    @Autowired
+    @Mock
     private GameRepository gameRepo;
 
-    @Autowired
+    @Mock
     private UserRepository userRepo;
 
-    @Autowired
-    private PlayerRepository playerRepo;
+    private Game game;
 
-    @Test
-    public void testCreatePlayerForUser() {
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
 
-        Assert.assertEquals(1, 1);
-//        // Create Player for User
-//        Player player_donald = new Player();
-//        player_donald.setCharacter(Character.GHOST);
-//
-//        // Create a User for testing purpose
-//        User user = new User("duck", "donald");
-//        user.setStatus(UserStatus.ONLINE);
-//        user.setToken("donald");
-//        user = userRepo.save(user);
-//
-//        // Call test method
-//        String result = playerService.createPlayerForUser(user.getToken(), player_donald);
-//
-//        user = userRepo.findByToken(user.getToken());
-//
-//        Assert.assertThat(String.valueOf(user.getPlayer().getId()), is(result));
+        game = new Game();
+        when(gameRepo.findOne(1L)).thenReturn(game);
     }
 
-    /*
     @Test
-    public void testListPlayersForGame() {
+    public void testListPlayers() {
+        Player p1 = new Player();
+        p1.setCharacter(Character.BELLE);
+        Player p2 = new Player();
+        p2.setCharacter(Character.GHOST);
 
-        // Create a game for testing purpose
-        Game game = new Game();
-        game.setStatus(GameStatus.PENDING);
-        game.setName("testListPlayerForGame");
-        game.setOwner("testListPlayerForGame");
-        game = gameRepo.save(game);
+        User user1 = new User("abc", "def");
+        user1.setToken(UUID.randomUUID().toString());
+        user1.setPlayer(p1);
 
-        List<Player> result = playerService.listPlayersForGame(game.getId());
-        Assert.assertThat(result, is(gameRepo.findOne(game.getId()).getUsers()));
+        User user2 = new User("def", "abc");
+        user2.setToken(UUID.randomUUID().toString());
+        user2.setPlayer(p2);
+        List<User> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
 
-        // Create a User for testing purpose
-        User user = new User("el", "barto");
-        user.setPlayer(new Player());
-        user.getPlayer().setCharacter(Character.DJANGO);
-        user.setStatus(UserStatus.ONLINE);
-        user.setToken("barto");
-        userRepo.save(user);
+        game.addUser(user1);
+        game.addUser(user2);
 
-        playerService.createPlayerForGame(game.getId(), user.getToken());
-        List<Player> testResult = playerService.listPlayersForGame(game.getId());
+        List<Player> players = playerService.listPlayersForGame(1L);
 
-        // Compare if defined user character and id is the same as the result from the method
-        Assert.assertThat( testResult.get(0).getCharacter(), is(user.getPlayer().getCharacter()) );
-        Assert.assertThat( testResult.get(0).getOwner().getId(), is(user.getId()) );
-    }*/
+        Assert.assertThat(players.size(), is(2));
+        Assert.assertThat(players.get(0).getCharacter(), is(Character.BELLE));
+        Assert.assertThat(players.get(1).getCharacter(), is(Character.GHOST));
+    }
 }

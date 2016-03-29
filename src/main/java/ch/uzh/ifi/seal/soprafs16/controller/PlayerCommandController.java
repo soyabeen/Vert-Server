@@ -18,7 +18,6 @@ public class PlayerCommandController
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerCommandController.class);
 
-
     @Autowired
     public PlayerService playerService;
 
@@ -29,6 +28,7 @@ public class PlayerCommandController
     public String createPlayerForGame(@PathVariable Long gameId, @RequestParam("token") String userToken,
                                       @RequestParam("character") Character character) {
 
-        return CONTEXT + "/" + gameId + "/player/" + playerService.createPlayerForUser(gameId, userToken, character);
+        //TODO: add full link or relative URL
+        return playerService.createPlayerForUser(gameId, userToken, character).toString();
     }
 }

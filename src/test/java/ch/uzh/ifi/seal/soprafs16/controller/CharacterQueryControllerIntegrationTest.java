@@ -29,7 +29,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 
 
