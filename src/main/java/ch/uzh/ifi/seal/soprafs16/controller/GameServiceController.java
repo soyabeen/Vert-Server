@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
+import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,7 +182,6 @@ public class GameServiceController
 
         if (game != null && player != null
                 && game.getUsers().size() < GameConstants.MAX_PLAYERS) {
-            //game.getUsers().add(player);
             game.addUser(player);
             game = gameRepo.save(game);
 

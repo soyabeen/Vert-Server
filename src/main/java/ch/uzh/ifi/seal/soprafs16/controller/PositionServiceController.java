@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
+import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import ch.uzh.ifi.seal.soprafs16.service.PositionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class PositionServiceController extends GenericService {
     @Autowired
     private PositionService positionService;
 
-    private final String CONTEXT = "/games/{gameId}/positions";
+    private static final String CONTEXT = "/games/{gameId}/positions";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)

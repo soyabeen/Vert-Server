@@ -27,6 +27,10 @@ public abstract class Meeple implements Positionable, Serializable {
     @Column
     private Positionable.Level level;
 
+    public Long getId() {
+        return id;
+    }
+
     /**
      * Sets the horizontal position of the meeple.
      * @param car The number of the car starting from the head.
