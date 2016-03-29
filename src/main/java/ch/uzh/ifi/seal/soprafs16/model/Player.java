@@ -29,7 +29,7 @@ public class Player extends Meeple {
     private List<Loot> loots;
 
     @Transient
-    private int MAX_BULLETS;
+    private static final int MAX_BULLETS = 6;
 
     /**
      * Default constructor.

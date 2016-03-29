@@ -36,7 +36,7 @@ public class GameQueryController
     private MoveRepository moveRepo;
 
 
-    private final String CONTEXT = "/games";
+    private static final String CONTEXT = "/games";
 
     /*
      * Context: /game
