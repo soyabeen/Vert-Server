@@ -1,10 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.GameConstants;
+import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.User;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import com.fasterxml.jackson.databind.util.JSONPObject;
@@ -34,6 +36,14 @@ public class PlayerService {
     @Autowired
     private PlayerRepository playerRepo;
 
+    @Autowired
+    private LootRepository lootRepo;
+
+    /**
+     * Lists all players for a given game.
+     * @param gameId
+     * @return
+     */
     public List<Player> listPlayersForGame(long gameId) {
         List<Player> result = new ArrayList<>();
 
@@ -47,34 +57,70 @@ public class PlayerService {
         return result;
     }
 
+    /**
+     * Creates a new player for a given user and adds this player to the game.
+     * @param gameId The game to which we want to add a player.
+     * @param userToken User identifying token.
+     * @param character User's chosen character.
+     * @return The id of the newly created player
+     */
+    public Long createPlayerForUser(Long gameId, String userToken, Character character) {
+        logger.debug("createPlayerForUser");
 
-    public String createPlayerForUser(String userToken, Player playerchar) {
-        // assign Player(initialize) to User
-        // assign Player to Game
+        Game game = gameRepo.findOne(gameId);
 
-        logger.debug("add Player to user");
+        if (game != null && GameConstants.MAX_PLAYERS >= game.getNumberOfPlayers()) {
+            // get User
+            User user = userRepo.findByToken(userToken);
 
-        // get User
-        User user = userRepo.findByToken(userToken);
+            // create new player for user
+            Player player = createPlayer(character);
 
-        // assign Player
-        if(null == user.getPlayer()) {
-            user.setPlayer(playerchar);
-            user.setStatus(UserStatus.ONLINE);
+            // assign Player to user
+            assignPlayerToUser(user, player);
+
+            // assign user to game
+            game.addUser(user);
+            gameRepo.save(game);
+
+            return user.getPlayer().getId();
         } else {
-            logger.debug("User had already Player assigned");
+            logger.error("No game found or game is already full for id: " + gameId);
         }
 
-        playerRepo.save(playerchar);
-        user = userRepo.save(user);
-
-        return String.valueOf(user.getPlayer().getId());
+        return -1L;
     }
 
-    protected Player createPlayer(JSONPObject character) {
-        //initialize Player
+    /**
+     * Assing player to a user.
+     * @param user
+     * @param player
+     */
+    protected void assignPlayerToUser(User user, Player player) {
+        if (user.getPlayer() == null) {
+            user.setPlayer(player);
+            user.setStatus(UserStatus.ONLINE);
+        } else {
+            logger.error("User already has Player assigned");
+        }
 
-        return null;
+        user = userRepo.save(user);
+    }
+
+    /**
+     * Creates a new Player with given character.
+     * @param character Users's chosen character.
+     * @return new Player.
+     */
+    protected Player createPlayer(Character character) {
+        Loot loot = new Loot(LootType.PURSE, 250, Positionable.Level.BOTTOM);
+        loot = lootRepo.save(loot);
+
+        Player player = new Player(loot);
+        player.setCharacter(character);
+        player = playerRepo.save(player);
+
+        return player;
     }
 
 }

@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16;
+package ch.uzh.ifi.seal.soprafs16.constant;
 
 public final class GameConstants {
 	public static final Integer MIN_PLAYERS = 2;
