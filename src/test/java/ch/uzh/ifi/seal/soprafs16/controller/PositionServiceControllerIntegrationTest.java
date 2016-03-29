@@ -99,7 +99,7 @@ public class PositionServiceControllerIntegrationTest {
         lootRepo.save(loot);
 
         game.addLoot(loot);
-        game = gameRepo.save(game);
+        gameRepo.save(game);
 
         positionableAfter = template.getForObject(posURI, List.class);
         Assert.assertEquals(2, positionableAfter.size());

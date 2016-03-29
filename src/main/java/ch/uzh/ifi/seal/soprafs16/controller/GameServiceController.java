@@ -176,7 +176,6 @@ public class GameServiceController
 
         if (game != null && player != null
                 && game.getUsers().size() < GameConstants.MAX_PLAYERS) {
-            //game.getUsers().add(player);
             game.addUser(player);
             game = gameRepo.save(game);
 

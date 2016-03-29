@@ -21,7 +21,7 @@ public class PositionServiceController extends GenericService {
     @Autowired
     private PositionService positionService;
 
-    private final String CONTEXT = "/games/{gameId}/positions";
+    private static final String CONTEXT = "/games/{gameId}/positions";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)

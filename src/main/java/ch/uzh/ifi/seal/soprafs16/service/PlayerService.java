@@ -29,7 +29,7 @@ public class PlayerService {
         Game game = gameRepo.findOne(gameId);
 
         if (game != null) {
-            for (User user : gameRepo.findOne(gameId).getUsers()) {
+            for (User user : game.getUsers()) {
                 result.add(user.getPlayer());
             }
         } else {
