@@ -64,13 +64,11 @@ public class RoundService {
         checkInputArgsGameIdAndNthRound(gameId, nthRound);
 
         Game game = gameRepo.findOne(gameId);
-        logger.debug(game.toString());
         if (game == null || game.getId() == null) {
             throw new InvalidInputException("Invalid arg. gameId  <" + gameId + ">, could not find a matching game.");
         }
 
-        Round round = roundRepo.findByGameAndNthRound(game, nthRound);
-        return round;
+        return roundRepo.findByGameAndNthRound(game, nthRound);
     }
 
     /**
