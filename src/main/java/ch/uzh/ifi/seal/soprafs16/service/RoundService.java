@@ -89,6 +89,7 @@ public class RoundService {
      * @param move Action chosen by player
      * @return turnId Nth-turn of player
      */
+    // TODO: rename method and controller to "makeAMove(...)"
     public String playACard(Long gameId, Integer nthRound, Move move) {
         Game game = gameRepo.findOne(gameId);
 
@@ -107,15 +108,15 @@ public class RoundService {
 
         // save new hand
         currentPlayer.setHand(playerHand);
-        currentPlayer = playerRepo.save(currentPlayer);
+        playerRepo.save(currentPlayer);
 
         // return turnId for player (where turnId is nth-move of player)
-        Integer turnId = round.getTotalMadeMoves() / 4;
+        move.setNthMove( round.getTotalMadeMoves() / 4 );
 
         // save Move
         // after move is saved to repository, moveId will get created
-        moveRepo.save(move);
+        move = moveRepo.save(move);
 
-        return String.valueOf(turnId);
+        return String.valueOf(move.getNthMove());
     }
 }

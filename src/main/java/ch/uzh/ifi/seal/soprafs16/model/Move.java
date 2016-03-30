@@ -27,6 +27,9 @@ public class Move implements Serializable {
 	@OneToOne
 	private Card playedCard;
 
+	@Column
+	private Integer nthMove;
+
 	public Long getId() {
 		return id;
 	}
@@ -57,5 +60,13 @@ public class Move implements Serializable {
 
 	public void setPlayedCard(Card playedCard) {
 		this.playedCard = playedCard;
+	}
+
+	public Integer getNthMove() {
+		return nthMove;
+	}
+
+	public void setNthMove(Integer nthMove) {
+		this.nthMove = nthMove;
 	}
 }
