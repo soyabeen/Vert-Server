@@ -1,25 +1,49 @@
 package ch.uzh.ifi.seal.soprafs16.utility;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import ch.uzh.ifi.seal.soprafs16.model.User;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 /**
  * Created by alexanderhofmann on 29/03/16.
  */
+@Service
 public class GameBuilder {
 
     private Game game;
 
     private List<Character> availableCharacter;
 
-    public GameBuilder(String name, String owner) {
+    @Autowired
+    private UserBuilder userBuilder;
+
+    @Autowired
+    private LootBuilder lootBuilder;
+
+    @Autowired
+    private LootRepository lootRepo;
+
+    @Autowired
+    private GameRepository gameRepo;
+
+
+
+    public GameBuilder builder(String name, String owner) {
         game = new Game();
         game.setName(name);
         game.setOwner(owner);
         availableCharacter = new ArrayList<>(Arrays.asList(Character.values()));
+
+        return save();
     }
 
     /**
@@ -30,7 +54,7 @@ public class GameBuilder {
      */
     public GameBuilder addUser(User user) {
         game.addUser(user);
-        return this;
+        return save();
     }
 
     /**
@@ -39,9 +63,8 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomUser() {
-        User user = UserBuilder.getRandomUser();
-        addUser(user);
-        return this;
+        User user = userBuilder.getRandomUser();
+        return addUser(user);
     }
 
     /**
@@ -56,11 +79,11 @@ public class GameBuilder {
             // get player with random character
             Collections.shuffle(availableChars);
             Character character = availableChars.remove(0);
-            UserBuilder.getRandomUserWithPlayer(character);
+            //userBuilder.getRandomUserWithPlayer(character);
 
             addRandomUserAndPlayer(character);
         }
-        return this;
+        return save();
     }
 
     /**
@@ -73,15 +96,35 @@ public class GameBuilder {
         List<Character> availableChars = availableCharacter;
 
         if (!availableChars.isEmpty() && availableChars.contains(character)) {
-            User user = UserBuilder.getRandomUserWithPlayer(character);
+            User user = userBuilder.getRandomUserWithPlayer(character);
 
             game.addUser(user);
         }
 
+        return save();
+    }
+
+    public GameBuilder addLoot(Loot loot) {
+        game.addLoot(loot);
         return this;
+    }
+
+    public GameBuilder addLootAndSave(Loot loot) {
+        game.addLoot(loot);
+        save();
+        return this;
+    }
+
+    public GameBuilder addRandomLoot() {
+        return addLootAndSave(lootBuilder.getRandomLootAndSave());
     }
 
     public Game build() {
         return game;
+    }
+
+    private GameBuilder save() {
+        game = gameRepo.save(game);
+        return this;
     }
 }

@@ -4,9 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
-import ch.uzh.ifi.seal.soprafs16.utility.GameBuilderSaver;
 import ch.uzh.ifi.seal.soprafs16.utility.GameBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,10 +50,7 @@ public class CharacterQueryControllerIntegrationTest {
     private GameRepository gameRepo;
 
     @Autowired
-    private PlayerRepository playerRepo;
-
-    @Autowired
-    private GameBuilderSaver gameBuilderSaver;
+    private GameBuilder gameBuilder;
 
     @Before
     public void setUp() throws MalformedURLException {
@@ -69,8 +64,8 @@ public class CharacterQueryControllerIntegrationTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testCharacters() {
-        GameBuilder gameBuilder = new GameBuilder("Game" , "Owner");
-        Game game = gameRepo.save(gameBuilder.build());
+        // create empty game
+        Game game = gameBuilder.builder("Game1", "Owner1").build();
 
         // check that all characters are available after game init
         String context = base + "games/" + game.getId() + "/characters";
@@ -78,10 +73,7 @@ public class CharacterQueryControllerIntegrationTest {
         Assert.assertEquals(7, charsBefore.size());
 
         // add players to game
-        gameBuilder.addRandomUserAndPlayer(Character.GHOST);
-        gameBuilder.addRandomUserAndPlayer(Character.BELLE);
-
-        gameBuilderSaver.saveGame(gameBuilder.build());
+        gameBuilder.addRandomUserAndPlayer(Character.GHOST).addRandomUserAndPlayer(Character.BELLE).build();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(context)
                 .queryParam("filter", "AVAILABLE");
