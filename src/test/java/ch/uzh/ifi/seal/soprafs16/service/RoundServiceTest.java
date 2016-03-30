@@ -56,7 +56,7 @@ public class RoundServiceTest {
         round = new Round(game, nthRound, turns, RoundEndEvent.REBELLION);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
-        when(roundRepo.findByGameAndRound(game, nthRound)).thenReturn(round);
+        when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
     }
 
     // TODO: optimize random turn generator

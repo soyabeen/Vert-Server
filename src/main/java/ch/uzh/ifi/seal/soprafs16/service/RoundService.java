@@ -70,7 +70,7 @@ public class RoundService {
         Game game = gameRepo.findOne(gameId);
 
         // retrieve round from repo
-        Round round = roundRepo.findByGameAndRound(game, nthRound);
+        Round round = roundRepo.findByGameAndNthRound(game, nthRound);
 
         return round.getTurns();
     }

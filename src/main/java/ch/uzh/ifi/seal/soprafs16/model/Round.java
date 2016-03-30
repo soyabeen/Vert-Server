@@ -10,11 +10,11 @@ import java.util.List;
 /**
  * This class represents a round card as well as a train station card.
  * It describes the structure (nr of turns, typ of turns, end events) of a round.
- * <p/>
+ * <p>
  * Created by soyabeen on 22.03.16.
  */
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"game" , "nthRound"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"GAME_ID", "POSITION"})})
 public class Round implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -23,18 +23,18 @@ public class Round implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne()
+    @Column(nullable = false, name = "GAME_ID")
     private Game game;
 
-    @Column (nullable = false)
+    @Column(nullable = false, name = "POSITION")
     private Integer nthRound;
 
     @OneToMany
     private List<Card> cardStack;
 
-    @ElementCollection(targetClass=Turn.class)
-    @CollectionTable(name="round_turn")
-    @Column(name="turns")
+    @ElementCollection(targetClass = Turn.class)
+    @CollectionTable(name = "round_turn")
+    @Column(name = "turns")
     private List<Turn> turns;
 
     @Enumerated(EnumType.STRING)
@@ -46,8 +46,8 @@ public class Round implements Serializable {
     /**
      * Create a new Round event with the given configuration.
      *
-     * @param game The game to which the round belongs.
-     * @param turns The turns for that round.
+     * @param game     The game to which the round belongs.
+     * @param turns    The turns for that round.
      * @param endEvent The end event.
      */
     public Round(Game game, Integer nthRound, List<Turn> turns, RoundEndEvent endEvent) {
@@ -63,6 +63,7 @@ public class Round implements Serializable {
 
     /**
      * Add a new card to the played card stack.
+     *
      * @param playedCard Played card from a player.
      */
     public void addNewlyPlayedCard(Card playedCard) {
@@ -77,11 +78,19 @@ public class Round implements Serializable {
         return cardStack;
     }
 
-    public List<Turn> getTurns() { return turns; }
+    public List<Turn> getTurns() {
+        return turns;
+    }
 
-    public void setTurns(List<Turn> turns) { this.turns = turns; }
+    public void setTurns(List<Turn> turns) {
+        this.turns = turns;
+    }
 
-    public Integer getNthRound() { return nthRound; }
+    public Integer getNthRound() {
+        return nthRound;
+    }
 
-    public void setNthRound(Integer nthRound) { this.nthRound = nthRound; }
+    public void setNthRound(Integer nthRound) {
+        this.nthRound = nthRound;
+    }
 }
