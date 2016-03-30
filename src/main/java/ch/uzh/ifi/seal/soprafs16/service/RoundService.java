@@ -103,20 +103,32 @@ public class RoundService {
 
         // need a Round to add new card
         Round round = roundRepo.findByGameAndNthRound(game, nthRound);
-        // add played card
-        round.addNewlyPlayedCard(move.getPlayedCard());
-        round = roundRepo.save(round);
 
-        // remove Card from player hand
-        Player currentPlayer = playerRepo.findOne(move.getPlayedCard().getOwner().getId());
-        List<Card> playerHand = currentPlayer.getHand();
+        if( move.getPlayedCard() != null ) {
+            // Player played a card
 
-        // go through hand and remove same card type
-        playerHand.remove(playerHand.indexOf(move.getPlayedCard())); // TODO: ☠ debug to see if java voodo works
+            // add played card
+            round.addNewlyPlayedCard(move.getPlayedCard());
+            round = roundRepo.save(round);
 
-        // save new hand
-        currentPlayer.setHand(playerHand);
-        playerRepo.save(currentPlayer);
+            // remove Card from player hand
+            Player currentPlayer = playerRepo.findOne(move.getPlayedCard().getOwner().getId());
+            List<Card> playerHand = currentPlayer.getHand();
+
+            // go through hand and remove same card type
+            playerHand.remove(playerHand.indexOf(move.getPlayedCard())); // TODO: ☠ debug to see if java voodo works
+
+            // save new hand
+            currentPlayer.setHand(playerHand);
+            playerRepo.save(currentPlayer);
+
+
+        } else {
+            // Player passed
+
+            // call passAndTake3-method from Round object
+            // add 3 new cards from player deck to player hand
+        }
 
         // return turnId for player (where turnId is nth-move of player)
         move.setNthMove( round.getTotalMadeMoves() / 4 );
@@ -124,7 +136,6 @@ public class RoundService {
         // save Move
         // after move is saved to repository, moveId will get created
         move = moveRepo.save(move);
-
         return String.valueOf(move.getNthMove());
     }
 }
