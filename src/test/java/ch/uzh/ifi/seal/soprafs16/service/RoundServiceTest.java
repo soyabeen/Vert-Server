@@ -53,6 +53,10 @@ public class RoundServiceTest {
                 Turn.NORMAL,
                 Turn.HIDDEN});
         nthRound = 1;
+
+        game = new Game();
+        game.setId(1L);
+
         round = new Round(game, nthRound, turns, RoundEndEvent.REBELLION);
 
         when(gameRepo.findOne(1L)).thenReturn(game);

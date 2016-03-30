@@ -14,7 +14,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * Created by soyabeen on 30.03.16.
  */
-public class RoundServiceTest {
+public class RoundConfiguratorTest {
 
     @Test
     public void getMaxRoundsPlusOneStationCards() {

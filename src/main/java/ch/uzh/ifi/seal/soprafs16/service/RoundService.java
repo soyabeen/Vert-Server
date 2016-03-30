@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,59 +30,70 @@ public class RoundService {
     private RoundRepository roundRepo;
 
     /**
-     * Retrieves a game round chosen by its ID.
+     * Check the input arguments gameId and nthRound. Both must be: <br/>
+     * - not null
+     * - not 0
+     * - positive numbers
+     *
      * @param gameId
-     * @param roundId
-     * @return
+     * @param nthRound
+     * @throws InvalidInputException
      */
-    public Round getRoundById(Long gameId, Long roundId) {
+    private void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
 
-        Round round = roundRepo.findOne(roundId);
-        if (round == null) {
-            throw new InvalidInputException("GetRoundById - No round object with id " + roundId + " exists.");
+        if (gameId == null || gameId <= 0) {
+            throw new InvalidInputException("Invalid arg. gameId <" + gameId + ">, must be a positive number.");
         }
-        if (gameId != round.getGame().getId()) {
-            throw new InvalidInputException("GetRoundById - Provided gameId (" + gameId
-                    + ") does not match gameId from round object (" + round.getGame().getId() + ").");
+        if (nthRound == null || nthRound <= 0) {
+            throw new InvalidInputException("Invalid arg. ntRound <" + nthRound + ">, must be a positive number.");
         }
+
+    }
+
+    /**
+     * Retrieves a round chosen by its belonging to a game and its position.
+     *
+     * @param gameId
+     * @param nthRound
+     * @return The round object.
+     */
+    public Round getRoundById(Long gameId, Integer nthRound) {
+        logger.debug("getRoundById with gameId: {} nthRound: {}", gameId, nthRound);
+
+        // throws InvalidInputException if not valid
+        checkInputArgsGameIdAndNthRound(gameId, nthRound);
+
+        Game game = gameRepo.findOne(gameId);
+        logger.debug(game.toString());
+        if (game == null || game.getId() == null) {
+            throw new InvalidInputException("Invalid arg. gameId  <" + gameId + ">, could not find a matching game.");
+        }
+
+        Round round = roundRepo.findByGameAndNthRound(game, nthRound);
         return round;
     }
 
     /**
-     * Retrieves a list of Turns belonging to a chosen round.
+     * Retrieves a list of Turns belonging to a game and a chosen round.
+     *
      * @param gameId
      * @param nthRound
      * @return
      */
     public List<Turn> listTurnsForRound(Long gameId, Integer nthRound) {
-        logger.debug("In RoundService: listTurnsForRound()");
-        logger.debug("listTurnsForRound() with gameID: {0} nthRound: {1}", gameId, nthRound);
-
-        if (nthRound == null || nthRound <= 0) {
-            throw new InvalidInputException("listTurnsForRound - No round object with # " + nthRound + " exists.");
-        }
-
-        if (gameId == null || gameId <= 0) {
-            throw new InvalidInputException("listTurnsForRound - Provided gameId (" + gameId
-                    + ") does not exist.");
-        }
-
-        // retrieve game from repo
-        Game game = gameRepo.findOne(gameId);
-
-        // retrieve round from repo
-        Round round = roundRepo.findByGameAndNthRound(game, nthRound);
-
+        logger.debug("listTurnsForRound with gameId: {} nthRound: {}", gameId, nthRound);
+        Round round = getRoundById(gameId, nthRound);
         return round.getTurns();
     }
 
     /**
      * Plays chosen card.
+     *
      * @param userToken
      * @param playedCard
      * @return
      */
     public String playACard(String userToken, Card playedCard) {
-        return "Not implemented yet";
+        throw new NotYetImplementedException();
     }
 }
