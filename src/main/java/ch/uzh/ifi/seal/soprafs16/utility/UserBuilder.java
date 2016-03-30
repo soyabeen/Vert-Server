@@ -36,6 +36,11 @@ public class UserBuilder {
         return userRepo.save(user);
     }
 
+    /**
+     * Generates a random user and player with a given character.
+     * @param character
+     * @return
+     */
     public User getRandomUserWithPlayer(Character character) {
         User user = getRandomUser();
 

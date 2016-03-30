@@ -31,6 +31,7 @@ import java.util.List;
 @IntegrationTest({ "server.port=0" })
 public class PositionQueryControllerIntegrationTest {
 
+    @SuppressWarnings("unused")
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PositionQueryControllerIntegrationTest.class);
 
     @Value("${local.server.port}")

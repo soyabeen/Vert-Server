@@ -20,6 +20,10 @@ public class PlayerBuilder {
     @Autowired
     private PlayerRepository playerRepo;
 
+    /**
+     * Creates a random player and saves it.
+     * @return random player
+     */
     public Player getRandomPlayer() {
         Player player = new Player();
 
@@ -32,6 +36,11 @@ public class PlayerBuilder {
         return playerRepo.save(player);
     }
 
+    /**
+     * Creates a player with a given character.
+     * @param character
+     * @return player
+     */
     public Player getPlayer(Character character) {
         Player player = new Player();
         player.setCharacter(character);

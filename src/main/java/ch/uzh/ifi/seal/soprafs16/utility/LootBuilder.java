@@ -35,6 +35,11 @@ public class LootBuilder {
         return loot;
     }
 
+    /**
+     * Generates a random piece of loot and saves it.
+     * {@see getRandomLoot()}
+     * @return random saved loot
+     */
     public Loot getRandomLootAndSave() {
         return lootRepo.save(getRandomLoot());
     }
