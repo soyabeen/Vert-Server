@@ -13,15 +13,11 @@ import java.util.List;
 @Entity
 public class Player extends Meeple {
 
+    @Column
+    private Character character;
 
     @Column
     private int bullets;
-
-    @OneToMany
-    private List<Loot> loots;
-
-    @Column
-    private Character character;
 
     @Column
     private CardDeck deck;
@@ -29,12 +25,20 @@ public class Player extends Meeple {
     @OneToMany(mappedBy = "owner")
     private List<Card> hand;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Loot> loots;
+
+    @Transient
+    private static final int MAX_BULLETS = 6;
+
     /**
      * Default constructor.
      */
     public Player() {
         this.loots = new ArrayList<>();
         this.hand = new ArrayList<>();
+        bullets = MAX_BULLETS;
+
     }
 
     /**
@@ -99,5 +103,17 @@ public class Player extends Meeple {
      */
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    //TODO: add equals method (or implement comparable)
+
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + getId() +
+                "character=" + character +
+                ", bullets=" + bullets +
+                '}';
     }
 }

@@ -16,12 +16,6 @@ public abstract class Meeple implements Positionable, Serializable {
     private Long id;
 
     /**
-     * Owner of the meeple.
-     */
-    @OneToOne(mappedBy="player")
-    private User owner;
-
-    /**
      * Horizontal position of the meeple.
      */
     @Column
@@ -33,21 +27,8 @@ public abstract class Meeple implements Positionable, Serializable {
     @Column
     private Positionable.Level level;
 
-    /**
-     * Returns the owner.
-     * @return owner The owner of the meeple.
-     */
-
-    public User getOwner() {
-        return owner;
-    }
-
-    /**
-     * Sets the owner of a meeple.
-     * @param owner The owner of the meeple.
-     */
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public Long getId() {
+        return id;
     }
 
     /**

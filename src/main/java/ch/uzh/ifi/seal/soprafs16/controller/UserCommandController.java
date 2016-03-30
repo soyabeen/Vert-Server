@@ -1,49 +1,29 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs16.model.User;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
-import ch.uzh.ifi.seal.soprafs16.model.User;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import java.util.UUID;
 
 
 @RestController
-@RequestMapping(UserServiceController.CONTEXT)
-public class UserServiceController
+@RequestMapping(UserCommandController.CONTEXT)
+public class UserCommandController
         extends GenericService {
 
-    Logger                 logger  = LoggerFactory.getLogger(UserServiceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserCommandController.class);
 
-    static final String    CONTEXT = "/users";
+    static final String CONTEXT = "/users";
 
     @Autowired
     private UserRepository userRepo;
-
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> listUsers() {
-        logger.debug("listUsers");
-
-        List<User> result = new ArrayList<>();
-        userRepo.findAll().forEach(result::add);
-
-        return result;
-    }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,15 +36,6 @@ public class UserServiceController
         user = userRepo.save(user);
 
         return user;
-    }
-
-
-    @RequestMapping(method = RequestMethod.GET, value = "{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public User getUser(@PathVariable Long userId) {
-        logger.debug("getUser: " + userId);
-
-        return userRepo.findOne(userId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "{userId}/login")
@@ -85,7 +56,7 @@ public class UserServiceController
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "{userId}/logout")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@PathVariable Long userId, @RequestParam("token") String userToken) {
         logger.debug("getUser: " + userId);
 

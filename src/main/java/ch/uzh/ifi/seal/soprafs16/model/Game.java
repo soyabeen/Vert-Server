@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -26,22 +24,38 @@ public class Game implements Serializable {
 	
 	@Column(nullable = false) 
 	private String owner;
+
+	@Column
+	private int numberOfPlayers;
 	
 	@Column 
 	private GameStatus status;
 	
 	@Column 
-	private Integer currentPlayer;
+	private int currentPlayer;
 
     @OneToMany(mappedBy="game")
     private List<Move> moves;
     
-    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<User> users;
+
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Loot> loots;
+
 
 	public Game() {
 		this.users = new ArrayList<>();
 		this.moves = new LinkedList<>();
+		this.loots = new LinkedHashSet<>();
+	}
+
+	public void addLoot(Loot loot) {
+		loots.add(loot);
+	}
+
+	public Collection<Loot> getLoots() {
+		return loots;
 	}
 
 	public Long getId() {
@@ -99,12 +113,17 @@ public class Game implements Serializable {
 	public void setCurrentPlayer(Integer currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
-   
-	public User getNextPlayer() {
-		return getUsers().get((getCurrentPlayer() + 1) % getUsers().size());
-	}
 
 	public void addUser(User user) {
 		users.add(user);
+		numberOfPlayers++;
+	}
+
+	public Integer getNumberOfPlayers() {
+		return numberOfPlayers;
+	}
+
+	public void setNumberOfPlayers(Integer numberOfPlayers) {
+		this.numberOfPlayers = numberOfPlayers;
 	}
 }

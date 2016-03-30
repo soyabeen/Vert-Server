@@ -25,19 +25,19 @@ public class User implements Serializable {
 	@Column(nullable = false, unique = true) 
 	private String username;
 	
-	@Column(nullable = false, unique = true) 
+	@Column(nullable = false, unique = true)
 	private String token;
-	
-	@Column(nullable = false) 
+
+	@Column(nullable = false)
 	private UserStatus status;
 
-    @ManyToOne
-    private Game game;
-	
+	@Column
+	private Long gameId;
+
     @OneToMany(mappedBy="user")
     private List<Move> moves;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Player player;
 
 	protected User() {
@@ -72,14 +72,6 @@ public class User implements Serializable {
 		this.username = username;
 	}
 
-	public Game getGames() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
 	public List<Move> getMoves() {
 		return moves;
 	}
@@ -110,5 +102,13 @@ public class User implements Serializable {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
 	}
 }
