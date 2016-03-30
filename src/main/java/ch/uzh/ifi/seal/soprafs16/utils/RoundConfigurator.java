@@ -16,7 +16,7 @@ import java.util.*;
 public class RoundConfigurator {
 
     private static final Logger logger  = LoggerFactory.getLogger(RoundConfigurator.class);
-    private static final int MAX_ROUNDS_FOR_GAME = 4;
+    protected static final int MAX_ROUNDS_FOR_GAME = 4;
 
     private List<RoundConfiguration> roundConfigs;
     private List<RoundConfiguration> stationConfigs;
@@ -44,9 +44,8 @@ public class RoundConfigurator {
         logger.debug("Added {} RoundConfigurations for train station cards.", roundConfigs.size());
     }
 
-    protected Round buildRoundWithConfig(Game game, RoundConfiguration config) {
-        // FIXME: 3/30/16 -> pass correct nthRound number
-        return new Round(game, 0, Arrays.asList(config.turns), config.event);
+    protected Round buildRoundWithConfig(Game game, Integer position, RoundConfiguration config) {
+        return new Round(game, position, Arrays.asList(config.turns), config.event);
     }
 
     /**
@@ -70,11 +69,11 @@ public class RoundConfigurator {
         Collections.shuffle(stationConfigs);
 
         for (int i = 0; i < MAX_ROUNDS_FOR_GAME; i++) {
-            logger.debug("Create round with round configuration id {}", roundConfigs.get(i).getRcId());
-            rounds.add(buildRoundWithConfig(game, roundConfigs.get(i)));
+            logger.debug("Create round with round configuration id {} at position {}", roundConfigs.get(i).getRcId(), i);
+            rounds.add(buildRoundWithConfig(game, Integer.valueOf(i), roundConfigs.get(i)));
         }
-        logger.debug("Create train station with round configuration id {}", stationConfigs.get(0).getRcId());
-        rounds.add(buildRoundWithConfig(game, stationConfigs.get(0)));
+        logger.debug("Create train station with round configuration id {} at position {}", stationConfigs.get(0).getRcId(), MAX_ROUNDS_FOR_GAME);
+        rounds.add(buildRoundWithConfig(game, Integer.valueOf(MAX_ROUNDS_FOR_GAME), stationConfigs.get(0)));
 
         return rounds;
     }

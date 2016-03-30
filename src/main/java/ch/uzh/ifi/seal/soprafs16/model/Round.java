@@ -14,6 +14,7 @@ import java.util.List;
  * Created by soyabeen on 22.03.16.
  */
 @Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"game" , "nthRound"})})
 public class Round implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,10 +23,10 @@ public class Round implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     private Game game;
 
-    @Column
+    @Column (nullable = false)
     private Integer nthRound;
 
     @OneToMany
