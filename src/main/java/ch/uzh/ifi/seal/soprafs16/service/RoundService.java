@@ -2,9 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.Card;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
@@ -104,7 +102,7 @@ public class RoundService {
         Game game = gameRepo.findOne(gameId);
 
         // need a Round to add new card
-        Round round = roundRepo.findByGameAndRound(game, nthRound);
+        Round round = roundRepo.findByGameAndNthRound(game, nthRound);
         // add played card
         round.addNewlyPlayedCard(move.getPlayedCard());
         round = roundRepo.save(round);

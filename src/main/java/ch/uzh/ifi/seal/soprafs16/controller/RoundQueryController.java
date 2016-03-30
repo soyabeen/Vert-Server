@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
-import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.service.RoundService;
