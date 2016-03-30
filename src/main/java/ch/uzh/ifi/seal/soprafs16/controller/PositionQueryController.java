@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import ch.uzh.ifi.seal.soprafs16.service.PositionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by alexanderhofmann on 26/03/16.
  */
 @RestController
-public class PositionQueryController extends GenericService {
+public class PositionQueryController extends GenericController {
     private static final Logger logger = LoggerFactory.getLogger(PositionQueryController.class);
 
     @Autowired

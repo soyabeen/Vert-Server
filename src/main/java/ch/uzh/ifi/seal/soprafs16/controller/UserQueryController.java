@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping(UserQueryController.CONTEXT)
 public class UserQueryController
-        extends GenericService {
+        extends GenericController {
 
-    private static final Logger logger  = LoggerFactory.getLogger(UserQueryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserQueryController.class);
 
     static final String CONTEXT = "/users";
 

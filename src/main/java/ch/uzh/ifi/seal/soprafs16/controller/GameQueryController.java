@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 
 @RestController
 public class GameQueryController
-        extends GenericService {
+        extends GenericController {
 
     private static final Logger logger  = LoggerFactory.getLogger(GameQueryController.class);
 

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
 import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 public class PlayerCommandController
-        extends GenericService {
+        extends GenericController {
 
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(PlayerCommandController.class);

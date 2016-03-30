@@ -2,11 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Move implements Serializable {
@@ -27,6 +23,12 @@ public class Move implements Serializable {
     @ManyToOne
     @JoinColumn(name="USER_ID")
     private User user;
+
+	@OneToOne
+	private Card playedCard;
+
+	@Column
+	private Integer nthMove;
 
 	public Long getId() {
 		return id;
@@ -50,5 +52,21 @@ public class Move implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Card getPlayedCard() {
+		return playedCard;
+	}
+
+	public void setPlayedCard(Card playedCard) {
+		this.playedCard = playedCard;
+	}
+
+	public Integer getNthMove() {
+		return nthMove;
+	}
+
+	public void setNthMove(Integer nthMove) {
+		this.nthMove = nthMove;
 	}
 }
