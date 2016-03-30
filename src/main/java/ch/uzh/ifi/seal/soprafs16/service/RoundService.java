@@ -2,11 +2,14 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.*;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,56 +38,63 @@ public class RoundService {
     private MoveRepository moveRepo;
 
     /**
-     * Retrieves a game round chosen by its ID.
+     * Check the input arguments gameId and nthRound. Both must be: <br/>
+     * - not null
+     * - not 0
+     * - positive numbers
+     *
      * @param gameId
      * @param nthRound
-     * @return round Desired Round object.
+     * @throws InvalidInputException
      */
-    public Round getRoundById(Long gameId, Integer nthRound) {
+    private void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
 
-        Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameAndRound(game, nthRound);
+        if (gameId == null || gameId <= 0) {
+            throw new InvalidInputException("Invalid arg. gameId <" + gameId + ">, must be a positive number.");
+        }
+        if (nthRound == null || nthRound <= 0) {
+            throw new InvalidInputException("Invalid arg. ntRound <" + nthRound + ">, must be a positive number.");
+        }
 
-        if (round == null) {
-            throw new InvalidInputException("GetRoundById - No round object with id " + nthRound + " exists.");
-        }
-        if (gameId != round.getGame().getId()) {
-            throw new InvalidInputException("GetRoundById - Provided gameId (" + gameId
-                    + ") does not match gameId from round object (" + round.getGame().getId() + ").");
-        }
-        return round;
     }
 
     /**
-     * Retrieves a list of Turns belonging to a chosen round.
+     * Retrieves a round chosen by its belonging to a game and its position.
+     *
+     * @param gameId
+     * @param nthRound
+     * @return The round object.
+     */
+    public Round getRoundById(Long gameId, Integer nthRound) {
+        logger.debug("getRoundById with gameId: {} nthRound: {}", gameId, nthRound);
+
+        // throws InvalidInputException if not valid
+        checkInputArgsGameIdAndNthRound(gameId, nthRound);
+
+        Game game = gameRepo.findOne(gameId);
+        if (game == null || game.getId() == null) {
+            throw new InvalidInputException("Invalid arg. gameId  <" + gameId + ">, could not find a matching game.");
+        }
+
+        return roundRepo.findByGameAndNthRound(game, nthRound);
+    }
+
+    /**
+     * Retrieves a list of Turns belonging to a game and a chosen round.
+     *
      * @param gameId
      * @param nthRound
      * @return Desired list of Turns.
      */
     public List<Turn> listTurnsForRound(Long gameId, Integer nthRound) {
-        logger.debug("In RoundService: listTurnsForRound()");
-        logger.debug("listTurnsForRound() with gameID: {} nthRound: {}", gameId, nthRound);
-
-        if (nthRound == null || nthRound <= 0) {
-            throw new InvalidInputException("listTurnsForRound - No round object with # " + nthRound + " exists.");
-        }
-
-        if (gameId == null || gameId <= 0) {
-            throw new InvalidInputException("listTurnsForRound - Provided gameId (" + gameId
-                    + ") does not exist.");
-        }
-
-        // retrieve game from repo
-        Game game = gameRepo.findOne(gameId);
-
-        // retrieve round from repo
-        Round round = roundRepo.findByGameAndRound(game, nthRound);
-
+        logger.debug("listTurnsForRound with gameId: {} nthRound: {}", gameId, nthRound);
+        Round round = getRoundById(gameId, nthRound);
         return round.getTurns();
     }
 
     /**
      * Plays chosen card.
+     *
      * @param gameId Identifier of game
      * @param move Action chosen by player
      * @return turnId Nth-turn of player

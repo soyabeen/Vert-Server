@@ -17,7 +17,7 @@ import java.util.List;
 public class UserQueryController
         extends GenericController {
 
-    private static final Logger logger  = LoggerFactory.getLogger(UserQueryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserQueryController.class);
 
     static final String CONTEXT = "/users";
 

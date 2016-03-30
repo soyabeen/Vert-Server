@@ -11,7 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("roundRepository")
 public interface RoundRepository extends CrudRepository<Round, Long> {
-    Round findByGameAndRound(Game game, Integer nthRound);
-
-
+    Round findByGameAndNthRound(Game game, Integer nthRound);
 }
