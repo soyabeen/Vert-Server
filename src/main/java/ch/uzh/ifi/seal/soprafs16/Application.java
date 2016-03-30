@@ -8,10 +8,11 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableAutoConfiguration
 public class Application {
 
-    /**
-     * Spring needs this!!!
-     */
+
     public Application() {
+        /**
+         * Spring needs this!!!
+         */
     }
 
     public static void main(String[] args) {

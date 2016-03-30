@@ -17,12 +17,13 @@ import java.util.List;
 public class PlayerQueryController
         extends GenericController {
 
+    @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(PlayerQueryController.class);
 
     @Autowired
     public PlayerService playerService;
 
-    private final String CONTEXT = "/games/{gameId}/players";
+    private static final String CONTEXT = "/games/{gameId}/players";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)

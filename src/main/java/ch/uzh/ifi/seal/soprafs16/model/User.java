@@ -6,9 +6,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class User implements Serializable {
