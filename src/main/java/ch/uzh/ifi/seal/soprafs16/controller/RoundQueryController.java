@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.service.RoundService;
 import org.slf4j.Logger;
@@ -42,8 +43,8 @@ public class RoundQueryController extends GenericController {
     @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public String playACard(@PathVariable Long gameId, @PathVariable Integer nthRound,
-                            @RequestBody Card playedCard) {
-        return roundService.playACard(gameId, nthRound, playedCard);
+                            @RequestBody Move move) {
+        return roundService.playACard(gameId, nthRound, move);
     }
 
 }

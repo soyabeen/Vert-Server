@@ -2,13 +2,11 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.Card;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Round;
-import ch.uzh.ifi.seal.soprafs16.model.User;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +29,16 @@ public class RoundService {
     private RoundRepository roundRepo;
 
     @Autowired
-    private UserRepository userRepo;
+    private PlayerRepository playerRepo;
+
+    @Autowired
+    private MoveRepository moveRepo;
 
     /**
      * Retrieves a game round chosen by its ID.
      * @param gameId
      * @param nthRound
-     * @return
+     * @return round Desired Round object.
      */
     public Round getRoundById(Long gameId, Integer nthRound) {
 
@@ -58,7 +59,7 @@ public class RoundService {
      * Retrieves a list of Turns belonging to a chosen round.
      * @param gameId
      * @param nthRound
-     * @return
+     * @return Desired list of Turns.
      */
     public List<Turn> listTurnsForRound(Long gameId, Integer nthRound) {
         logger.debug("In RoundService: listTurnsForRound()");
@@ -84,22 +85,37 @@ public class RoundService {
 
     /**
      * Plays chosen card.
-     * @param gameId
-     * @param playedCard
-     * @return
+     * @param gameId Identifier of game
+     * @param move Action chosen by player
+     * @return turnId Nth-turn of player
      */
-    public String playACard(Long gameId, Integer nthRound, Card playedCard) {
+    public String playACard(Long gameId, Integer nthRound, Move move) {
         Game game = gameRepo.findOne(gameId);
 
         // need a Round to add new card
         Round round = roundRepo.findByGameAndRound(game, nthRound);
-        round.addNewlyPlayedCard(playedCard);
+        // add played card
+        round.addNewlyPlayedCard(move.getPlayedCard());
         round = roundRepo.save(round);
 
         // remove Card from player hand
+        Player currentPlayer = playerRepo.findOne(move.getPlayedCard().getOwner().getId());
+        List<Card> playerHand = currentPlayer.getHand();
 
+        // go through hand and remove same card type
+        playerHand.remove(playerHand.indexOf(move.getPlayedCard())); // TODO: ☠ debug to see if java voodo works
 
-        // return turnId
-        return String.valueOf(nthRound);
+        // save new hand
+        currentPlayer.setHand(playerHand);
+        currentPlayer = playerRepo.save(currentPlayer);
+
+        // return turnId for player (where turnId is nth-move of player)
+        Integer turnId = round.getTotalMadeMoves() / 4;
+
+        // save Move
+        // after move is saved to repository, moveId will get created
+        moveRepo.save(move);
+
+        return String.valueOf(turnId);
     }
 }
