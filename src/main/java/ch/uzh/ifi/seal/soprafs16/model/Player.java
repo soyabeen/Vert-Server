@@ -116,4 +116,20 @@ public class Player extends Meeple {
                 ", bullets=" + bullets +
                 '}';
     }
+
+    /**
+     * Gets the players cards in hand.
+     * @return Cards which the player is holding.
+     */
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    /**
+     * Sets the new cards the player is holding.
+     * @param hand Updated collection of cards the player is going to hold.
+     */
+    public void setHand(List<Card> hand) {
+        this.hand = hand;
+    }
 }
