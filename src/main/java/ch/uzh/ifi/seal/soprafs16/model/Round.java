@@ -72,4 +72,7 @@ public class Round implements Serializable {
         return cardStack;
     }
 
+    public List<Turn> getTurns() { return turns; }
+
+    public void setTurns(List<Turn> turns) { this.turns = turns; }
 }
