@@ -37,7 +37,7 @@ public class GameBuilder {
     private GameRepository gameRepo;
 
 
-    public GameBuilder builder(String name, String owner) {
+    public GameBuilder init(String name, String owner) {
         game = new Game();
         game.setName(name);
         game.setOwner(owner);
@@ -54,6 +54,18 @@ public class GameBuilder {
     public GameBuilder addUser(User user) {
         game.addUser(user);
         return save();
+    }
+
+    /**
+     * Adds multiple users.
+     * @param users
+     * @return
+     */
+    public GameBuilder addUsers(User... users) {
+        for (User user : users) {
+            addUser(user);
+        }
+        return this;
     }
 
     /**

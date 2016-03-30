@@ -52,6 +52,7 @@ public class PlayerService {
         Game game = gameRepo.findOne(gameId);
 
         if (game != null) {
+            logger.debug("Game id: " + game.getId());
             result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
         } else {
             logger.error("No game found for id: " + gameId);
@@ -71,8 +72,9 @@ public class PlayerService {
 
         Game game = gameRepo.findOne(gameId);
 
-        if (game != null && GameConstants.MAX_PLAYERS >= game.getNumberOfPlayers()
+        if (game != null && game.getNumberOfPlayers() < GameConstants.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
+
             // get User
             User user = userRepo.findByToken(userToken);
 

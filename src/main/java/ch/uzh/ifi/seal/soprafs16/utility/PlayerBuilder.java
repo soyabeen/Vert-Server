@@ -47,4 +47,31 @@ public class PlayerBuilder {
 
         return playerRepo.save(player);
     }
+
+    public Player getPlayerNoPersistence(Character character) {
+        Player player = new Player();
+        player.setCharacter(character);
+        return player;
+    }
+
+    public List<Player> getPlayers(Character... characters) {
+        List<Player> result = new ArrayList<>();
+
+        for (Character c : characters) {
+            result.add(getPlayer(c));
+        }
+
+        return result;
+    }
+
+    public List<Player> getPlayersNoPersistence(Character... characters) {
+        List<Player> result = new ArrayList<>();
+
+        for (Character c : characters) {
+            result.add(getPlayerNoPersistence(c));
+        }
+
+        return result;
+    }
+
 }

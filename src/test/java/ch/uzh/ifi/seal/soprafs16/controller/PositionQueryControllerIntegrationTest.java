@@ -54,7 +54,7 @@ public class PositionQueryControllerIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testGetPositionablesSuccess() throws URISyntaxException {
         // create empty game
-        Game game = gameBuilder.builder("Game1", "Owner1").build();
+        Game game = gameBuilder.init("Game1", "Owner1").build();
 
         URI posURI = new URI(base + "games/" + game.getId() + "/positions");
 

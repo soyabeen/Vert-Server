@@ -65,7 +65,7 @@ public class CharacterQueryControllerIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testCharacters() {
         // create empty game
-        Game game = gameBuilder.builder("Game1", "Owner1").build();
+        Game game = gameBuilder.init("Game1", "Owner1").build();
 
         // check that all characters are available after game init
         String context = base + "games/" + game.getId() + "/characters";

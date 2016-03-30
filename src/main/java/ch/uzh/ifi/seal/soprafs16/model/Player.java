@@ -106,4 +106,14 @@ public class Player extends Meeple {
     }
 
     //TODO: add equals method (or implement comparable)
+
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + getId() +
+                "character=" + character +
+                ", bullets=" + bullets +
+                '}';
+    }
 }
