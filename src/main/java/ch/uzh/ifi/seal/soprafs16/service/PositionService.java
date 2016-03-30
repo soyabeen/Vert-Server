@@ -15,6 +15,7 @@ import java.util.List;
 @Service("positionService")
 public class PositionService {
 
+    @SuppressWarnings("unused")
     private static final Logger logger  = LoggerFactory.getLogger(PositionService.class);
 
     @Autowired

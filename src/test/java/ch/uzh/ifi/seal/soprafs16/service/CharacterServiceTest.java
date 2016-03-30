@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.utility.PlayerBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +11,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.when;
  *
  * Created by alexanderhofmann on 24/03/16.
  */
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringApplicationConfiguration(classes = Application.class)
 public class CharacterServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
@@ -38,6 +41,9 @@ public class CharacterServiceTest {
      */
     @Mock
     private PlayerService playerService;
+
+    @Autowired
+    private PlayerBuilder playerBuilder;
 
     /**
      * Must init mocks.
@@ -55,13 +61,8 @@ public class CharacterServiceTest {
 
     @Test
     public void getAvailableCharacters() {
-        Player p1 = new Player();
-        p1.setCharacter(Character.BELLE);
-        Player p2 = new Player();
-        p2.setCharacter(Character.GHOST);
-        List<Player> players = new ArrayList<>();
-        players.add(p1);
-        players.add(p2);
+        PlayerBuilder playerBuilder = new PlayerBuilder();
+        List<Player> players = playerBuilder.getPlayersNoPersistence(Character.BELLE, Character.GHOST);
 
         // When playerService.listPlayersForGame(1L) is called in characterService
         // return players list.

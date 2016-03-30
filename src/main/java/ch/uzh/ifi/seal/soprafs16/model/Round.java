@@ -25,6 +25,9 @@ public class Round implements Serializable {
     @ManyToOne
     private Game game;
 
+    @Column
+    private Integer nthRound;
+
     @OneToMany
     private List<Card> cardStack;
 
@@ -46,8 +49,9 @@ public class Round implements Serializable {
      * @param turns The turns for that round.
      * @param endEvent The end event.
      */
-    public Round(Game game, List<Turn> turns, RoundEndEvent endEvent) {
+    public Round(Game game, Integer nthRound, List<Turn> turns, RoundEndEvent endEvent) {
         this.game = game;
+        this.nthRound = nthRound;
         this.turns = turns;
         this.end = endEvent;
     }
@@ -72,4 +76,11 @@ public class Round implements Serializable {
         return cardStack;
     }
 
+    public List<Turn> getTurns() { return turns; }
+
+    public void setTurns(List<Turn> turns) { this.turns = turns; }
+
+    public Integer getNthRound() { return nthRound; }
+
+    public void setNthRound(Integer nthRound) { this.nthRound = nthRound; }
 }
