@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class PlayerCommandController
         extends GenericController {
 
+    @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(PlayerCommandController.class);
 
     @Autowired
     public PlayerService playerService;
 
-    private final String CONTEXT = "/games/{gameId}/players";
+    private static final String CONTEXT = "/games/{gameId}/players";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)

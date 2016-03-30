@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Defines a loot on train or at player.
@@ -37,10 +38,10 @@ public class Loot implements Positionable, Serializable {
     /**
      * Car on which loot is.
      */
-    @Column()
+    @Column
     private int car;
 
-    protected  Loot() {
+    protected Loot() {
     }
 
     public Loot(LootType type, int value, Level level) {
@@ -116,8 +117,4 @@ public class Loot implements Positionable, Serializable {
         
         return value;
     }
-    
-    
-    
-    
 }

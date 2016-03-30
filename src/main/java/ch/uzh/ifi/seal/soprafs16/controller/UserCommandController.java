@@ -17,7 +17,7 @@ import java.util.UUID;
 public class UserCommandController
         extends GenericController {
 
-    private static final Logger logger  = LoggerFactory.getLogger(UserCommandController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserCommandController.class);
 
     static final String CONTEXT = "/users";
 

@@ -52,7 +52,8 @@ public class PlayerService {
         Game game = gameRepo.findOne(gameId);
 
         if (game != null) {
-            result.addAll(game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList()));
+            logger.debug("Game id: " + game.getId());
+            result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
         } else {
             logger.error("No game found for id: " + gameId);
         }
@@ -71,8 +72,9 @@ public class PlayerService {
 
         Game game = gameRepo.findOne(gameId);
 
-        if (game != null && GameConstants.MAX_PLAYERS >= game.getNumberOfPlayers()
+        if (game != null && game.getNumberOfPlayers() < GameConstants.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
+
             // get User
             User user = userRepo.findByToken(userToken);
 
@@ -80,11 +82,13 @@ public class PlayerService {
             Player player = createPlayer(character);
 
             // assign Player to user
-            assignPlayerToUser(user, player);
+            boolean itWorked = assignPlayerToUser(user, player);
 
-            // assign user to game
-            game.addUser(user);
-            gameRepo.save(game);
+            if (itWorked) {
+                // assign user to game
+                game.addUser(user);
+                gameRepo.save(game);
+            }
 
             return user.getPlayer().getId();
         } else {
@@ -100,15 +104,18 @@ public class PlayerService {
      * @param user
      * @param player
      */
-    protected void assignPlayerToUser(User user, Player player) {
+    protected boolean assignPlayerToUser(User user, Player player) {
         if (user.getPlayer() == null) {
             user.setPlayer(player);
             user.setStatus(UserStatus.ONLINE);
+            userRepo.save(user);
+
+            return true;
         } else {
             logger.error("User already has Player assigned");
         }
 
-        user = userRepo.save(user);
+        return false;
     }
 
     /**
