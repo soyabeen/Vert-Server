@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static org.eclipse.persistence.jpa.jpql.Assert.fail;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 
@@ -85,7 +87,7 @@ public class RoundServiceTest {
     }
 
     @Test
-    public void testListTurnsForRound() {
+    public void listTurnsForRoundReturnsCorrectOrder() {
         List<Turn> result = roundService.listTurnsForRound(1L, 1);
 
         Assert.assertThat(result.size(), is(turns.size()));
@@ -94,4 +96,25 @@ public class RoundServiceTest {
             Assert.assertThat(result.indexOf(i), is(turns.indexOf(i)));
         }
     }
+
+    @Test
+    public void listTurnsForRoundThrowsInvalidInputException() {
+        try {
+            roundService.listTurnsForRound(-1L, 1);
+            fail("Illegal gameId, should throw InvalidInputException");
+
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidInputException);
+        }
+
+        try {
+            roundService.listTurnsForRound(1L, -1);
+            fail("Illegal nthRound, should throw InvalidInputException");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidInputException);
+        }
+
+
+    }
+
 }
