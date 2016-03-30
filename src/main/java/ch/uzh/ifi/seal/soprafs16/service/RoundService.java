@@ -5,8 +5,10 @@ import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +30,22 @@ public class RoundService {
     @Autowired
     private RoundRepository roundRepo;
 
+    @Autowired
+    private UserRepository userRepo;
+
     /**
      * Retrieves a game round chosen by its ID.
      * @param gameId
-     * @param roundId
+     * @param nthRound
      * @return
      */
-    public Round getRoundById(Long gameId, Long roundId) {
+    public Round getRoundById(Long gameId, Integer nthRound) {
 
-        Round round = roundRepo.findOne(roundId);
+        Game game = gameRepo.findOne(gameId);
+        Round round = roundRepo.findByGameAndRound(game, nthRound);
+
         if (round == null) {
-            throw new InvalidInputException("GetRoundById - No round object with id " + roundId + " exists.");
+            throw new InvalidInputException("GetRoundById - No round object with id " + nthRound + " exists.");
         }
         if (gameId != round.getGame().getId()) {
             throw new InvalidInputException("GetRoundById - Provided gameId (" + gameId
@@ -55,7 +62,7 @@ public class RoundService {
      */
     public List<Turn> listTurnsForRound(Long gameId, Integer nthRound) {
         logger.debug("In RoundService: listTurnsForRound()");
-        logger.debug("listTurnsForRound() with gameID: {0} nthRound: {1}", gameId, nthRound);
+        logger.debug("listTurnsForRound() with gameID: {} nthRound: {}", gameId, nthRound);
 
         if (nthRound == null || nthRound <= 0) {
             throw new InvalidInputException("listTurnsForRound - No round object with # " + nthRound + " exists.");
@@ -77,11 +84,22 @@ public class RoundService {
 
     /**
      * Plays chosen card.
-     * @param userToken
+     * @param gameId
      * @param playedCard
      * @return
      */
-    public String playACard(String userToken, Card playedCard) {
-        return "Not implemented yet";
+    public String playACard(Long gameId, Integer nthRound, Card playedCard) {
+        Game game = gameRepo.findOne(gameId);
+
+        // need a Round to add new card
+        Round round = roundRepo.findByGameAndRound(game, nthRound);
+        round.addNewlyPlayedCard(playedCard);
+        round = roundRepo.save(round);
+
+        // remove Card from player hand
+
+
+        // return turnId
+        return String.valueOf(nthRound);
     }
 }
