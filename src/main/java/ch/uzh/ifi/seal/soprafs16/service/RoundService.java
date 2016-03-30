@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
@@ -11,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by soyabeen on 26.03.16.
@@ -51,27 +50,29 @@ public class RoundService {
     /**
      * Retrieves a list of Turns belonging to a chosen round.
      * @param gameId
-     * @param roundId
+     * @param nthRound
      * @return
      */
-    public List<Turn> listOfTurns(Long gameId, Long roundId) {
-        logger.debug("gameID: " + gameId);
-        logger.debug("roundID: " + roundId);
+    public List<Turn> listTurnsForRound(Long gameId, Integer nthRound) {
+        logger.debug("In RoundService: listTurnsForRound()");
+        logger.debug("listTurnsForRound() with gameID: {0} nthRound: {1}", gameId, nthRound);
 
-        // create container for all turns
-        List<Turn> turns = new ArrayList<>();
-
-        // retrieve turns from repo
-        Round round = roundRepo.findOne(gameId);
-
-        if(round != null) {
-            // populate list with turns
-            turns = round.getTurns();
-        } else {
-            logger.debug("No round found for id: " + gameId);
+        if (nthRound == null || nthRound <= 0) {
+            throw new InvalidInputException("listTurnsForRound - No round object with # " + nthRound + " exists.");
         }
 
-        return turns;
+        if (gameId == null || gameId <= 0) {
+            throw new InvalidInputException("listTurnsForRound - Provided gameId (" + gameId
+                    + ") does not exist.");
+        }
+
+        // retrieve game from repo
+        Game game = gameRepo.findOne(gameId);
+
+        // retrieve round from repo
+        Round round = roundRepo.findByGameAndRound(game, nthRound);
+
+        return round.getTurns();
     }
 
     /**

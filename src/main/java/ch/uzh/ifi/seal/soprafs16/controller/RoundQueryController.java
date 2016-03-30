@@ -35,8 +35,8 @@ public class RoundQueryController extends GenericController {
     @RequestMapping(value = CONTEXT + "/{roundId}/turns", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     // TODO: add parameter for filter options
-    public List<Turn> listOfTurns(@PathVariable Long gameId, @PathVariable Long roundId) {
-        return roundService.listOfTurns(gameId, roundId);
+    public List<Turn> listTurnsForRound(@PathVariable Long gameId, @PathVariable Integer nthRound) {
+        return roundService.listTurnsForRound(gameId, nthRound);
     }
 
     @RequestMapping(value = CONTEXT + "/{roundId}/turns", method = RequestMethod.POST)

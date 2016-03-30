@@ -4,7 +4,9 @@ import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,16 +17,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 
 /**
  * Created by soyabeen on 29.03.16.
  */
-public class RoundServiceIntTest {
+public class RoundServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
     @InjectMocks
     private RoundService roundService;
+
+    @Mock
+    private GameRepository gameRepo;
 
     @Mock
     private RoundRepository roundRepo;
@@ -32,18 +38,23 @@ public class RoundServiceIntTest {
     private Round round;
     private Game game;
     private List<Turn> turns;
+    private Integer nthRound;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        game = new Game();
-
         // List of turns needs to be generated
-        turns = createRandomTurns();
-        round = new Round(game, turns, RoundEndEvent.REBELLION);
-        
-        //when(gameRepo.findOne(1L)).thenReturn(game);
+        turns = Arrays.asList(new Turn[]{
+                Turn.DOUBLE_TURNS,
+                Turn.NORMAL,
+                Turn.NORMAL,
+                Turn.HIDDEN});
+        nthRound = 1;
+        round = new Round(game, nthRound, turns, RoundEndEvent.REBELLION);
+
+        when(gameRepo.findOne(1L)).thenReturn(game);
+        when(roundRepo.findByGameAndRound(game, nthRound)).thenReturn(round);
     }
 
     // TODO: optimize random turn generator
@@ -74,7 +85,13 @@ public class RoundServiceIntTest {
     }
 
     @Test
-    public void testListOfTurns() {
-        // FIXME: 3/30/16
+    public void testListTurnsForRound() {
+        List<Turn> result = roundService.listTurnsForRound(1L, 1);
+
+        Assert.assertThat(result.size(), is(turns.size()));
+
+        for(int i = 0; i < turns.size(); i++) {
+            Assert.assertThat(result.indexOf(i), is(turns.indexOf(i)));
+        }
     }
 }

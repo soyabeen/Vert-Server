@@ -40,7 +40,8 @@ public class RoundConfigurator {
     }
 
     protected Round buildRoundWithConfig(Game game, RoundConfiguration config) {
-        return new Round(game, Arrays.asList(config.turns), config.event);
+        // FIXME: 3/30/16 -> pass correct nthRound number
+        return new Round(game, 0, Arrays.asList(config.turns), config.event);
     }
 
     /**
