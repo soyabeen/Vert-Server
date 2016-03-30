@@ -35,13 +35,13 @@ public class RoundConfigurator {
         roundConfigs.add(new RoundConfiguration(3, new Turn[]{Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.NONE));
         roundConfigs.add(new RoundConfiguration(4, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.REVERSE}, RoundEndEvent.ANGRY_MARSHAL));
         roundConfigs.add(new RoundConfiguration(5, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.NORMAL, Turn.NORMAL}, RoundEndEvent.BRAKING));
-        logger.debug("Added {0} RoundConfigurations for 2-4 players.", roundConfigs.size());
+        logger.debug("Added {} RoundConfigurations for 2-4 players.", roundConfigs.size());
 
         stationConfigs = new ArrayList<>();
         stationConfigs.add(new RoundConfiguration(1, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.MARSHALS_REVENGE));
         stationConfigs.add(new RoundConfiguration(2, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.PICKPOCKETING));
         stationConfigs.add(new RoundConfiguration(3, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.HOSTAGE));
-        logger.debug("Added {0} RoundConfigurations for  players.", roundConfigs.size());
+        logger.debug("Added {} RoundConfigurations for train station cards.", roundConfigs.size());
     }
 
     protected Round buildRoundWithConfig(Game game, RoundConfiguration config) {
@@ -70,10 +70,10 @@ public class RoundConfigurator {
         Collections.shuffle(stationConfigs);
 
         for (int i = 0; i < MAX_ROUNDS_FOR_GAME; i++) {
-            logger.debug("Create round with round configuration id {0}", roundConfigs.get(i).getRcId());
+            logger.debug("Create round with round configuration id {}", roundConfigs.get(i).getRcId());
             rounds.add(buildRoundWithConfig(game, roundConfigs.get(i)));
         }
-        logger.debug("Create train station with round configuration id {0}", stationConfigs.get(0).getRcId());
+        logger.debug("Create train station with round configuration id {}", stationConfigs.get(0).getRcId());
         rounds.add(buildRoundWithConfig(game, stationConfigs.get(0)));
 
         return rounds;
