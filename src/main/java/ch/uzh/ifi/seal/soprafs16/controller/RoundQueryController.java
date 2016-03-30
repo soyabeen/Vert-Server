@@ -26,23 +26,24 @@ public class RoundQueryController extends GenericController {
 
     private final String CONTEXT = "/games/{gameId}/rounds";
 
-    @RequestMapping(value = CONTEXT + "/{roundId}", method = RequestMethod.GET)
+    @RequestMapping(value = CONTEXT + "/{nthRound}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Round getRoundById(@PathVariable Long gameId, @PathVariable Long roundId) {
-        return roundService.getRoundById(gameId, roundId);
+    public Round getRoundById(@PathVariable Long gameId, @PathVariable Integer nthRound) {
+        return roundService.getRoundById(gameId, nthRound);
     }
 
-    @RequestMapping(value = CONTEXT + "/{roundId}/turns", method = RequestMethod.GET)
+    @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     // TODO: add parameter for filter options
     public List<Turn> listTurnsForRound(@PathVariable Long gameId, @PathVariable Integer nthRound) {
         return roundService.listTurnsForRound(gameId, nthRound);
     }
 
-    @RequestMapping(value = CONTEXT + "/{roundId}/turns", method = RequestMethod.POST)
+    @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public String playACard(@RequestParam String userToken, @RequestBody Card playedCard) {
-        return roundService.playACard(userToken, playedCard);
+    public String playACard(@PathVariable Long gameId, @PathVariable Integer nthRound,
+                            @RequestBody Card playedCard) {
+        return roundService.playACard(gameId, nthRound, playedCard);
     }
 
 }
