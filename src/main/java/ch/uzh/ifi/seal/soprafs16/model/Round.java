@@ -18,6 +18,7 @@ import java.util.List;
 public class Round implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static Integer totalMadeMoves = 0;
 
     @Id
     @GeneratedValue
@@ -68,6 +69,15 @@ public class Round implements Serializable {
      */
     public void addNewlyPlayedCard(Card playedCard) {
         cardStack.add(playedCard);
+        totalMadeMoves++;
+    }
+
+    public void passAndTake3Cards() {
+        totalMadeMoves++;
+    }
+
+    public Integer getTotalMadeMoves() {
+        return totalMadeMoves;
     }
 
     public Game getGame() {
