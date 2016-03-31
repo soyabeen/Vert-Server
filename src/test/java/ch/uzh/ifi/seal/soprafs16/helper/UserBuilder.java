@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.utility;
+package ch.uzh.ifi.seal.soprafs16.helper;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
