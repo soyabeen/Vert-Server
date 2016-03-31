@@ -13,20 +13,20 @@ import javax.servlet.http.HttpServletRequest;
 
 public abstract class GenericController {
 
-	Logger logger = LoggerFactory.getLogger(GenericController.class);
+	Logger gen_logger = LoggerFactory.getLogger(GenericController.class);
 
 	@ExceptionHandler(TransactionSystemException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public void handleTransactionSystemException(Exception exception, HttpServletRequest request) {
-		logger.error("", exception);
+		gen_logger.error("", exception);
 	}
 
 	@ExceptionHandler(InvalidInputException.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid input argument")
 	public ErrorResource handleInvalidInputException(Exception exception, HttpServletRequest request) {
-		logger.error("", exception);
-		logger.info("handleInvalidInputException ....");
+		gen_logger.error("", exception);
+		gen_logger.info("handleInvalidInputException ....");
 
 		return new ErrorResource("Invalid input argument", exception.getMessage());
 	}
@@ -34,6 +34,6 @@ public abstract class GenericController {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public void handleException(Exception exception, HttpServletRequest request) {
-		logger.error("", exception);
+		gen_logger.error("", exception);
 	}
 }
