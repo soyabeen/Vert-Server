@@ -1,11 +1,10 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import java.io.Serializable;
-import java.util.List;
+import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 
 import javax.persistence.*;
-
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class User implements Serializable {

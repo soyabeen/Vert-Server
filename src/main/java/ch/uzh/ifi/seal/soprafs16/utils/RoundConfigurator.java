@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs16.model.Round;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.ConfigurationException;
 import java.util.*;
 
 /**

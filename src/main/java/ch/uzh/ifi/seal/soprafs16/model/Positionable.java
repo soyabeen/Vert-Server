@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import java.util.logging.Level;
-
 /**
  * Defines the functionality for positioning an object on the game board (train).
  * <p/>

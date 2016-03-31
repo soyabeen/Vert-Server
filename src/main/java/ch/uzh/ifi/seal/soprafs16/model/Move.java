@@ -1,8 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import java.io.Serializable;
-
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 public class Move implements Serializable {

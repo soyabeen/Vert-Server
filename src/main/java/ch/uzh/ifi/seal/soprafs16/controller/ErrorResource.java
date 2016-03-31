@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import org.springframework.core.io.Resource;
-
 import java.io.Serializable;
 
 /**

@@ -1,11 +1,10 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import java.io.Serializable;
-import java.util.*;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 
 import javax.persistence.*;
-
-import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
 public class Game implements Serializable {
