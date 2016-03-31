@@ -1,7 +1,10 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.UserBuilder;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
@@ -22,21 +25,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({ "server.port=0" })
-public class UserQueryControllerIntegrationTest {
+public class GameCommandControllerTest {
 
-    private static final Logger logger  = LoggerFactory.getLogger(UserQueryControllerIntegrationTest.class);
+    private static final Logger logger  = LoggerFactory.getLogger(GameCommandControllerTest.class);
 
     @Value("${local.server.port}")
     private int          port;
@@ -51,12 +55,14 @@ public class UserQueryControllerIntegrationTest {
     private GameRepository gameRepo;
 
     @Autowired
+    private GameBuilder gameBuilder;
+
+    @Autowired
     private UserBuilder userBuilder;
 
     @Before
-    public void setUp()
-            throws MalformedURLException {
-        this.base = new URL("http://localhost:" + port + "/");
+    public void setUp() throws MalformedURLException {
+        this.base = new URL("http://localhost:" + port + "/games");
         this.template = new TestRestTemplate();
 
         gameRepo.deleteAll();
@@ -65,20 +71,38 @@ public class UserQueryControllerIntegrationTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testCreateUserSuccess() {
-        List<User> usersBefore = template.getForObject(base + "/users", List.class);
-        Assert.assertEquals(0, usersBefore.size());
+    public void addGameTest() {
+        // test valid query
+        User user = userBuilder.getRandomUser();
+        Game game = gameBuilder.initNoPersistence("addGameTest", "addGameTest").build();
 
-        User user1 = userBuilder.getRandomUser();
-        User user2 = userBuilder.getRandomUser();
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString())
+                .queryParam("token", user.getToken());
 
-        User[] usersAfter = template.getForObject(base + "/users", User[].class);
-        Assert.assertThat(usersAfter.length, is(2));
+        HttpEntity<Game> gameEntity = new HttpEntity<>(game);
 
-        Assert.assertThat(usersAfter[0].getId(), is(user1.getId()));
-        Assert.assertThat(usersAfter[0].getToken(), is(user1.getToken()));
+        ResponseEntity<String> response = template.exchange(uriBuilder.build().encode().toUri(),
+                HttpMethod.POST,
+                gameEntity,
+                String.class);
 
-        Assert.assertThat(usersAfter[1].getId(), is(user2.getId()));
-        Assert.assertThat(usersAfter[1].getToken(), is(user2.getToken()));
+        Long gameId = Long.parseLong(response.getBody());
+
+        Game result = gameRepo.findOne(gameId);
+        Assert.assertThat(result.getName(), is(game.getName()));
+        Assert.assertThat(result.getOwner(), is(game.getOwner()));
+
+        //test invalid query
+        uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString())
+                .queryParam("token", "a");
+
+        gameEntity = new HttpEntity<>(game);
+
+        response = template.exchange(uriBuilder.build().encode().toUri(),
+                HttpMethod.POST,
+                gameEntity,
+                String.class);
+
+        Assert.assertNull(response.getBody());
     }
 }

@@ -45,23 +45,10 @@ public class GameCommandController
             game = gameRepo.save(game);
 
             logger.debug("Game Id: "  + game.getId());
-            return CONTEXT + "/" + game.getId();
+            return game.getId().toString();
         }
 
         return null;
-    }
-
-    @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void startGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
-        logger.debug("startGame: " + gameId);
-
-        Game game = gameRepo.findOne(gameId);
-        User owner = userRepo.findByToken(userToken);
-
-        if (owner != null && game != null && game.getOwner().equals(owner.getUsername())) {
-            // TODO: Start game
-        }
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/stop", method = RequestMethod.POST)
@@ -73,7 +60,7 @@ public class GameCommandController
         User owner = userRepo.findByToken(userToken);
 
         if (owner != null && game != null && game.getOwner().equals(owner.getUsername())) {
-            // TODO: Stop game
+            gameRepo.delete(game);
         }
     }
 
