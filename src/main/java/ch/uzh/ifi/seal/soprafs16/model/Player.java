@@ -21,6 +21,9 @@ public class Player extends Meeple {
 
     @Column
     private CardDeck deck;
+
+    @Column
+    private Integer totalMadeMoves;
     
     @OneToMany(mappedBy = "owner")
     private List<Card> hand;
@@ -37,8 +40,8 @@ public class Player extends Meeple {
     public Player() {
         this.loots = new ArrayList<>();
         this.hand = new ArrayList<>();
+        this.deck = new CardDeck();
         bullets = MAX_BULLETS;
-
     }
 
     /**
@@ -105,9 +108,6 @@ public class Player extends Meeple {
         this.character = character;
     }
 
-    //TODO: add equals method (or implement comparable)
-
-
     @Override
     public String toString() {
         return "Player{" +
@@ -131,5 +131,28 @@ public class Player extends Meeple {
      */
     public void setHand(List<Card> hand) {
         this.hand = hand;
+    }
+
+    /**
+     * Adds 3 Cards from card deck to players hand.
+     */
+    public void take3Cards() {
+        this.hand.addAll( this.deck.drawCard(3) );
+    }
+
+    /**
+     * Gets the amount of rounds a player made a move.
+     * @return totalMadeMoves
+     */
+    public Integer getTotalMadeMoves() {
+        return totalMadeMoves;
+    }
+
+    /**
+     * Increments the amount of rounds a player made.
+     *
+     */
+    public void incrementTotalMadeMoves() {
+        this.totalMadeMoves++;
     }
 }
