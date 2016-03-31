@@ -32,9 +32,8 @@ public class UserCommandController
 
         user.setStatus(UserStatus.OFFLINE);
         user.setToken(UUID.randomUUID().toString());
-        user = userRepo.save(user);
 
-        return user;
+        return userRepo.save(user);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "{userId}/login")
