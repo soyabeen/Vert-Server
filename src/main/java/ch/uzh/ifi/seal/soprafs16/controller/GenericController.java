@@ -1,18 +1,15 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import ch.qos.logback.core.pattern.util.RestrictedEscapeUtil;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.servlet.http.HttpServletRequest;
 
 public abstract class GenericController {
 
