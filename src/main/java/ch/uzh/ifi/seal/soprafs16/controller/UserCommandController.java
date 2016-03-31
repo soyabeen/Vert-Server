@@ -31,7 +31,7 @@ public class UserCommandController
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public User addUser(@RequestBody User user) {
-        logger.debug("Call addUser for name <{}>, username <{}>.", user.getName(), user.getUsername());
+        logger.debug("POST: - Args. name <{}>, username <{}>.", CONTEXT, user.getName(), user.getUsername());
         return userService.createUser(user.getName(), user.getUsername());
     }
 

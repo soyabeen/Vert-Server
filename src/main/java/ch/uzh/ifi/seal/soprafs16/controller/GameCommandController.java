@@ -6,6 +6,8 @@ import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.service.GameService;
+import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class GameCommandController
     private static final Logger logger = LoggerFactory.getLogger(GameCommandController.class);
 
     @Autowired
+    private GameService gameSerivce;
+    @Autowired
     private UserRepository userRepo;
     @Autowired
     private GameRepository gameRepo;
@@ -31,23 +35,12 @@ public class GameCommandController
             value = CONTEXT,
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String addGame(@RequestBody Game game, @RequestParam("token") String userToken) {
-        logger.debug("addGame: " + game);
+    public Game addGame(@RequestBody Game game, @RequestParam("token") String userToken) {
 
-        logger.debug("User Token: " + userToken);
-        User owner = userRepo.findByToken(userToken);
+        logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
-        logger.debug("User Found?: " + (null != owner ? "True":"False"));
-
-        if (owner != null) {
-            // TODO Mapping into Game
-            game = gameRepo.save(game);
-
-            logger.debug("Game Id: "  + game.getId());
-            return CONTEXT + "/" + game.getId();
-        }
-
-        return null;
+        User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
+        return gameSerivce.createGame(game.getName(), game.getOwner(), game.getNumberOfPlayers());
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
