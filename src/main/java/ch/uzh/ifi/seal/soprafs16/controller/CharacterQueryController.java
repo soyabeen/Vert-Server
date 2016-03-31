@@ -12,10 +12,8 @@ import java.util.List;
 
 
 @RestController
-public class CharacterQueryController
-        extends GenericController {
+public class CharacterQueryController extends GenericController {
 
-    @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(CharacterQueryController.class);
 
     private static final String CONTEXT = "/games/{gameId}/characters";
@@ -25,7 +23,8 @@ public class CharacterQueryController
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Character> getCharacters(@PathVariable Long gameId, @RequestParam(value="filter", required=false) String filter) {
+    public List<Character> getCharacters(@PathVariable Long gameId, @RequestParam(value = "filter", required = false) String filter) {
+        logger.debug("Call getCharacters for gameId {} and filter {}", gameId, filter);
         if ("AVAILABLE".equals(filter)) {
             return charService.listAvailableCharactersByGame(gameId);
         }
