@@ -32,7 +32,7 @@ public class UserCommandController
     @ResponseBody
     public User addUser(@RequestBody User user) {
         logger.debug("Call addUser for name <{}>, username <{}>.", user.getName(), user.getUsername());
-        return userService.addNewUser(user.getName(), user.getUsername());
+        return userService.createUser(user.getName(), user.getUsername());
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "{userId}/logout")
