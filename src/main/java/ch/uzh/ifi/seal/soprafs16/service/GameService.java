@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     private static final Logger logger  = LoggerFactory.getLogger(GameService.class);
-
-    private static final int DEFAULT_PLAYER_NR = 4;
 
     @Autowired
     private GameRepository gameRepo;
@@ -46,7 +45,8 @@ public class GameService {
             throw new InvalidInputException("Invalid arg : Name of game is already used.");
         }
 
-        int players = (nrOfPlayers<2) ? DEFAULT_PLAYER_NR : nrOfPlayers;
+        int players = (nrOfPlayers< GameConfiguration.MIN_PLAYERS)
+                ? GameConfiguration.MAX_PLAYERS : nrOfPlayers;
         return createGame(gameName, owner, players);
     }
 }
