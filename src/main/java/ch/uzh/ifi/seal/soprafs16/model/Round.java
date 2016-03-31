@@ -18,7 +18,7 @@ import java.util.List;
 public class Round implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static Integer totalMadeMoves = 0;
+    private Integer totalMadeMoves;
 
     @Id
     @GeneratedValue
@@ -42,6 +42,7 @@ public class Round implements Serializable {
     private RoundEndEvent end;
 
     protected Round() {
+        totalMadeMoves = 0;
     }
 
     /**
@@ -56,6 +57,7 @@ public class Round implements Serializable {
         this.nthRound = nthRound;
         this.turns = turns;
         this.end = endEvent;
+        totalMadeMoves = 0;
     }
 
     public void executeActionPhase() {
