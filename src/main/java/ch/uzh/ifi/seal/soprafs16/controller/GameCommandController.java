@@ -25,12 +25,11 @@ public class GameCommandController
     @Autowired
     private MoveRepository moveRepo;
 
-
     private static final String CONTEXT = "/games";
 
-
-
-    @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
+    @RequestMapping(
+            value = CONTEXT,
+            method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String addGame(@RequestBody Game game, @RequestParam("token") String userToken) {
         logger.debug("addGame: " + game);

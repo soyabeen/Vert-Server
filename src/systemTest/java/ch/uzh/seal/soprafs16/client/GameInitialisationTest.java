@@ -38,13 +38,5 @@ public class GameInitialisationTest {
         logger.debug("Registered: {}", registerdUser.toString());
     }
 
-    @Test
-    public void dofirstClientConnectionToGetNewUser() {
-        User me = new User("Harry Potter", "TheWizard");
-        logger.debug("Create new user for me: {}", me.toString());
 
-        RestTemplate restTemplate = new RestTemplate();
-        User registerdUser = restTemplate.postForObject(baseUri + "/users", me, User.class);
-        logger.debug("Registered: {}", registerdUser.toString());
-    }
 }
