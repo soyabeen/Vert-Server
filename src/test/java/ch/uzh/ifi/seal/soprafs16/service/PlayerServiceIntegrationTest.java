@@ -30,6 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
@@ -89,8 +90,8 @@ public class PlayerServiceIntegrationTest {
 
         // check that player was correctly created
         Player createdPlayer = playerRepo.findOne(Long.parseLong(response));
-        Assert.assertNotNull(createdPlayer);
-        Assert.assertThat(createdPlayer.getCharacter(), is(Character.BELLE));
+        Assert.assertNotNull("Player1 not null.", createdPlayer);
+        Assert.assertThat("Player1 has char BELLE.", createdPlayer.getCharacter(), is(Character.BELLE));
 
         // check that player is assigned to user
         user1 = userRepo.findOne(user1.getId());
@@ -129,7 +130,7 @@ public class PlayerServiceIntegrationTest {
                 .queryParam("token", user2.getToken())
                 .queryParam("character", Character.BELLE);
         response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertThat(response, is(BAD_RESPONSE));
+        Assert.assertThat(response, containsString("\"status\":400"));
 
         // Check if game is already full
         User user3 = userBuilder.getRandomUser();
