@@ -3,6 +3,10 @@ package ch.uzh.ifi.seal.soprafs16.utils;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import org.springframework.data.repository.CrudRepository;
+
+import javax.persistence.Entity;
+
 
 /**
  * Created by soyabeen on 31.03.16.
@@ -12,7 +16,20 @@ public class InputArgValidator {
     private static final String MESSAGE_START = "Invalid arg : ";
 
     /**
-     * Check in the given <code>java.lang.String</code> is null or lengt <= 0.
+     * Check in the given <code>java.lang.Object</code> is not null, otherwise throw exception.
+     *
+     * @param arg     The object to check.
+     * @param argName Name of the argument shown in the error message.
+     * @throws InvalidInputException to indicate the checks negative result.
+     */
+    public static void checkNotNull(Object arg, String argName) {
+        if (arg == null) {
+            throw new InvalidInputException(MESSAGE_START + argName + " can not be empty.");
+        }
+    }
+
+    /**
+     * Check in the given <code>java.lang.String</code> is not null or lengt > 0, otherwise throw exception.
      *
      * @param arg     The String argument to check.
      * @param argName Name of the argument shown in the error message.
@@ -21,6 +38,12 @@ public class InputArgValidator {
     public static void checkNotEmpty(String arg, String argName) {
         if (arg == null || arg.length() <= 0) {
             throw new InvalidInputException(MESSAGE_START + argName + " can not be empty.");
+        }
+    }
+
+    public static void checkIfPositiveNumber(Long arg, String argName) {
+        if(arg == null || arg.longValue() < 0) {
+            throw new InvalidInputException(MESSAGE_START + argName + " no positive number.");
         }
     }
 
@@ -57,5 +80,24 @@ public class InputArgValidator {
             throw new InvalidInputException(MESSAGE_START + " No valid user for " + argName + ".");
         }
         return holder;
+    }
+
+    /**
+     * Check in the given crud repository for an existing id. If a object object belonging to the id can be found,
+     * return the object. Otherwise throw exception.
+     *
+     * @param id   The id to check.
+     * @param repo    The Spring CRUDRepository for the id.
+     * @param argName Name of the argument shown in the error message.
+     * @return The user belonging to the token,
+     * @throws InvalidInputException to indicate the checks negative result.
+     */
+    public static Object checkAvailabeId(Long id, CrudRepository repo, String argName) {
+        InputArgValidator.checkNotNull(id, argName);
+        Object e = repo.findOne(id);
+        if (e == null) {
+            throw new InvalidInputException(MESSAGE_START + " No valid object for " + argName + ".");
+        }
+        return e;
     }
 }
