@@ -40,7 +40,6 @@ public class Player extends Meeple {
     public Player() {
         this.loots = new ArrayList<>();
         this.hand = new ArrayList<>();
-        this.deck = new CardDeck();
         totalMadeMoves = 0;
         bullets = MAX_BULLETS;
     }
@@ -51,6 +50,11 @@ public class Player extends Meeple {
     public Player(Loot loot) {
         this();
         loots.add(loot);
+    }
+
+    public Player(Loot loot, CardDeck playerDeck) {
+        this(loot);
+        this.deck = playerDeck;
     }
 
     /**

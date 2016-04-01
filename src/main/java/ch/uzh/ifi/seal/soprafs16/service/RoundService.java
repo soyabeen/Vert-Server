@@ -108,7 +108,7 @@ public class RoundService {
         Player currentPlayer;
         if( move != null  ) {
             // get owner of card (=player) to access players hand
-            Long tmpId = move.getPlayedCard().getOwner().getId();
+            Long tmpId = move.getUser().getPlayer().getId();
             currentPlayer = playerRepo.findOne(tmpId);
         } else throw new InvalidInputException();
 
