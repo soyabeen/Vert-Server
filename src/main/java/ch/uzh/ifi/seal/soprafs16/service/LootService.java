@@ -26,6 +26,10 @@ public class LootService {
     @Autowired
     private PlayerService playerService;
 
+    private List<Loot> generateLootsForGame(Game game) {
+        return new ArrayList<Loot>();
+    }
+
     public List<Loot> listLootsForGame(Long gameId) {
         logger.debug("listLootsForGame");
 
@@ -35,6 +39,7 @@ public class LootService {
         if (game != null) {
             result.addAll(game.getLoots());
 
+            // TODO: That's definitely wrong! We want the ownerless loots.
             List<Player> players = playerService.listPlayersForGame(gameId);
 
             for (Player player : players) {

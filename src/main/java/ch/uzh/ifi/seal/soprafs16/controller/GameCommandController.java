@@ -35,7 +35,7 @@ public class GameCommandController
             value = CONTEXT,
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Game addGame(@RequestBody Game game, @RequestParam("token") String userToken) {
+    public Game createGame(@RequestBody Game game, @RequestParam("token") String userToken) {
 
         logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
@@ -46,14 +46,9 @@ public class GameCommandController
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
-        logger.debug("startGame: " + gameId);
+        logger.debug("POST:{} - token: {}, gameid: {}",  CONTEXT + "/{gameId}/start", userToken, gameId );
 
-        Game game = gameRepo.findOne(gameId);
-        User owner = userRepo.findByToken(userToken);
-
-        if (owner != null && game != null && game.getOwner().equals(owner.getUsername())) {
-            // TODO: Start game
-        }
+        gameSerivce.startGame(gameId, userToken);
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/stop", method = RequestMethod.POST)

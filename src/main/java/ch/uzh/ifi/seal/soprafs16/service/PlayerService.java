@@ -54,6 +54,7 @@ public class PlayerService {
 
         if (game != null) {
             logger.debug("Game id: " + game.getId());
+            // TODO: Why not playerRepo.findByGame() ?
             result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
         } else {
             logger.error("No game found for id: " + gameId);
@@ -126,7 +127,8 @@ public class PlayerService {
      * @return new Player.
      */
     protected Player createPlayer(Character character) {
-        Loot loot = new Loot(LootType.PURSE, 250, Positionable.Level.BOTTOM);
+        // TODO: set player pos as loot pos.
+        Loot loot = new Loot(LootType.PURSE_SMALL, LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
         loot = lootRepo.save(loot);
 
         Player player = new Player(loot);
