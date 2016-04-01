@@ -64,7 +64,7 @@ public class GameService {
     private void createNewGameBoardForGame(Game game) {
         // nr of cars
         // generate loots
-        // add init loot to player
+        // add init loot and card deck to player
         // set next player
         // set game state
     }
