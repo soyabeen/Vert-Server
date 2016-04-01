@@ -1,8 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import ch.uzh.ifi.seal.soprafs16.Application;
-import ch.uzh.ifi.seal.soprafs16.helper.UserBuilder;
-import ch.uzh.ifi.seal.soprafs16.model.User;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
@@ -23,20 +24,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
+import ch.uzh.ifi.seal.soprafs16.Application;
+import ch.uzh.ifi.seal.soprafs16.model.User;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({ "server.port=0" })
-public class UserQueryControllerIntegrationTest {
+public class UserCommandControllerIntegrationTest {
 
-    private static final Logger logger  = LoggerFactory.getLogger(UserQueryControllerIntegrationTest.class);
+    private static final Logger logger  = LoggerFactory.getLogger(UserCommandControllerIntegrationTest.class);
 
     @Value("${local.server.port}")
     private int          port;
@@ -49,9 +47,6 @@ public class UserQueryControllerIntegrationTest {
 
     @Autowired
     private GameRepository gameRepo;
-
-    @Autowired
-    private UserBuilder userBuilder;
 
     @Before
     public void setUp()
@@ -67,18 +62,22 @@ public class UserQueryControllerIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testCreateUserSuccess() {
         List<User> usersBefore = template.getForObject(base + "/users", List.class);
+        logger.debug(usersBefore.toString());
         Assert.assertEquals(0, usersBefore.size());
 
-        User user1 = userBuilder.getRandomUser();
-        User user2 = userBuilder.getRandomUser();
+        User request = new User("Mike Meyers", "mm");
 
-        User[] usersAfter = template.getForObject(base + "/users", User[].class);
-        Assert.assertThat(usersAfter.length, is(2));
+        HttpEntity<User> httpEntity = new HttpEntity<>(request);
 
-        Assert.assertThat(usersAfter[0].getId(), is(user1.getId()));
-        Assert.assertThat(usersAfter[0].getToken(), is(user1.getToken()));
+        ResponseEntity<User> response = template.exchange(base + "/users/", HttpMethod.POST, httpEntity, User.class);
+        logger.debug("User found: " + response.getBody().getId());
 
-        Assert.assertThat(usersAfter[1].getId(), is(user2.getId()));
-        Assert.assertThat(usersAfter[1].getToken(), is(user2.getToken()));
+        List<User> usersAfter = template.getForObject(base + "/users", List.class);
+        Assert.assertEquals(1, usersAfter.size());
+
+        ResponseEntity<User> userResponseEntity = template.getForEntity(base + "/users/" + response.getBody().getId(), User.class);
+        User userResponse = userResponseEntity.getBody();
+        Assert.assertEquals(request.getName(), userResponse.getName());
+        Assert.assertEquals(request.getUsername(), userResponse.getUsername());
     }
 }

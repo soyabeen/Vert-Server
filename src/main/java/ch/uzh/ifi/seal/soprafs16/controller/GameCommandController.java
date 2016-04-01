@@ -51,6 +51,7 @@ public class GameCommandController
         gameService.startGame(gameId, userToken);
     }
 
+
     @RequestMapping(value = CONTEXT + "/{gameId}/stop", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void stopGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
@@ -60,7 +61,7 @@ public class GameCommandController
         User owner = userRepo.findByToken(userToken);
 
         if (owner != null && game != null && game.getOwner().equals(owner.getUsername())) {
-            // TODO: Stop game
+            gameRepo.delete(game);
         }
     }
 

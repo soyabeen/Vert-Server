@@ -118,7 +118,23 @@ public class RoundServiceTest {
             Assert.assertTrue(e instanceof InvalidInputException);
         }
 
+        try {
+            roundService.listTurnsForRound(null, 1);
+            fail("Illegal gameId, should throw InvalidInputException");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidInputException);
+        }
 
+        try {
+            roundService.listTurnsForRound(1L, null);
+            fail("Illegal gameId, should throw InvalidInputException");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidInputException);
+        }
     }
 
+    @Test
+    public void testGetRoundById() {
+
+    }
 }

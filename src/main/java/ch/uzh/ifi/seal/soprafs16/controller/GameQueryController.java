@@ -32,8 +32,8 @@ public class GameQueryController
 
     private static final String CONTEXT = "/games";
 
-    /*
-     * Context: /game
+    /**
+     * Context: /games
      */
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -44,8 +44,8 @@ public class GameQueryController
         return result;
     }
 
-    /*
-     * Context: /game/{game-id}
+    /**
+     * Context: /games/{game-id}
      */
     @RequestMapping(value = CONTEXT + "/{gameId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -57,8 +57,8 @@ public class GameQueryController
         return game;
     }
 
-    /*
-     * Context: /game/{game-id}/move
+    /**
+     * Context: /games/{game-id}/move
      */
     @RequestMapping(value = CONTEXT + "/{gameId}/move", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -70,11 +70,11 @@ public class GameQueryController
             return game.getMoves();
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
-    /*
-     * Context: /game/{game-id}/move/{moveId}
+    /**
+     * Context: /games/{game-id}/move/{moveId}
      */
     @RequestMapping(value = CONTEXT + "/{gameId}/move/{moveId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -89,16 +89,22 @@ public class GameQueryController
         return null;
     }
 
-    /*
-     * Context: /game/{game-id}/player/{playerId}
+    /**
+     * Context: /games/{game-id}/player/{playerId}
      */
     @RequestMapping(value = CONTEXT + "/{gameId}/player/{playerId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public User getPlayer(@PathVariable Long gameId, @PathVariable Integer playerId) {
+    public User getPlayer(@PathVariable Long gameId, @PathVariable Long playerId) {
         logger.debug("getPlayer: " + gameId);
 
         Game game = gameRepo.findOne(gameId);
 
-        return game.getUsers().get(playerId);
+        for (User user : game.getUsers()) {
+            if (user.getId().equals(playerId)) {
+                return user;
+            }
+        }
+        // TODO: Find better return
+        return null;
     }
 }

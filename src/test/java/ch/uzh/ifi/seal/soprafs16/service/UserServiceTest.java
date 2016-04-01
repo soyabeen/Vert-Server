@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -49,7 +51,10 @@ public class UserServiceTest {
         expectedUser.setStatus(UserStatus.ONLINE);
         expectedUser.setToken("token string");
 
-        when(token.generateToken()).thenReturn("token string");
+        String token = "testToken";
+        when(UUID.randomUUID().toString()).thenReturn(token);
+
+        //when(token.generateToken()).thenReturn("token string");
         when(userRepository.save(any(User.class))).thenReturn(expectedUser);
         when(userRepository.findByUsername("userNameAlreadyInUse")).thenReturn(expectedUser);
     }
