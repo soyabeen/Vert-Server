@@ -97,19 +97,22 @@ public class RoundService {
      * @return turnId Nth-turn of player
      */
     public String makeAMove(Long gameId, Integer nthRound, Move move) {
+        // holds playerId to lookup player in repo
+        Long tmpId;
+
         // throws InvalidInputException if not valid
         checkInputArgsGameIdAndNthRound(gameId, nthRound);
 
         Game game = gameRepo.findOne(gameId);
-
-        // need a Round to add new card
+        move.setGame(game);
         Round round = roundRepo.findByGameAndNthRound(game, nthRound);
 
         Player currentPlayer;
         if( move != null  ) {
-            // get owner of card (=player) to access players hand
-            Long tmpId = move.getUser().getPlayer().getId();
+            // get owner of card (= player) to access players hand
+            tmpId = move.getUser().getPlayer().getId();
             currentPlayer = playerRepo.findOne(tmpId);
+
         } else throw new InvalidInputException();
 
         if( !move.isPass() ) {
