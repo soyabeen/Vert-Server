@@ -51,10 +51,7 @@ public class UserServiceTest {
         expectedUser.setStatus(UserStatus.ONLINE);
         expectedUser.setToken("token string");
 
-        String token = "testToken";
-        when(UUID.randomUUID().toString()).thenReturn(token);
-
-        //when(token.generateToken()).thenReturn("token string");
+        when(token.generateToken()).thenReturn("token string");
         when(userRepository.save(any(User.class))).thenReturn(expectedUser);
         when(userRepository.findByUsername("userNameAlreadyInUse")).thenReturn(expectedUser);
     }

@@ -81,14 +81,13 @@ public class GameCommandControllerTest {
 
         HttpEntity<Game> gameEntity = new HttpEntity<>(game);
 
-        ResponseEntity<String> response = template.exchange(uriBuilder.build().encode().toUri(),
+        ResponseEntity<Game> response = template.exchange(uriBuilder.build().encode().toUri(),
                 HttpMethod.POST,
                 gameEntity,
-                String.class);
+                Game.class);
 
-        Long gameId = Long.parseLong(response.getBody());
 
-        Game result = gameRepo.findOne(gameId);
+        Game result = gameRepo.findOne(response.getBody().getId());
         Assert.assertThat(result.getName(), is(game.getName()));
         Assert.assertThat(result.getOwner(), is(game.getOwner()));
 
@@ -101,7 +100,7 @@ public class GameCommandControllerTest {
         response = template.exchange(uriBuilder.build().encode().toUri(),
                 HttpMethod.POST,
                 gameEntity,
-                String.class);
+                Game.class);
 
         Assert.assertNull(response.getBody());
     }
