@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import org.junit.Assert;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import static org.eclipse.persistence.jpa.jpql.Assert.fail;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,19 +48,24 @@ public class RoundServiceTest {
     private PlayerRepository playerRepo;
 
     @Mock
+    private MoveRepository moveRepo;
+
+
     private Player player;
 
     @Mock
     private Round round;
 
-    //@Mock
+    @Mock
+    private Move move;
+
+    @Mock
     private Card card;
 
     private Game game;
     private Integer nthRound;
     private List<Turn> turns;
     private List<Card> hand;
-    private Move move;
 
     @Before
     public void init() {
@@ -70,15 +78,19 @@ public class RoundServiceTest {
                 Turn.NORMAL,
                 Turn.HIDDEN});
         nthRound = 1;
+        round = new Round(game, nthRound, turns,RoundEndEvent.REBELLION);
 
         game = new Game();
         game.setId(1L);
 
+        player = new Player();
         player.setCharacter(Character.GHOST);
 
         card = new Card();
         card.setOwner(player);
         card.setType(CardType.MOVE);
+
+
 
         // player has 4 Move cards
         hand = new ArrayList<>();
@@ -89,14 +101,13 @@ public class RoundServiceTest {
 
         player.setHand(hand);
 
-        move = new Move();
-        move.setPlayedCard(card);
-        move.setGame(game);
-        move.setId(1L);
+
 
         when(gameRepo.findOne(1L)).thenReturn(game);
         when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
-        when(playerRepo.findOne( move.getPlayedCard().getOwner().getId() )).thenReturn(player);
+        //when(move.getPlayedCard().getOwner().getId()).thenReturn(1L);
+        when(playerRepo.findOne(anyLong())).thenReturn(player);
+        when(moveRepo.save((Move) any())).thenReturn(move);
     }
 
     @Test
@@ -130,7 +141,15 @@ public class RoundServiceTest {
 
     @Test
     public void makeAMoveReturnsTurnId() {
+        move = new Move();
+        move.setPlayedCard(card);
+        move.setGame(game);
+        move.setId(1L);
+
+
         String result = roundService.makeAMove(1L, 1, move);
+
+        logger.debug("Result was {} and is type {}", result, result.getClass().toString());
 
         Assert.assertThat(result, is("1"));
     }

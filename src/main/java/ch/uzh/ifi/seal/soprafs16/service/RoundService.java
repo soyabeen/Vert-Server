@@ -108,7 +108,8 @@ public class RoundService {
         Player currentPlayer;
         if( move != null  ) {
             // get owner of card (=player) to access players hand
-            currentPlayer = playerRepo.findOne(move.getPlayedCard().getOwner().getId());
+            Long tmpId = move.getPlayedCard().getOwner().getId();
+            currentPlayer = playerRepo.findOne(tmpId);
         } else throw new InvalidInputException();
 
         if( !move.isPass() ) {
@@ -152,7 +153,14 @@ public class RoundService {
         List<Card> playerHand = currentPlayer.getHand();
 
         // go through hand and remove same card type
-        playerHand.remove(playerHand.indexOf(playedCard)); // TODO: debug to see if java voodo works ☠
+        logger.debug("playerHand size: {}", playerHand.size());
+        for(Card cardInHand : playerHand) {
+            if(cardInHand.equals(playedCard)) {
+                playerHand.remove(cardInHand); // TODO: debug to see if java voodo works ☠
+                break;
+            }
+        }
+
 
         // save new hand
         currentPlayer.setHand(playerHand);
