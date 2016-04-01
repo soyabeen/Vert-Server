@@ -153,14 +153,7 @@ public class RoundService {
         List<Card> playerHand = currentPlayer.getHand();
 
         // go through hand and remove same card type
-        logger.debug("playerHand size: {}", playerHand.size());
-        for(Card cardInHand : playerHand) {
-            if(cardInHand.equals(playedCard)) {
-                playerHand.remove(cardInHand); // TODO: debug to see if java voodo works ☠
-                break;
-            }
-        }
-
+        playerHand.remove(playedCard);
 
         // save new hand
         currentPlayer.setHand(playerHand);

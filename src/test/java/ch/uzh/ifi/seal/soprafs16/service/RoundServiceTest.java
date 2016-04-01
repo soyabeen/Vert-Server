@@ -60,7 +60,7 @@ public class RoundServiceTest {
     private Move move;
 
     @Mock
-    private Card card;
+    private Card card, card1;
 
     private Game game;
     private Integer nthRound;
@@ -90,14 +90,16 @@ public class RoundServiceTest {
         card.setOwner(player);
         card.setType(CardType.MOVE);
 
-
+        card1 = new Card();
+        card1.setOwner(player);
+        card1.setType(CardType.MOVE);
 
         // player has 4 Move cards
         hand = new ArrayList<>();
-        hand.add(card);
-        hand.add(card);
-        hand.add(card);
-        hand.add(card);
+        hand.add(card1);
+        hand.add(card1);
+        hand.add(card1);
+        hand.add(card1);
 
         player.setHand(hand);
 
@@ -105,7 +107,6 @@ public class RoundServiceTest {
 
         when(gameRepo.findOne(1L)).thenReturn(game);
         when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
-        //when(move.getPlayedCard().getOwner().getId()).thenReturn(1L);
         when(playerRepo.findOne(anyLong())).thenReturn(player);
         when(moveRepo.save((Move) any())).thenReturn(move);
     }

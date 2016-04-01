@@ -60,4 +60,14 @@ public class Card implements Serializable {
     public void setType(CardType type) {
         this.type = type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Card)) {
+            return false;
+        }
+
+        Card card = (Card) o;
+        return (card.getOwner() == this.getOwner() && card.getType() == this.getType());
+    }
 }
