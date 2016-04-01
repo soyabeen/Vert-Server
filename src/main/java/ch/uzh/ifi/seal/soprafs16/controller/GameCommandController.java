@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +22,7 @@ public class GameCommandController
     private static final Logger logger = LoggerFactory.getLogger(GameCommandController.class);
 
     @Autowired
-    private GameService gameSerivce;
+    private GameService gameService;
     @Autowired
     private UserRepository userRepo;
     @Autowired
@@ -36,11 +37,10 @@ public class GameCommandController
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Game createGame(@RequestBody Game game, @RequestParam("token") String userToken) {
-
         logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
         User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
-        return gameSerivce.createGame(game.getName(), game.getOwner(), game.getNumberOfPlayers());
+        return gameService.createGame(game.getName(), game.getOwner(), game.getNumberOfPlayers());
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
@@ -48,7 +48,7 @@ public class GameCommandController
     public void startGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
         logger.debug("POST:{} - token: {}, gameid: {}",  CONTEXT + "/{gameId}/start", userToken, gameId );
 
-        gameSerivce.startGame(gameId, userToken);
+        gameService.startGame(gameId, userToken);
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/stop", method = RequestMethod.POST)

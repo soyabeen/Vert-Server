@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by soyabeen on 31.03.16.
@@ -38,5 +42,15 @@ public class UserService {
         user.setStatus(UserStatus.ONLINE);
         user.setToken(generator.generateToken());
         return userRepo.save(user);
+    }
+
+    public List<User> listUsers() {
+        List<User> result = new ArrayList<>();
+        userRepo.findAll().forEach(result::add);
+        return result;
+    }
+
+    public User getUser(Long userId) {
+        return (User) InputArgValidator.checkAvailabeId(userId, userRepo, "userId");
     }
 }

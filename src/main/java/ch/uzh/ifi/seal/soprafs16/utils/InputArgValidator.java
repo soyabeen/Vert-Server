@@ -42,7 +42,7 @@ public class InputArgValidator {
     }
 
     public static void checkIfPositiveNumber(Long arg, String argName) {
-        if(arg == null || arg.longValue() < 0) {
+        if (arg == null || arg.longValue() < 0) {
             throw new InvalidInputException(MESSAGE_START + argName + " no positive number.");
         }
     }
@@ -86,7 +86,7 @@ public class InputArgValidator {
      * Check in the given crud repository for an existing id. If a object object belonging to the id can be found,
      * return the object. Otherwise throw exception.
      *
-     * @param id   The id to check.
+     * @param id      The id to check.
      * @param repo    The Spring CRUDRepository for the id.
      * @param argName Name of the argument shown in the error message.
      * @return The user belonging to the token,
@@ -96,7 +96,7 @@ public class InputArgValidator {
         InputArgValidator.checkNotNull(id, argName);
         Object e = repo.findOne(id);
         if (e == null) {
-            throw new InvalidInputException(MESSAGE_START + " No valid object for " + argName + ".");
+            throw new InvalidInputException(MESSAGE_START + " No valid object for " + argName + " " + id + ".");
         }
         return e;
     }
