@@ -58,7 +58,11 @@ public class Round implements Serializable {
     }
 
     public void executeActionPhase() {
+
         throw new IllegalStateException("Method not yet implemented!");
+
+        // increment nthRound
+        //this.incrementNthRound();
     }
 
     /**
@@ -90,7 +94,7 @@ public class Round implements Serializable {
         return nthRound;
     }
 
-    public void setNthRound(Integer nthRound) {
-        this.nthRound = nthRound;
+    public void incrementNthRound() {
+        this.nthRound++;
     }
 }

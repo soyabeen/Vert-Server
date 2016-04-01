@@ -1,11 +1,13 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +18,9 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.eclipse.persistence.jpa.jpql.Assert.fail;
 import static org.hamcrest.core.Is.is;
@@ -37,10 +41,23 @@ public class RoundServiceTest {
     @Mock
     private RoundRepository roundRepo;
 
+    @Mock
+    private PlayerRepository playerRepo;
+
+    @Mock
+    private Player player;
+
+    @Mock
     private Round round;
+
+    //@Mock
+    private Card card;
+
     private Game game;
-    private List<Turn> turns;
     private Integer nthRound;
+    private List<Turn> turns;
+    private List<Card> hand;
+    private Move move;
 
     @Before
     public void init() {
@@ -57,37 +74,29 @@ public class RoundServiceTest {
         game = new Game();
         game.setId(1L);
 
-        round = new Round(game, nthRound, turns, RoundEndEvent.REBELLION);
+        player.setCharacter(Character.GHOST);
+
+        card = new Card();
+        card.setOwner(player);
+        card.setType(CardType.MOVE);
+
+        // player has 4 Move cards
+        hand = new ArrayList<>();
+        hand.add(card);
+        hand.add(card);
+        hand.add(card);
+        hand.add(card);
+
+        player.setHand(hand);
+
+        move = new Move();
+        move.setPlayedCard(card);
+        move.setGame(game);
+        move.setId(1L);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
         when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
-    }
-
-    // TODO: optimize random turn generator
-    private List<Turn> createRandomTurns() {
-        // holds result
-        List<Turn> turns = new ArrayList<>();
-
-        Random rand = new Random();
-        Integer max_no_of_turns = rand.nextInt(5-3) + 3;
-
-        // holds indexes of events
-        List<Integer> no_turns = new ArrayList<>(max_no_of_turns);
-
-        // fill no_turns with values
-        for(int i = 0; i < max_no_of_turns; i++) {
-            no_turns.add(i);
-        }
-
-        // shuffle no_turns values
-        Collections.shuffle(no_turns);
-
-        // go through shuffled collection and add to turns
-        for(Integer val : no_turns) {
-            turns.add(Turn.values()[val]);
-        }
-
-        return turns;
+        when(playerRepo.findOne( move.getPlayedCard().getOwner().getId() )).thenReturn(player);
     }
 
     @Test
@@ -117,8 +126,13 @@ public class RoundServiceTest {
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidInputException);
         }
+    }
 
+    @Test
+    public void makeAMoveReturnsTurnId() {
+        String result = roundService.makeAMove(1L, 1, move);
 
+        Assert.assertThat(result, is("1"));
     }
 
 }
