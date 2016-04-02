@@ -36,7 +36,12 @@ public class GameBuilder {
     @Autowired
     private GameRepository gameRepo;
 
-
+    /**
+     * Creates a game and saves it.
+     * @param name
+     * @param owner
+     * @return
+     */
     public GameBuilder init(String name, String owner) {
         game = new Game();
         game.setName(name);
@@ -44,6 +49,21 @@ public class GameBuilder {
         availableCharacter = new ArrayList<>(Arrays.asList(Character.values()));
 
         return save();
+    }
+
+    /**
+     * Creates a game without saving it.
+     * @param name
+     * @param owner
+     * @return
+     */
+    public GameBuilder initNoPersistence(String name, String owner) {
+        game = new Game();
+        game.setName(name);
+        game.setOwner(owner);
+        availableCharacter = new ArrayList<>(Arrays.asList(Character.values()));
+
+        return this;
     }
 
     /**
