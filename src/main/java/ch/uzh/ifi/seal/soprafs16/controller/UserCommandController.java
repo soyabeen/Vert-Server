@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import ch.uzh.ifi.seal.soprafs16.service.UserService;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +20,18 @@ public class UserCommandController
     private static final String CONTEXT = "/users";
 
     @Autowired
-    private UserService userService;
+    private PlayerService playerService;
 
     /**
      * Adds a new user to the database.
-     * @param user
+     * @param player
      * @return
      */
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public User addUser(@RequestBody User user) {
-        logger.debug("POST: - Args. name <{}>, username <{}>.", CONTEXT, user.getName(), user.getUsername());
-        return userService.createUser(user.getName(), user.getUsername());
+    public Player addUser(@RequestBody Player player) {
+        logger.debug("POST: - Args. name <{}>, username <{}>.", CONTEXT, player.getUsername());
+        return playerService.createPlayer(player);
     }
 }

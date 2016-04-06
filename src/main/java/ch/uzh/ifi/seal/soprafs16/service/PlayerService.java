@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.model.*;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by soyabeen on 24.03.16.
@@ -36,6 +38,25 @@ public class PlayerService {
 
     @Autowired
     private LootRepository lootRepo;
+
+
+    public Player createPlayer(Player player) {
+
+        InputArgValidator.checkNotEmpty(player.getUsername(), "username");
+        InputArgValidator.checkUserNameNotUsed(player.getUsername(), playerRepo, "username");
+        player.setToken(UUID.randomUUID().toString());
+        return playerRepo.save(player);
+    }
+
+    public List<Player> listPlayer() {
+        List<Player> result = new ArrayList<>();
+        playerRepo.findAll().forEach(result::add);
+        return result;
+    }
+
+    public Player getPlayer(Long playerId) {
+        return (Player) InputArgValidator.checkAvailabeId(playerId, playerRepo, "playerId");
+    }
 
     /**
      * Lists all players for a given game.
