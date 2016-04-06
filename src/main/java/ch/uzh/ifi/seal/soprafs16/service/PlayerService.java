@@ -86,7 +86,7 @@ public class PlayerService {
      * @return The id of the newly created player
      */
     public Player assignPlayer(Long gameId, Player player, Character character) {
-        logger.debug("createPlayerForUser");
+        logger.debug("assignPlayer");
 
         InputArgValidator.checkIfPositiveNumber(gameId, "gameid");
         InputArgValidator.checkNotNull(player, "player");
