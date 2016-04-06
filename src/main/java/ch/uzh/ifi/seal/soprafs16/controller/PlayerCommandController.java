@@ -31,12 +31,12 @@ public class PlayerCommandController
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createPlayerForGame(@PathVariable Long gameId, @RequestParam("token") String userToken,
-                                      @RequestParam("character") Character character) {
+    public String assignPlayer(@PathVariable Long gameId, @RequestParam("token") String userToken,
+                               @RequestParam("character") Character character) {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
 
         //TODO: add full link or relative URL
-        return playerService.createPlayerForGame(gameId, tokenOwner, character).toString();
+        return playerService.assignPlayer(gameId, tokenOwner, character).toString();
     }
 }

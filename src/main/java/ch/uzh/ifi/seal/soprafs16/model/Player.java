@@ -108,7 +108,7 @@ public class Player extends Meeple {
 
     /**
      * Adds a piece of loot.
-     * @param loot Loot to pick.
+     * @param loot
      */
     public void addLoot(Loot loot) {
         loots.add(loot);
