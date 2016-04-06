@@ -2,9 +2,12 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
+
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +49,7 @@ public class GameCommandControllerTest {
     private RestTemplate template;
 
     @Autowired
-    private UserRepository userRepo;
+    private PlayerRepository playerRepo;
 
     @Autowired
     private GameRepository gameRepo;
@@ -55,7 +58,7 @@ public class GameCommandControllerTest {
     private GameBuilder gameBuilder;
 
     @Autowired
-    private UserBuilder userBuilder;
+    private PlayerBuilder playerBuilder;
 
     @Before
     public void setUp() throws MalformedURLException {
@@ -63,18 +66,18 @@ public class GameCommandControllerTest {
         this.template = new TestRestTemplate();
 
         gameRepo.deleteAll();
-        userRepo.deleteAll();
+        playerRepo.deleteAll();
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void addGameTest() {
         // test valid query
-        User user = userBuilder.getRandomUser();
-        Game game = gameBuilder.initNoPersistence("addGameTest", user.getUsername()).build();
+        Player player = playerBuilder.getRandomPlayer();
+        Game game = gameBuilder.initNoPersistence("addGameTest", player.getUsername()).build();
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString())
-                .queryParam("token", user.getToken());
+                .queryParam("token", player.getToken());
 
         HttpEntity<Game> gameEntity = new HttpEntity<>(game);
 
