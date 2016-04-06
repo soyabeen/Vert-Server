@@ -4,14 +4,13 @@ import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.LootBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
-import ch.uzh.ifi.seal.soprafs16.model.*;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 public class PositionServiceIntegrationTest {
 
     @SuppressWarnings("unused")
-    private static final Logger logger  = LoggerFactory.getLogger(PositionServiceIntegrationTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(PositionServiceIntegrationTest.class);
 
     @Autowired
     private PositionService positionService;
