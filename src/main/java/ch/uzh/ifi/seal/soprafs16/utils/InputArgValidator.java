@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.utils;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.springframework.data.repository.CrudRepository;
 
 
@@ -73,7 +72,6 @@ public class InputArgValidator {
      */
     public static Player checkTokenHasValidPlayer(String token, PlayerRepository repo, String argName) {
         InputArgValidator.checkNotEmpty(token, "token");
-
         Player holder = repo.findByToken(token);
         if (holder == null) {
             throw new InvalidInputException(MESSAGE_START + " No valid user for " + argName + ".");

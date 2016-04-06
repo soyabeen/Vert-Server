@@ -4,7 +4,6 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import ch.uzh.ifi.seal.soprafs16.service.GameService;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
@@ -35,8 +34,7 @@ public class GameCommandController
     public Game createGame(@RequestBody Game game, @RequestParam("token") String userToken) {
         logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
-        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
-        return gameService.createGame(game, tokenOwner, game.getNumberOfPlayers());
+        return gameService.createGame(game, userToken, game.getNumberOfPlayers());
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)

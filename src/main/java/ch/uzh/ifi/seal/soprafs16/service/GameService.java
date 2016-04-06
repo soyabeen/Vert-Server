@@ -5,7 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
@@ -30,24 +30,25 @@ public class GameService {
     private GameRepository gameRepo;
 
     @Autowired
-    private UserRepository userRepo;
+    private PlayerRepository playerRepo;
+
+    private GameConfiguration gameConf;
 
 
-    private Game createGame(String gameName, User owner, int players) {
-        Game game = new Game();
+    private Game createGame(String gameName, Player owner, int players) {
+        Game game = gameConf.createGameEmptyGameShellForNrOfPlayers(players);
         game.setName(gameName);
         game.setOwner(owner.getUsername());
-        game.setStatus(GameStatus.PENDING);
-        game.setNumberOfPlayers(players);
         game.addUser(owner);
         return gameRepo.save(game);
     }
 
-    public Game createGame(Game game, User owner, int nrOfPlayers) {
-        logger.debug("create game for name: {}, owner: {}, players: {}", game.getName(), owner.getUsername(), nrOfPlayers);
+    public Game createGame(Game game, String userToken, int nrOfPlayers) {
+        logger.debug("create game for name: {}, owner: {}, players: {}", game.getName(), userToken, nrOfPlayers);
 
         InputArgValidator.checkNotEmpty(game.getName(), "gamename");
-        InputArgValidator.checkNotEmpty(owner.getUsername(), "owner");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
+        InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
 
 //        // game name available?
         if (gameRepo.findByName(game.getName()) != null) {
@@ -56,7 +57,7 @@ public class GameService {
 
         int players = (nrOfPlayers < GameConfiguration.MIN_PLAYERS)
                 ? GameConfiguration.MAX_PLAYERS : nrOfPlayers;
-        return createGame(game.getName(), owner, players);
+        return createGame(game.getName(), tokenOwner, players);
     }
 
     private void createNewGameBoardForGame(Game game) {
@@ -69,7 +70,7 @@ public class GameService {
 
     public void startGame(Long gameId, String userToken) {
 
-        User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, playerRepo, "token");
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
         // Game must be in pending state
