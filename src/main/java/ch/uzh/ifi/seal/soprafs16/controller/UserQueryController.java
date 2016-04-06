@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +20,20 @@ public class UserQueryController
     static final String CONTEXT = "/users";
 
     @Autowired
-    private UserService userService;
+    private PlayerService playerService;
 
     @RequestMapping(method = RequestMethod.GET, value = CONTEXT)
     @ResponseStatus(HttpStatus.OK)
-    public List<User> listUsers() {
-        logger.debug("listUsers");
-        return userService.listUsers();
+    public List<Player> listPlayers() {
+        logger.debug("listPlayers");
+        return playerService.listPlayers();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = CONTEXT + "/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User getUser(@PathVariable Long userId) {
+    public Player getUser(@PathVariable Long userId) {
         logger.debug("getPlayer: " + userId);
 
-        return userService.getUser(userId);
+        return playerService.getPlayer(userId);
     }
 }

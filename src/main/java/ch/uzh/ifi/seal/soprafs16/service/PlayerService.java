@@ -48,7 +48,7 @@ public class PlayerService {
         return playerRepo.save(player);
     }
 
-    public List<Player> listPlayer() {
+    public List<Player> listPlayers() {
         List<Player> result = new ArrayList<>();
         playerRepo.findAll().forEach(result::add);
         return result;
