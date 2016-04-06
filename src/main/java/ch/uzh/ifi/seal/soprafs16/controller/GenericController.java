@@ -23,7 +23,7 @@ public abstract class GenericController {
 
 	@ExceptionHandler(InvalidInputException.class)
 	@ResponseBody
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid input argument")
+	@ResponseStatus(value = HttpStatus.PRECONDITION_FAILED, reason = "Invalid input argument")
 	public ErrorResource handleInvalidInputException(Exception exception, HttpServletRequest request) {
 		genLogger.error("", exception);
 		genLogger.info("handleInvalidInputException ....");
