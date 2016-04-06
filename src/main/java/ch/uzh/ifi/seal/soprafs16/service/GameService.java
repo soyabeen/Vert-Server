@@ -44,21 +44,20 @@ public class GameService {
         return gameRepo.save(game);
     }
 
-    public Game createGame(String gameName, String usernameOfOwner, int nrOfPlayers) {
-        logger.debug("create game for name: {}, owner: {}, players: {}", gameName, usernameOfOwner, nrOfPlayers);
+    public Game createGame(Game game, User owner, int nrOfPlayers) {
+        logger.debug("create game for name: {}, owner: {}, players: {}", game.getName(), owner.getUsername(), nrOfPlayers);
 
-        InputArgValidator.checkNotEmpty(gameName, "gamename");
-        InputArgValidator.checkNotEmpty(usernameOfOwner, "owner");
+        InputArgValidator.checkNotEmpty(game.getName(), "gamename");
+        InputArgValidator.checkNotEmpty(owner.getUsername(), "owner");
 
-        // game name available?
-        User owner = gameRepo.findByName(gameName);
-        if (owner != null) {
+//        // game name available?
+        if (gameRepo.findByName(game.getName()) != null) {
             throw new InvalidInputException("Invalid arg : Name of game is already used.");
         }
 
         int players = (nrOfPlayers < GameConfiguration.MIN_PLAYERS)
                 ? GameConfiguration.MAX_PLAYERS : nrOfPlayers;
-        return createGame(gameName, owner, players);
+        return createGame(game.getName(), owner, players);
     }
 
     private void createNewGameBoardForGame(Game game) {

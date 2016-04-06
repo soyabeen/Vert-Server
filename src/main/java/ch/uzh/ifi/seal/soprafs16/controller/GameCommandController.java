@@ -35,7 +35,7 @@ public class GameCommandController
         logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
         User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
-        return gameService.createGame(game.getName(), game.getOwner(), game.getNumberOfPlayers());
+        return gameService.createGame(game, tokenOwner, game.getNumberOfPlayers());
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
