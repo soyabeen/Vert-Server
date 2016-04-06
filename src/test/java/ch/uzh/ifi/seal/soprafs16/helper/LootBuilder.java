@@ -23,7 +23,7 @@ public class LootBuilder {
     private LootType[] types = LootType.values();
 
 
-    public Loot init(LootType type, int value, int car, Positionable.Level level) {
+    public LootBuilder init(LootType type, int value, int car, Positionable.Level level) {
         loot = new Loot(type, value, car, level);
 
         return save();
@@ -42,7 +42,8 @@ public class LootBuilder {
         Positionable.Level level = r.nextBoolean() ? Positionable.Level.BOTTOM : Positionable.Level.TOP;
         // TODO: mech - set random car nr
         Loot loot = new Loot(randomType, value, 0, level);
-        return save();
+        save();
+        return loot;
     }
 
     /**
@@ -59,7 +60,8 @@ public class LootBuilder {
         return loot;
     }
 
-    public Loot save() {
-        return lootRepo.save(loot);
+    public LootBuilder save() {
+        loot = lootRepo.save(loot);
+        return this;
     }
 }
