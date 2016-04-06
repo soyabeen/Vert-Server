@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by soyabeen on 24.03.16.
@@ -31,9 +29,6 @@ public class PlayerService {
     private GameRepository gameRepo;
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
     private PlayerRepository playerRepo;
 
     @Autowired
@@ -44,6 +39,7 @@ public class PlayerService {
 
     /**
      * Lists all players for a given game.
+     *
      * @param gameId
      * @return
      */
@@ -55,7 +51,7 @@ public class PlayerService {
         if (game != null) {
             logger.debug("Game id: " + game.getId());
             // TODO: Why not playerRepo.findByGame() ?
-            result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
+            result = game.getPlayers();
         } else {
             logger.error("No game found for id: " + gameId);
         }
@@ -64,78 +60,54 @@ public class PlayerService {
 
     /**
      * Creates a new player for a given user and adds this player to the game.
-     * @param gameId The game to which we want to add a player.
-     * @param user The user owning the player.
+     *
+     * @param gameId    The game to which we want to add a player.
+     * @param player    The user owning the player.
      * @param character User's chosen character.
      * @return The id of the newly created player
      */
-    public Long createPlayerForUser(Long gameId, User user, Character character) {
+    public Player assignPlayer(Long gameId, Player player, Character character) {
         logger.debug("createPlayerForUser");
 
         InputArgValidator.checkIfPositiveNumber(gameId, "gameid");
-        InputArgValidator.checkNotNull(user, "user");
+        InputArgValidator.checkNotNull(player, "player");
         InputArgValidator.checkNotNull(character, "character");
 
-        Game game = (Game)InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
-        if (game != null && game.getUsers().size() < GameConfiguration.MAX_PLAYERS
+        if (game != null && game.getPlayers().size() < GameConfiguration.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
 
             // create new player for user
-            Player player = createPlayer(character);
+            player = initializeCharacter(player, character);
 
-            // assign Player to user
-            boolean itWorked = assignPlayerToUser(user, player);
+            // assign user to game
+            game.addPlayer(player);
+            gameRepo.save(game);
 
-            if (itWorked) {
-                // assign user to game
-                game.addUser(user);
-                gameRepo.save(game);
-            }
-
-            return user.getPlayer().getId();
+            return player;
         } else {
             //TODO: Find better way to handle this
             logger.error("No game found/game is full/character not available for id: " + gameId);
         }
 
-        return -1L;
-    }
-
-    /**
-     * Assing player to a user.
-     * @param user
-     * @param player
-     */
-    protected boolean assignPlayerToUser(User user, Player player) {
-        if (user.getPlayer() == null) {
-            user.setPlayer(player);
-            user.setStatus(UserStatus.ONLINE);
-            userRepo.save(user);
-
-            return true;
-        } else {
-            logger.error("User already has Player assigned");
-        }
-
-        return false;
+        return new Player();
     }
 
     /**
      * Creates a new Player with given character.
+     *
      * @param character Users's chosen character.
      * @return new Player.
      */
-    protected Player createPlayer(Character character) {
+    protected Player initializeCharacter(Player player, Character character) {
         // TODO: set player pos as loot pos.
         Loot loot = new Loot(LootType.PURSE_SMALL, LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
         loot = lootRepo.save(loot);
 
-        Player player = new Player(loot);
         player.setCharacter(character);
-        player = playerRepo.save(player);
-
-        return player;
+        player.addLoot(loot);
+        return playerRepo.save(player);
     }
 
 }
