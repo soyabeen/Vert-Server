@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
@@ -34,8 +35,7 @@ public class PlayerServiceTest {
     @Mock
     private GameRepository gameRepo;
 
-    @Mock
-    private UserRepository userRepo;
+    private PlayerBuilder playerBuilder;
 
     private Game game;
 
@@ -49,24 +49,11 @@ public class PlayerServiceTest {
 
     @Test
     public void testListPlayers() {
-        Player p1 = new Player();
-        p1.setCharacter(Character.BELLE);
-        Player p2 = new Player();
-        p2.setCharacter(Character.GHOST);
+        Player p1 = playerBuilder.init().addCharacter(Character.BELLE).build();
+        Player p2 = playerBuilder.init().addCharacter(Character.GHOST).build();
 
-        User user1 = new User("abc", "def");
-        user1.setToken(UUID.randomUUID().toString());
-        user1.setPlayer(p1);
-
-        User user2 = new User("def", "abc");
-        user2.setToken(UUID.randomUUID().toString());
-        user2.setPlayer(p2);
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-
-        game.addUser(user1);
-        game.addUser(user2);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
 
         List<Player> players = playerService.listPlayersForGame(1L);
 
