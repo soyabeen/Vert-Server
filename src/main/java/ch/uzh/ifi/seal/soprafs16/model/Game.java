@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -40,6 +42,7 @@ public class Game implements Serializable {
     private List<Move> moves;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Player> players;
 
     @OneToMany(fetch = FetchType.EAGER)

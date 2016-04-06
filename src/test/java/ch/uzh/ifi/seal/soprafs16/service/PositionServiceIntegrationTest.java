@@ -45,6 +45,9 @@ public class PositionServiceIntegrationTest {
     @Autowired
     private GameBuilder gameBuilder;
 
+    @Autowired
+    private PlayerBuilder playerBuilder;
+
 
     @Test
     public void getPositionablesTest() {
@@ -55,14 +58,17 @@ public class PositionServiceIntegrationTest {
         List<Positionable> result = positionService.listPositionablesForGame(game.getId());
         Assert.assertThat(result.size(), is(0));
 
-        game = gameBuilder.addRandomUser()
-                .addRandomUser()
+        Player p1 = playerBuilder.init(true).build();
+        Player p2 = playerBuilder.init(true).build();
+
+        game = gameBuilder
+                .addUser(p1)
+                .addUser(p2)
                 .addRandomLoot()
                 .addRandomLoot()
                 .build();
 
         logger.error(game.getPlayers().toString());
-        // TODO: This returns each player twice but only in testing!!!
         result = positionService.listPositionablesForGame(game.getId());
         logger.error(result.toString());
         Assert.assertThat(result.size(), is(4));
