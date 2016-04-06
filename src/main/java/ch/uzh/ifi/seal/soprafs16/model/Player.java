@@ -53,6 +53,10 @@ public class Player extends Meeple {
         bullets = MAX_BULLETS;
     }
 
+    public Player(String username) {
+        this.username = username;
+    }
+
     /**
      * @param loot Loot to add to this player.
      */
