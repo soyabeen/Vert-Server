@@ -35,8 +35,6 @@ public class PlayerCommandController
                                @RequestParam("character") Character character) {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
-
-        //TODO: add full link or relative URL
         return playerService.assignPlayer(gameId, tokenOwner, character).toString();
     }
 }

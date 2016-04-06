@@ -123,7 +123,7 @@ public class RoundServiceTest {
         user1.setToken(UUID.randomUUID().toString());
         user1.setPlayer(player);
 
-        move.setUser(user1);
+        move.setPlayer(user1);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
         when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
@@ -192,13 +192,13 @@ public class RoundServiceTest {
     public void makeAMovePassesTurn() {
         move = new Move();
         move.setGame(game);
-        move.setUser(user1);
+        move.setPlayer(user1);
         move.setId(1L);
         move.setPass(true);
 
-        int sizeBefore = move.getUser().getPlayer().getHand().size();
+        int sizeBefore = move.getPlayer().getPlayer().getHand().size();
         roundService.makeAMove(1L, 1, move);
-        int sizeAfter = move.getUser().getPlayer().getHand().size();
+        int sizeAfter = move.getPlayer().getPlayer().getHand().size();
 
         Assert.assertThat(sizeAfter, is(sizeBefore + 3));
 

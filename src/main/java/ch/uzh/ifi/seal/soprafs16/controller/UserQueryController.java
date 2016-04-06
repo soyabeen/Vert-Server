@@ -31,7 +31,7 @@ public class UserQueryController
     @RequestMapping(method = RequestMethod.GET, value = CONTEXT + "/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User getUser(@PathVariable Long userId) {
-        logger.debug("getUser: " + userId);
+        logger.debug("getPlayer: " + userId);
 
         return userService.getUser(userId);
     }
