@@ -77,7 +77,7 @@ public class RoundService {
     }
 
     /**
-     * Retrieves a list of Turns belonging to a game and a chosen round.
+     * Retrieves a list of turns belonging to a game and a chosen round.
      *
      * @param gameId
      * @param nthRound
@@ -90,51 +90,88 @@ public class RoundService {
     }
 
     /**
-     * Plays chosen card.
+     * Executes chosen action of Player.
      *
      * @param gameId Identifier of game
      * @param move Action chosen by player
      * @return turnId Nth-turn of player
      */
-    // TODO: rename method and controller to "makeAMove(...)"
-    public String playACard(Long gameId, Integer nthRound, Move move) {
-        Game game = gameRepo.findOne(gameId);
+    public String makeAMove(Long gameId, Integer nthRound, Move move) {
+        // holds playerId to lookup player in repo
+        Long tmpId;
 
-        // need a Round to add new card
+        // throws InvalidInputException if not valid
+        checkInputArgsGameIdAndNthRound(gameId, nthRound);
+
+        Game game = gameRepo.findOne(gameId);
+        move.setGame(game);
         Round round = roundRepo.findByGameAndNthRound(game, nthRound);
 
-        if( move.getPlayedCard() != null ) {
+        Player currentPlayer;
+        if( move != null  ) {
+            // get owner of card (= player) to access players hand
+            tmpId = move.getUser().getPlayer().getId();
+            currentPlayer = playerRepo.findOne(tmpId);
+
+        } else throw new InvalidInputException();
+
+        if( !move.isPass() ) {
             // Player played a card
 
             // add played card
-            round.addNewlyPlayedCard(move.getPlayedCard());
-            round = roundRepo.save(round);
-
-            // remove Card from player hand
-            Player currentPlayer = playerRepo.findOne(move.getPlayedCard().getOwner().getId());
-            List<Card> playerHand = currentPlayer.getHand();
-
-            // go through hand and remove same card type
-            playerHand.remove(playerHand.indexOf(move.getPlayedCard())); // TODO: ☠ debug to see if java voodo works
-
-            // save new hand
-            currentPlayer.setHand(playerHand);
-            playerRepo.save(currentPlayer);
-
+            playACard(round, move.getPlayedCard());
 
         } else {
             // Player passed
+            passAndTake3(currentPlayer);
 
-            // call passAndTake3-method from Round object
-            // add 3 new cards from player deck to player hand
         }
 
-        // return turnId for player (where turnId is nth-move of player)
-        move.setNthMove( round.getTotalMadeMoves() / 4 );
-
         // save Move
-        // after move is saved to repository, moveId will get created
-        move = moveRepo.save(move);
-        return String.valueOf(move.getNthMove());
+        moveRepo.save(move);
+
+        // return turnId for player (where turnId is nth-move of player)
+        return String.valueOf(currentPlayer.getTotalMadeMoves());
     }
+
+    /**
+     * Saves played card in card stack.
+     * @param playedCard
+     * @param round
+     * @return round
+     */
+    protected Round playACard(Round round, Card playedCard) {
+        // add played card to card stack
+        round.addNewlyPlayedCard(playedCard);
+
+        playedCard.getOwner().incrementTotalMadeMoves();
+
+        // remove Card from player hand
+        removeCardFromHand(playedCard.getOwner(), playedCard);
+
+        return roundRepo.save(round);
+    }
+
+    private void removeCardFromHand(Player currentPlayer, Card playedCard) {
+        List<Card> playerHand = currentPlayer.getHand();
+
+        // go through hand and remove same card type
+        playerHand.remove(playedCard);
+
+        // save new hand
+        currentPlayer.setHand(playerHand);
+        playerRepo.save(currentPlayer);
+    }
+
+    /**
+     * Passes the turn and adds 3 cards into players hand
+     * @param currentPlayer
+     */
+    protected void passAndTake3(Player currentPlayer) {
+        currentPlayer.take3Cards();
+        currentPlayer.incrementTotalMadeMoves();
+        playerRepo.save(currentPlayer);
+    }
+
+
 }

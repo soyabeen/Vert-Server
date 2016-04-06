@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -27,7 +29,11 @@ public class Move implements Serializable {
 	private Card playedCard;
 
 	@Column
-	private Integer nthMove;
+	private boolean pass;
+
+	public Move() {
+		this.pass = false;
+	}
 
 	public Long getId() {
 		return id;
@@ -58,14 +64,22 @@ public class Move implements Serializable {
 	}
 
 	public void setPlayedCard(Card playedCard) {
-		this.playedCard = playedCard;
+		if(playedCard != null) {
+			this.playedCard = playedCard;
+		} else throw new InvalidInputException();
 	}
 
-	public Integer getNthMove() {
-		return nthMove;
-	}
+	/**
+	 * Gives back the information if the player wants to pass the round.
+	 * @return pass
+     */
+	public boolean isPass() { return this.pass; }
 
-	public void setNthMove(Integer nthMove) {
-		this.nthMove = nthMove;
+	/**
+	 * Set variable to true if player doesn't want to pass a card in his round.
+	 * @param pass
+     */
+	public void setPass(boolean pass) {
+		this.pass = pass;
 	}
 }

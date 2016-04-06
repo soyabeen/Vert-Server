@@ -1,11 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
-import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
-import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import ch.uzh.ifi.seal.soprafs16.constant.*;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,10 +17,16 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static org.eclipse.persistence.jpa.jpql.Assert.fail;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -37,10 +44,30 @@ public class RoundServiceTest {
     @Mock
     private RoundRepository roundRepo;
 
+    @Mock
+    private PlayerRepository playerRepo;
+
+    @Mock
+    private MoveRepository moveRepo;
+
+
+    private Player player;
+
+    @Mock
     private Round round;
+
+    @Mock
+    private Card card1, card2;
+
     private Game game;
-    private List<Turn> turns;
+    private User user1;
+    private Loot loot;
+    private CardDeck playerDeck;
+    private List<Card> starterDeck;
+    private Move move, movePass;
     private Integer nthRound;
+    private List<Turn> turns;
+    private List<Card> hand;
 
     @Before
     public void init() {
@@ -53,41 +80,55 @@ public class RoundServiceTest {
                 Turn.NORMAL,
                 Turn.HIDDEN});
         nthRound = 1;
+        round = new Round(game, nthRound, turns,RoundEndEvent.REBELLION);
 
         game = new Game();
         game.setId(1L);
 
-        round = new Round(game, nthRound, turns, RoundEndEvent.REBELLION);
+        loot = new Loot(LootType.JEWEL, 1000, Positionable.Level.BOTTOM);
+        starterDeck = new ArrayList<>();
+        starterDeck.add(card2);
+        starterDeck.add(card2);
+        starterDeck.add(card2);
+        starterDeck.add(card2);
+        starterDeck.add(card2);
+
+        playerDeck = new CardDeck(starterDeck);
+
+        player = new Player(loot, playerDeck);
+        player.setCharacter(Character.GHOST);
+
+        card1 = new Card();
+        card1.setOwner(player);
+        card1.setType(CardType.MOVE);
+
+        card2 = new Card();
+        card2.setOwner(player);
+        card2.setType(CardType.MOVE);
+
+        // player has 4 Move cards
+        hand = new ArrayList<>();
+        hand.add(card2);
+        hand.add(card2);
+        hand.add(card2);
+        hand.add(card2);
+
+        player.setHand(hand);
+
+        move = new Move();
+        move.setGame(game);
+        move.setId(1L);
+
+        user1 = new User("abc", "def");
+        user1.setToken(UUID.randomUUID().toString());
+        user1.setPlayer(player);
+
+        move.setUser(user1);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
         when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
-    }
-
-    // TODO: optimize random turn generator
-    private List<Turn> createRandomTurns() {
-        // holds result
-        List<Turn> turns = new ArrayList<>();
-
-        Random rand = new Random();
-        Integer max_no_of_turns = rand.nextInt(5-3) + 3;
-
-        // holds indexes of events
-        List<Integer> no_turns = new ArrayList<>(max_no_of_turns);
-
-        // fill no_turns with values
-        for(int i = 0; i < max_no_of_turns; i++) {
-            no_turns.add(i);
-        }
-
-        // shuffle no_turns values
-        Collections.shuffle(no_turns);
-
-        // go through shuffled collection and add to turns
-        for(Integer val : no_turns) {
-            turns.add(Turn.values()[val]);
-        }
-
-        return turns;
+        when(playerRepo.findOne(anyLong())).thenReturn(player);
+        when(moveRepo.save((Move) any())).thenReturn(move);
     }
 
     @Test
@@ -117,6 +158,50 @@ public class RoundServiceTest {
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidInputException);
         }
+    }
+
+    @Test
+    public void makeAMoveReturnsTurnId() {
+        move.setPass(false);
+        move.setPlayedCard(card1);
+
+        String result = roundService.makeAMove(1L, 1, move);
+
+        Assert.assertThat(result, is("1"));
+
+        try {
+            Integer.parseInt(result);
+        } catch (Exception x_x) {
+            Assert.assertFalse(x_x instanceof NumberFormatException);
+        }
+    }
+
+    @Test
+    public void makeAMovePlaysCard() {
+        move.setPass(false);
+        move.setPlayedCard(card1);
+
+        int sizeBefore = move.getPlayedCard().getOwner().getHand().size();
+        roundService.makeAMove(1L, 1, move);
+        int sizeAfter = move.getPlayedCard().getOwner().getHand().size();
+
+        Assert.assertThat(sizeAfter, is(sizeBefore - 1));
+    }
+
+    @Test
+    public void makeAMovePassesTurn() {
+        move = new Move();
+        move.setGame(game);
+        move.setUser(user1);
+        move.setId(1L);
+        move.setPass(true);
+
+        int sizeBefore = move.getUser().getPlayer().getHand().size();
+        roundService.makeAMove(1L, 1, move);
+        int sizeAfter = move.getUser().getPlayer().getHand().size();
+
+        Assert.assertThat(sizeAfter, is(sizeBefore + 3));
+
 
         try {
             roundService.listTurnsForRound(null, 1);
