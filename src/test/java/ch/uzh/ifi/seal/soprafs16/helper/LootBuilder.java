@@ -51,6 +51,9 @@ public class LootBuilder {
         return lootRepo.save(getRandomLoot());
     }
 
+    public Loot build() {
+        return loot;
+    }
     public Loot save() {
         loot = lootRepo.save(loot);
     }
