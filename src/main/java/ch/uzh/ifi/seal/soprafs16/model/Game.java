@@ -40,14 +40,14 @@ public class Game implements Serializable {
     private List<Move> moves;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<User> users;
+    private List<Player> players;
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Loot> loots;
 
 
     public Game() {
-        this.users = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.moves = new LinkedList<>();
         this.loots = new LinkedHashSet<>();
     }
@@ -99,12 +99,12 @@ public class Game implements Serializable {
         this.moves = moves;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<Player> getPlayers() {
+        return players;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     public GameStatus getStatus() {
@@ -123,8 +123,8 @@ public class Game implements Serializable {
         this.currentPlayer = currentPlayer;
     }
 
-    public void addUser(User user) {
-        users.add(user);
+    public void addPlayer(Player player) {
+        players.add(player);
     }
 
     public int getNumberOfPlayers() {
