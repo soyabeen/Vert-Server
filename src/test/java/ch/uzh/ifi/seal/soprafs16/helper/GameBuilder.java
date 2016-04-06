@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.helper;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,8 @@ public class GameBuilder {
      * @param user
      * @return
      */
-    public GameBuilder addUser(User user) {
-        game.addUser(user);
+    public GameBuilder addUser(Player user) {
+        game.addPlayer(user);
         return save();
     }
 
@@ -80,8 +81,8 @@ public class GameBuilder {
      * @param users
      * @return
      */
-    public GameBuilder addUsers(User... users) {
-        for (User user : users) {
+    public GameBuilder addUsers(Player... users) {
+        for (Player user : users) {
             addUser(user);
         }
         return this;
@@ -92,7 +93,7 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomUser() {
-        User user = userBuilder.getRandomUser();
+        Player user = playerBuilder.getRandomUser();
         return addUser(user);
     }
 
@@ -123,9 +124,9 @@ public class GameBuilder {
         List<Character> availableChars = availableCharacter;
 
         if (!availableChars.isEmpty() && availableChars.contains(character)) {
-            User user = userBuilder.getRandomUserWithPlayer(character);
+            Player user = playerBuilder.getRandomUserWithPlayer(character);
 
-            game.addUser(user);
+            game.addPlayer(user);
         }
 
         return save();
