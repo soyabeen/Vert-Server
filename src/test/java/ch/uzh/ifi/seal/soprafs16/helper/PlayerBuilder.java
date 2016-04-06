@@ -1,15 +1,14 @@
 package ch.uzh.ifi.seal.soprafs16.helper;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.misc.UUDecoder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by alexanderhofmann on 30/03/16.
@@ -17,8 +16,36 @@ import java.util.List;
 @Service
 public class PlayerBuilder {
 
+    private Player player;
+
     @Autowired
     private PlayerRepository playerRepo;
+
+    public PlayerBuilder init() {
+        return init(UUID.randomUUID().toString());
+    }
+
+    public PlayerBuilder init(String username) {
+        player = new Player();
+        player.setUsername(username);
+        player.setToken(UUID.randomUUID().toString());
+        return save();
+    }
+
+    public PlayerBuilder addCharacter(Character character) {
+        player.setCharacter(character);
+        return save();
+    }
+
+    public PlayerBuilder addRandomCharacter() {
+        return addCharacter(getRandomCharacter());
+    }
+
+    private Character getRandomCharacter() {
+        List<Character> availableChars = new ArrayList<>(Arrays.asList(Character.values()));
+        Collections.shuffle(availableChars);
+        return availableChars.remove(0);
+    }
 
     /**
      * Creates a random player and saves it.
@@ -26,12 +53,8 @@ public class PlayerBuilder {
      */
     public Player getRandomPlayer() {
         Player player = new Player();
-
-        List<Character> availableChars = new ArrayList<>(Arrays.asList(Character.values()));
-        Collections.shuffle(availableChars);
-        Character character = availableChars.remove(0);
-
-        player.setCharacter(character);
+        player.setUsername(UUID.randomUUID().toString());
+        player.setToken(UUID.randomUUID().toString());
 
         return playerRepo.save(player);
     }
@@ -72,6 +95,15 @@ public class PlayerBuilder {
         }
 
         return result;
+    }
+
+    public PlayerBuilder save() {
+        player = playerRepo.save(player);
+        return this;
+    }
+
+    public Player build() {
+        return player;
     }
 
 }

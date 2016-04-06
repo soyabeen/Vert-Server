@@ -25,7 +25,7 @@ public class GameBuilder {
     private List<Character> availableCharacter;
 
     @Autowired
-    private UserBuilder userBuilder;
+    private PlayerBuilder playerBuilder;
 
     @Autowired
     private LootBuilder lootBuilder;
@@ -93,7 +93,7 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomUser() {
-        Player user = playerBuilder.getRandomUser();
+        Player user = playerBuilder.init().build();
         return addUser(user);
     }
 
@@ -124,7 +124,7 @@ public class GameBuilder {
         List<Character> availableChars = availableCharacter;
 
         if (!availableChars.isEmpty() && availableChars.contains(character)) {
-            Player user = playerBuilder.getRandomUserWithPlayer(character);
+            Player user = playerBuilder.init().addCharacter(character).build();
 
             game.addPlayer(user);
         }
