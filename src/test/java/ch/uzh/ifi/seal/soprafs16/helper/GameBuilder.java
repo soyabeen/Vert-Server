@@ -94,7 +94,7 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomUser() {
-        Player user = playerBuilder.init().build();
+        Player user = playerBuilder.init(true).build();
         return addUser(user);
     }
 
@@ -125,7 +125,7 @@ public class GameBuilder {
         List<Character> availableChars = availableCharacter;
 
         if (!availableChars.isEmpty() && availableChars.contains(character)) {
-            Player user = playerBuilder.init().addCharacter(character).build();
+            Player user = playerBuilder.init(true).addCharacter(character).build();
 
             game.addPlayer(user);
         }

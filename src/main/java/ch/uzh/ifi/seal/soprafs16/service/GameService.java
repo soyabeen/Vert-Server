@@ -36,7 +36,9 @@ public class GameService {
 
 
     private Game createGame(String gameName, Player owner, int players) {
-        Game game = gameConf.createGameEmptyGameShellForNrOfPlayers(players);
+        //TODO: Fix gameConf NPE
+        //Game game = gameConf.createGameEmptyGameShellForNrOfPlayers(players);
+        Game game = new Game();
         game.setName(gameName);
         game.setOwner(owner.getUsername());
         game.addPlayer(owner);

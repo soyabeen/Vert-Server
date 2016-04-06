@@ -73,7 +73,7 @@ public class GameCommandControllerTest {
     @SuppressWarnings("unchecked")
     public void addGameTest() {
         // test valid query
-        Player player = playerBuilder.getRandomPlayer();
+        Player player = playerBuilder.init(true).build();
         Game game = gameBuilder.initNoPersistence("addGameTest", player.getUsername()).build();
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString())

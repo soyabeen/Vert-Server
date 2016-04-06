@@ -142,6 +142,6 @@ public class GameQueryControllerTest {
         uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString() + "/" + gameId + "/player/-1");
         response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Player.class);
         result = response.getBody();
-        Assert.assertNull(result);
+        Assert.assertNull(result.getId() );
     }
 }
