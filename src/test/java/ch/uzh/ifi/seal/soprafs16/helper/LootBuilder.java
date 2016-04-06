@@ -25,11 +25,14 @@ public class LootBuilder {
 
     public Loot init(LootType type, int value, int car, Positionable.Level level) {
         loot = new Loot(type, value, car, level);
+
+        return save();
     }
 
     /**
      * Generates a random piece of loot.
      * Type, value and position are all generated randomly.
+     *
      * @return random loot
      */
     public Loot getRandomLoot() {
@@ -39,12 +42,13 @@ public class LootBuilder {
         Positionable.Level level = r.nextBoolean() ? Positionable.Level.BOTTOM : Positionable.Level.TOP;
         // TODO: mech - set random car nr
         Loot loot = new Loot(randomType, value, 0, level);
-        return loot;
+        return save();
     }
 
     /**
      * Generates a random piece of loot and saves it.
      * {@see getRandomLoot()}
+     *
      * @return random saved loot
      */
     public Loot getRandomLootAndSave() {
@@ -54,7 +58,8 @@ public class LootBuilder {
     public Loot build() {
         return loot;
     }
+
     public Loot save() {
-        loot = lootRepo.save(loot);
+        return lootRepo.save(loot);
     }
 }
