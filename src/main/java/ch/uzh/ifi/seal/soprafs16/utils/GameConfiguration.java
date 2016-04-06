@@ -1,19 +1,20 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameConfiguration {
     public static final Integer MIN_PLAYERS = 2;
     public static final Integer MAX_PLAYERS = 4;
+    public static final Integer MIN_CARS_PER_GAME = 3;
 
     public static final Integer LOOT_MAX_PURSES_IN_GAME = 18;
     public static final Integer LOOT_MAX_JEWELS_IN_GAME = 6;
@@ -78,6 +79,24 @@ public class GameConfiguration {
             loots.addAll(buildLootsForCarConfiguration(carConfigs.get(i), i));
         }
         return loots;
+    }
+
+
+    /**
+     * @return
+     */
+    public Game createGameEmptyGameShellForNrOfPlayers(int nrOfPlayersForGame) {
+
+        int nrOfCars = (nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame);
+
+
+        Game game = new Game();
+        game.setStatus(GameStatus.PENDING);
+        game.setNumberOfPlayers(nrOfPlayersForGame);
+        game.setNrOfCars(nrOfCars);
+        game.setLoots(new HashSet<>(generateLootsForNCars(nrOfCars)));
+
+        return game;
     }
 
 

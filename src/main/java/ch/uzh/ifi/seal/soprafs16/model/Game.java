@@ -33,6 +33,9 @@ public class Game implements Serializable {
     @Column
     private int currentPlayer;
 
+    @Column
+    private int nrOfCars;
+
     @OneToMany(mappedBy = "game")
     private List<Move> moves;
 
@@ -130,5 +133,17 @@ public class Game implements Serializable {
 
     public void setNumberOfPlayers(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public int getNrOfCars() {
+        return nrOfCars;
+    }
+
+    public void setNrOfCars(int nrOfCars) {
+        this.nrOfCars = nrOfCars;
+    }
+
+    public void setLoots(Set<Loot> loots) {
+        this.loots = loots;
     }
 }
