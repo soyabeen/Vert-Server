@@ -11,4 +11,6 @@ import java.util.List;
  */
 @Repository("playerRepository")
 public interface PlayerRepository extends CrudRepository<Player, Long> {
+    Player findByUsername(String username);
+    Player findByToken(String token);
 }
