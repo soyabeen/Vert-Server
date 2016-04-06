@@ -35,34 +35,4 @@ public class UserCommandController
 
         return userRepo.save(user);
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "{userId}/login")
-    @ResponseStatus(HttpStatus.OK)
-    public User login(@PathVariable Long userId) {
-        logger.debug("login: " + userId);
-
-        User user = userRepo.findOne(userId);
-        if (user != null) {
-            user.setToken(UUID.randomUUID().toString());
-            user.setStatus(UserStatus.ONLINE);
-            user = userRepo.save(user);
-
-            return user;
-        }
-
-        return null;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "{userId}/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(@PathVariable Long userId, @RequestParam("token") String userToken) {
-        logger.debug("getUser: " + userId);
-
-        User user = userRepo.findOne(userId);
-
-        if (user != null && user.getToken().equals(userToken)) {
-            user.setStatus(UserStatus.OFFLINE);
-            userRepo.save(user);
-        }
-    }
 }
