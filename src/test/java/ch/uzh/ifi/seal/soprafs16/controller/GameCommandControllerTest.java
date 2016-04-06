@@ -103,6 +103,6 @@ public class GameCommandControllerTest {
                 gameEntity,
                 ErrorResource.class);
 
-        Assert.assertThat(errorResponse.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        Assert.assertThat(errorResponse.getStatusCode(), is(HttpStatus.PRECONDITION_FAILED));
     }
 }
