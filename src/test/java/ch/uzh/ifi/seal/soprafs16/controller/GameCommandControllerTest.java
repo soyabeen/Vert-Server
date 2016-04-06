@@ -1,8 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
-import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.UserBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
@@ -22,6 +20,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -30,7 +29,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -99,14 +97,11 @@ public class GameCommandControllerTest {
         gameEntity = new HttpEntity<>(game);
 
 
-        try {
-            response = template.exchange(uriBuilder.build().encode().toUri(),
-                    HttpMethod.POST,
-                    gameEntity,
-                    Game.class);
-            //Should throw an exception
-            Assert.fail();
-        } catch (Exception e) {
-        }
+        ResponseEntity<ErrorResource> errorResponse = template.exchange(uriBuilder.build().encode().toUri(),
+                HttpMethod.POST,
+                gameEntity,
+                ErrorResource.class);
+
+        Assert.assertThat(errorResponse.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 }
