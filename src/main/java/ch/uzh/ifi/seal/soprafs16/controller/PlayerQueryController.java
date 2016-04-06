@@ -26,7 +26,7 @@ public class PlayerQueryController
     private static final String CONTEXT = "/games/{gameId}/players";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public List<Player> listPlayersForGame(@PathVariable Long gameId) {
         return playerService.listPlayersForGame(gameId);
     }
