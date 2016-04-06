@@ -21,8 +21,15 @@ public class PlayerBuilder {
     @Autowired
     private PlayerRepository playerRepo;
 
+    private boolean isPersistent;
+
     public PlayerBuilder init() {
         return init(UUID.randomUUID().toString());
+    }
+
+    public PlayerBuilder init(boolean isPersistent) {
+        this.isPersistent = isPersistent;
+        return init();
     }
 
     public PlayerBuilder init(String username) {
@@ -30,6 +37,11 @@ public class PlayerBuilder {
         player.setUsername(username);
         player.setToken(UUID.randomUUID().toString());
         return save();
+    }
+
+    public PlayerBuilder init(boolean isPersistent, String username) {
+        this.isPersistent = isPersistent;
+        return init(username);
     }
 
     public PlayerBuilder addCharacter(Character character) {
@@ -98,7 +110,9 @@ public class PlayerBuilder {
     }
 
     public PlayerBuilder save() {
-        player = playerRepo.save(player);
+        if (isPersistent) {
+            player = playerRepo.save(player);
+        }
         return this;
     }
 
