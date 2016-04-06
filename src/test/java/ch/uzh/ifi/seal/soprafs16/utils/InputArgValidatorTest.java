@@ -3,6 +3,8 @@ package ch.uzh.ifi.seal.soprafs16.utils;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class InputArgValidatorTest {
 
     @Mock
-    private UserRepository userRepo;
+    private PlayerRepository playerRepo;
 
     @Test
     public void checkNotNullValidator() {
@@ -78,16 +80,16 @@ public class InputArgValidatorTest {
     @Test
     public void checkUserNameNotUsedValidator() {
         MockitoAnnotations.initMocks(this);
-        when(userRepo.findByUsername("ExistingUsername")).thenReturn(new User("existing", "username"));
+        when(playerRepo.findByUsername("ExistingUsername")).thenReturn(new Player("username"));
 
         try {
-            InputArgValidator.checkUserNameNotUsed("NotExistingUsername", userRepo, "username");
+            InputArgValidator.checkUserNameNotUsed("NotExistingUsername", playerRepo, "username");
         } catch (InvalidInputException iie) {
             Assert.fail("UserNameValidation is ok and should not throw an exception.");
         }
 
         try {
-            InputArgValidator.checkUserNameNotUsed("ExistingUsername", userRepo, "username");
+            InputArgValidator.checkUserNameNotUsed("ExistingUsername", playerRepo, "username");
             Assert.fail("UserNameValidation is nok and should have thrown an exception.");
         } catch (InvalidInputException iie) {
             Assert.assertTrue("UserNameValidation is nok and has trown an exception", true);

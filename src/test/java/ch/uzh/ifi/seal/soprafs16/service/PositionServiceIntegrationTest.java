@@ -5,6 +5,9 @@ import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
+import ch.uzh.ifi.seal.soprafs16.helper.LootBuilder;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
@@ -33,66 +36,51 @@ import static org.hamcrest.CoreMatchers.is;
 @IntegrationTest({"server.port=0"})
 public class PositionServiceIntegrationTest {
 
-    private static final Logger logger  = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
+    @SuppressWarnings("unused")
+    private static final Logger logger  = LoggerFactory.getLogger(PositionServiceIntegrationTest.class);
 
     @Autowired
     private PositionService positionService;
 
     @Autowired
-    private GameRepository gameRepo;
+    private GameBuilder gameBuilder;
 
     @Autowired
-    private UserRepository userRepo;
+    private LootBuilder lootBuilder;
 
     @Autowired
-    private LootRepository lootRepo;
+    private PlayerBuilder playerBuilder;
 
-    @Autowired
-    private PlayerRepository playerRepo;
 
     @Test
     public void getPositionablesTest() {
-        Game game = new Game();
-        game.setStatus(GameStatus.PENDING);
-        game.setName("getAvailableCharactersa");
-        game.setOwner("getAvailableCharactersa");
-        game = gameRepo.save(game);
+        Game game = gameBuilder.init("getAvailableCharacters", "getAvailableCharacters")
+                .setStatus(GameStatus.PENDING)
+                .build();
 
         List<Positionable> result = positionService.listPositionablesForGame(game.getId());
         Assert.assertThat(result.size(), is(0));
 
-        Loot loot1 = new Loot(LootType.PURSE_SMALL, 250, 1, Positionable.Level.TOP);
-        Loot loot2 = new Loot(LootType.JEWEL, 500, 1, Positionable.Level.TOP);
-        lootRepo.save(loot1);
-        lootRepo.save(loot2);
+        Loot loot1 = lootBuilder.init(LootType.PURSE_SMALL, 250, 1, Positionable.Level.TOP).build();
+        Loot loot2 = lootBuilder.init(LootType.JEWEL, 500, 1, Positionable.Level.TOP).build();
 
-        User user1 = new User("hans1", "wurst1");
-        Player p1 = new Player();
-        user1.setPlayer(p1);
-        user1.getPlayer().setCharacter(Character.BELLE);
-        user1.setStatus(UserStatus.ONLINE);
-        user1.setToken("blablaasd");
-        playerRepo.save(p1);
-        userRepo.save(user1);
+        Player player1 = playerBuilder.init("hans").addCharacter(Character.BELLE).build();
+        Player player2 = playerBuilder.init("daisy").addCharacter(Character.GHOST).build();
 
-        User user2 = new User("daisy1", "duck1");
-        Player p2 = new Player();
-        user2.setPlayer(p2);
-        user2.getPlayer().addLoot(loot1);
-        user2.getPlayer().setCharacter(Character.GHOST);
-        user2.setStatus(UserStatus.ONLINE);
-        user2.setToken("blabladasdads");
-        playerRepo.save(p2);
-        userRepo.save(user2);
+        game = gameBuilder.addRandomUserAndPlayer(Character.BELLE)
+                .addRandomUserAndPlayer(Character.GHOST)
+                .addLoot(loot1)
+                .addLoot(loot2)
+                .build();
 
-        game.addUser(user1);
-        game.addUser(user2);
-        game.addLoot(loot2);
-        game = gameRepo.save(game);
-
-        userRepo.save(user1);
-
-        userRepo.save(user2);
+//        game.addUser(user1);
+//        game.addUser(user2);
+//        game.addLoot(loot2);
+//        game = gameRepo.save(game);
+//
+//        userRepo.save(user1);
+//
+//        userRepo.save(user2);
 
         result = positionService.listPositionablesForGame(game.getId());
         Assert.assertThat(result.size(), is(4));

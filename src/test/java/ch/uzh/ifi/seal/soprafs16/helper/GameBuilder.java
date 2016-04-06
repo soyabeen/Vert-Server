@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.helper;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -159,6 +160,11 @@ public class GameBuilder {
      */
     public GameBuilder addRandomLoot() {
         return addLootAndSave(lootBuilder.getRandomLootAndSave());
+    }
+
+    public GameBuilder setStatus(GameStatus gameStatus) {
+        game.setStatus(gameStatus);
+        return save();
     }
 
     /**
