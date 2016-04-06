@@ -85,7 +85,7 @@ public class RoundServiceTest {
         game = new Game();
         game.setId(1L);
 
-        loot = new Loot(LootType.JEWEL, 1000, Positionable.Level.BOTTOM);
+        loot = new Loot(LootType.JEWEL, 1000, 0, Positionable.Level.BOTTOM);
         starterDeck = new ArrayList<>();
         starterDeck.add(card2);
         starterDeck.add(card2);
