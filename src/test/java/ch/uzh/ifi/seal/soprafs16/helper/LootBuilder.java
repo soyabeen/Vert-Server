@@ -18,8 +18,14 @@ public class LootBuilder {
     @Autowired
     private LootRepository lootRepo;
 
+    private Loot loot;
+
     private LootType[] types = LootType.values();
 
+
+    public Loot init(LootType type, int value, int car, Positionable.Level level) {
+        loot = new Loot(type, value, car, level);
+    }
 
     /**
      * Generates a random piece of loot.
@@ -43,5 +49,9 @@ public class LootBuilder {
      */
     public Loot getRandomLootAndSave() {
         return lootRepo.save(getRandomLoot());
+    }
+
+    public Loot save() {
+        loot = lootRepo.save(loot);
     }
 }
