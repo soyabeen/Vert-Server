@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.TokenGenerator;
 import org.junit.Assert;
 import org.junit.Before;
