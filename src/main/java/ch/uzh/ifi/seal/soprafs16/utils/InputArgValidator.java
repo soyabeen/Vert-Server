@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.springframework.data.repository.CrudRepository;
 
@@ -48,13 +50,13 @@ public class InputArgValidator {
      * Check in the given user repository for occurrances of the given user name. The check passes if no occurrance
      * is found and fails otherwise.
      *
-     * @param userName The username to check.
+     * @param playerName The username to check.
      * @param repo     The Spring CRUDRepository for users.
      * @param argName  Name of the argument shown in the error message.
      * @throws InvalidInputException to indicate the checks negative result.
      */
-    public static void checkUserNameNotUsed(String userName, UserRepository repo, String argName) {
-        if (repo.findByUsername(userName) != null) {
+    public static void checkUserNameNotUsed(String playerName, PlayerRepository repo, String argName) {
+        if (repo.findByUsername(playerName) != null) {
             throw new InvalidInputException(MESSAGE_START + argName + " is already in use.");
         }
     }
@@ -69,10 +71,10 @@ public class InputArgValidator {
      * @return The user belonging to the token,
      * @throws InvalidInputException to indicate the checks negative result.
      */
-    public static User checkTokenHasValidUser(String token, UserRepository repo, String argName) {
+    public static Player checkTokenHasValidPlayer(String token, PlayerRepository repo, String argName) {
         InputArgValidator.checkNotEmpty(token, "token");
 
-        User holder = repo.findByToken(token);
+        Player holder = repo.findByToken(token);
         if (holder == null) {
             throw new InvalidInputException(MESSAGE_START + " No valid user for " + argName + ".");
         }
