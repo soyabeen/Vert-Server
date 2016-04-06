@@ -2,8 +2,10 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.UserBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
@@ -54,7 +56,7 @@ public class GameQueryControllerTest {
     private GameBuilder gameBuilder;
 
     @Autowired
-    private UserBuilder userBuilder;
+    private PlayerBuilder playerBuilder;
 
     @Before
     public void setUp() throws MalformedURLException {
@@ -119,27 +121,26 @@ public class GameQueryControllerTest {
     @SuppressWarnings("unchecked")
     public void getPlayerTest() {
         // test valid query
-        User user = userBuilder.getRandomUser();
-        Game game4 = gameBuilder.init("listGamesTest4", "listGamesTest4").addUser(user).build();
+        Player player =  playerBuilder.getRandomPlayer();
+        Game game4 = gameBuilder.init("listGamesTest4", "listGamesTest4").addUser(player).build();
         Long gameId = game4.getId();
-        Long userId = user.getId();
+        Long userId = player.getId();
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(
                 base.toString() + "/" + gameId + "/player/" + userId);
 
         logger.debug(uriBuilder.build().encode().toUri().toString());
 
-        ResponseEntity<User> response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), User.class);
-        User result = response.getBody();
+        ResponseEntity<Player> response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Player.class);
+        Player result = response.getBody();
 
-        Assert.assertThat(user.getId(), is(result.getId()));
-        Assert.assertThat(user.getName(), is(result.getName()));
-        Assert.assertThat(user.getUsername(), is(result.getUsername()));
-        Assert.assertThat(user.getToken(), is(result.getToken()));
+        Assert.assertThat(player.getId(), is(result.getId()));
+        Assert.assertThat(player.getUsername(), is(result.getUsername()));
+        Assert.assertThat(player.getToken(), is(result.getToken()));
 
         // invalid query
         uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString() + "/" + gameId + "/player/-1");
-        response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), User.class);
+        response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Player.class);
         result = response.getBody();
         Assert.assertNull(result);
     }
