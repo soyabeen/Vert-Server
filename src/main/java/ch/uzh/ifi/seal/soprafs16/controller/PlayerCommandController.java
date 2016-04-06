@@ -1,7 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.service.PlayerService;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class PlayerCommandController
     private PlayerService playerService;
 
     @Autowired
-    private UserRepository userRepo;
+    private PlayerRepository playerRepository;
 
     private static final String CONTEXT = "/games/{gameId}/players";
 
@@ -33,9 +34,9 @@ public class PlayerCommandController
     public String createPlayerForGame(@PathVariable Long gameId, @RequestParam("token") String userToken,
                                       @RequestParam("character") Character character) {
 
-        User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
 
         //TODO: add full link or relative URL
-        return playerService.createPlayerForUser(gameId, tokenOwner, character).toString();
+        return playerService.createPlayerForGame(gameId, tokenOwner, character).toString();
     }
 }

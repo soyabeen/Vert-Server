@@ -47,7 +47,7 @@ public class GameService {
         logger.debug("create game for name: {}, owner: {}, players: {}", game.getName(), userToken, nrOfPlayers);
 
         InputArgValidator.checkNotEmpty(game.getName(), "gamename");
-        Player tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, playerRepo, "token");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
 
 //        // game name available?
