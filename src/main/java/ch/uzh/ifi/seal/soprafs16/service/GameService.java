@@ -39,7 +39,7 @@ public class GameService {
         Game game = gameConf.createGameEmptyGameShellForNrOfPlayers(players);
         game.setName(gameName);
         game.setOwner(owner.getUsername());
-        game.addUser(owner);
+        game.addPlayer(owner);
         return gameRepo.save(game);
     }
 
@@ -70,7 +70,7 @@ public class GameService {
 
     public void startGame(Long gameId, String userToken) {
 
-        Player tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, playerRepo, "token");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
         // Game must be in pending state
