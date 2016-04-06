@@ -26,7 +26,6 @@ import static org.eclipse.persistence.jpa.jpql.Assert.fail;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
