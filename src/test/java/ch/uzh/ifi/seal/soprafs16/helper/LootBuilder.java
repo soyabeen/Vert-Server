@@ -31,7 +31,8 @@ public class LootBuilder {
         LootType randomType = types[r.nextInt(types.length)];
         int value = r.nextInt(750) + 250;
         Positionable.Level level = r.nextBoolean() ? Positionable.Level.BOTTOM : Positionable.Level.TOP;
-        Loot loot = new Loot(randomType, value, level);
+        // TODO: mech - set random car nr
+        Loot loot = new Loot(randomType, value, 0, level);
         return loot;
     }
 

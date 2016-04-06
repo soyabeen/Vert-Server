@@ -62,8 +62,8 @@ public class PositionServiceIntegrationTest {
         List<Positionable> result = positionService.listPositionablesForGame(game.getId());
         Assert.assertThat(result.size(), is(0));
 
-        Loot loot1 = new Loot(LootType.PURSE, 250, Positionable.Level.TOP);
-        Loot loot2 = new Loot(LootType.JEWEL, 500, Positionable.Level.TOP);
+        Loot loot1 = new Loot(LootType.PURSE_SMALL, 250, 1, Positionable.Level.TOP);
+        Loot loot2 = new Loot(LootType.JEWEL, 500, 1, Positionable.Level.TOP);
         lootRepo.save(loot1);
         lootRepo.save(loot2);
 

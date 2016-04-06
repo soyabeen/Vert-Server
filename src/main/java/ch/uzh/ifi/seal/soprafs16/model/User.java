@@ -8,106 +8,113 @@ import java.util.List;
 
 @Entity
 public class User implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue
-	private Long id;
-	
-	@Column(nullable = false) 
-	private String name;
-	
-	@Column(nullable = false, unique = true) 
-	private String username;
-	
-	@Column(nullable = false, unique = true)
-	private String token;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	@Column(nullable = false)
-	private UserStatus status;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@Column
-	private Long gameId;
+    @Column(nullable = false)
+    private String name;
 
-    @OneToMany(mappedBy="user")
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String token;
+
+    @Column(nullable = false)
+    private UserStatus status;
+
+    @Column
+    private Long gameId;
+
+    @OneToMany(mappedBy = "user")
     private List<Move> moves;
 
-	@OneToOne
-	private Player player;
+    @OneToOne
+    private Player player;
 
-	protected User() {
-	}
+    protected User() {
+    }
 
-	public User(String name, String username) {
-		this.name = name;
-		this.username = username;
-	}
+    public User(String name, String username) {
+        this.name = name;
+        this.username = username;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public String toString() {
+        return "User(id=" + id + ", name=" + name
+                + ", username=" + username + ", token=" + token
+                + ", status=" + status + ", gameid=" + gameId + ")";
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public List<Move> getMoves() {
-		return moves;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public void setMoves(List<Move> moves) {
-		this.moves = moves;
-	}
+    public List<Move> getMoves() {
+        return moves;
+    }
 
-	public String getToken() {
-		return token;
-	}
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public UserStatus getStatus() {
-		return status;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-	public void setStatus(UserStatus status) {
-		this.status = status;
-	}
+    public UserStatus getStatus() {
+        return status;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
 
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public Long getGameId() {
-		return gameId;
-	}
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-	public void setGameId(Long gameId) {
-		this.gameId = gameId;
-	}
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
 }

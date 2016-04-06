@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.constant.GameConstants;
+import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.*;
@@ -9,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class PlayerService {
 
         if (game != null) {
             logger.debug("Game id: " + game.getId());
+            // TODO: Why not playerRepo.findByGame() ?
             result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
         } else {
             logger.error("No game found for id: " + gameId);
@@ -63,20 +65,21 @@ public class PlayerService {
     /**
      * Creates a new player for a given user and adds this player to the game.
      * @param gameId The game to which we want to add a player.
-     * @param userToken User identifying token.
+     * @param user The user owning the player.
      * @param character User's chosen character.
      * @return The id of the newly created player
      */
-    public Long createPlayerForUser(Long gameId, String userToken, Character character) {
+    public Long createPlayerForUser(Long gameId, User user, Character character) {
         logger.debug("createPlayerForUser");
 
-        Game game = gameRepo.findOne(gameId);
+        InputArgValidator.checkIfPositiveNumber(gameId, "gameid");
+        InputArgValidator.checkNotNull(user, "user");
+        InputArgValidator.checkNotNull(character, "character");
 
-        if (game != null && game.getNumberOfPlayers() < GameConstants.MAX_PLAYERS
+        Game game = (Game)InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+
+        if (game != null && game.getNumberOfPlayers() < GameConfiguration.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
-
-            // get User
-            User user = userRepo.findByToken(userToken);
 
             // create new player for user
             Player player = createPlayer(character);
@@ -124,7 +127,8 @@ public class PlayerService {
      * @return new Player.
      */
     protected Player createPlayer(Character character) {
-        Loot loot = new Loot(LootType.PURSE, 250, Positionable.Level.BOTTOM);
+        // TODO: set player pos as loot pos.
+        Loot loot = new Loot(LootType.PURSE_SMALL, LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
         loot = lootRepo.save(loot);
 
         Player player = new Player(loot);
