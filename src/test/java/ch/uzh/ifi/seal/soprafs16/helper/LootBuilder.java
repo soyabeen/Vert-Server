@@ -22,6 +22,16 @@ public class LootBuilder {
 
     private LootType[] types = LootType.values();
 
+    public LootBuilder init() {
+        Random r = new Random();
+        LootType randomType = types[r.nextInt(types.length)];
+        int value = r.nextInt(750) + 250;
+        Positionable.Level level = r.nextBoolean() ? Positionable.Level.BOTTOM : Positionable.Level.TOP;
+        // TODO: mech - set random car nr
+        loot = new Loot(randomType, value, 0, level);
+
+        return save();
+    }
 
     public LootBuilder init(LootType type, int value, int car, Positionable.Level level) {
         loot = new Loot(type, value, car, level);

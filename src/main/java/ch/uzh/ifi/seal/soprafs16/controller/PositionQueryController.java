@@ -27,11 +27,7 @@ public class PositionQueryController extends GenericController {
     @ResponseStatus(HttpStatus.OK)
     public List<Positionable> getPositionables(@PathVariable Long gameId, @RequestParam(value="type", required=false) String filter) {
         logger.debug("getPositionables");
-        List<Positionable> result = new ArrayList<>();
-        result.addAll(positionService.listPositionablesForGame(gameId));
-        logger.debug("Result size: " + result.size());
-
-        return result;
+        return positionService.listPositionablesForGame(gameId);
     }
 
 }

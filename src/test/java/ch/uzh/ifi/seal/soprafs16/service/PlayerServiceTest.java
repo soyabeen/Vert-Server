@@ -36,7 +36,7 @@ public class PlayerServiceTest {
     @Mock
     private GameRepository gameRepo;
 
-    @Autowired
+    // Cannot @Autowired if test is not inside a spring context
     private PlayerBuilder playerBuilder;
 
     private Game game;
@@ -51,8 +51,10 @@ public class PlayerServiceTest {
 
     @Test
     public void testListPlayers() {
-        Player p1 = playerBuilder.init().addCharacter(Character.BELLE).build();
-        Player p2 = playerBuilder.init().addCharacter(Character.GHOST).build();
+        Player p1 = new Player(UUID.randomUUID().toString());
+        p1.setCharacter(Character.BELLE);
+        Player p2 = new Player(UUID.randomUUID().toString());
+        p2.setCharacter(Character.GHOST);
 
         game.addPlayer(p1);
         game.addPlayer(p2);

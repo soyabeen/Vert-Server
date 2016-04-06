@@ -32,9 +32,6 @@ public class GameBuilder {
     private LootBuilder lootBuilder;
 
     @Autowired
-    private LootRepository lootRepo;
-
-    @Autowired
     private GameRepository gameRepo;
 
     /**
@@ -140,7 +137,7 @@ public class GameBuilder {
      */
     public GameBuilder addLoot(Loot loot) {
         game.addLoot(loot);
-        return this;
+        return save();
     }
 
     /**
@@ -150,8 +147,7 @@ public class GameBuilder {
      */
     public GameBuilder addLootAndSave(Loot loot) {
         game.addLoot(loot);
-        save();
-        return this;
+        return save();
     }
 
     /**
@@ -159,7 +155,7 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomLoot() {
-        return addLootAndSave(lootBuilder.getRandomLootAndSave());
+        return addLoot(lootBuilder.init().build());
     }
 
     public GameBuilder setStatus(GameStatus gameStatus) {

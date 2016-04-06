@@ -69,8 +69,8 @@ public class PlayerService {
 
         if (game != null) {
             logger.debug("Game id: " + game.getId());
-            // TODO: Why not playerRepo.findByGame() ?
-            result = game.getPlayers();
+            logger.debug("Number of player in game: " + game.getPlayers().size());
+            result.addAll(game.getPlayers());
         } else {
             logger.error("No game found for id: " + gameId);
         }

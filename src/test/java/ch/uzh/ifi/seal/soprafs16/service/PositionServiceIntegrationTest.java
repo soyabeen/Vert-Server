@@ -11,6 +11,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,12 +45,6 @@ public class PositionServiceIntegrationTest {
     @Autowired
     private GameBuilder gameBuilder;
 
-    @Autowired
-    private LootBuilder lootBuilder;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
 
     @Test
     public void getPositionablesTest() {
@@ -60,28 +55,16 @@ public class PositionServiceIntegrationTest {
         List<Positionable> result = positionService.listPositionablesForGame(game.getId());
         Assert.assertThat(result.size(), is(0));
 
-        Loot loot1 = lootBuilder.init(LootType.PURSE_SMALL, 250, 1, Positionable.Level.TOP).build();
-        Loot loot2 = lootBuilder.init(LootType.JEWEL, 500, 1, Positionable.Level.TOP).build();
-
-        Player player1 = playerBuilder.init("hans").addCharacter(Character.BELLE).build();
-        Player player2 = playerBuilder.init("daisy").addCharacter(Character.GHOST).build();
-
-        game = gameBuilder.addRandomUserAndPlayer(Character.BELLE)
-                .addRandomUserAndPlayer(Character.GHOST)
-                .addLoot(loot1)
-                .addLoot(loot2)
+        game = gameBuilder.addRandomUser()
+                .addRandomUser()
+                .addRandomLoot()
+                .addRandomLoot()
                 .build();
 
-//        game.addUser(user1);
-//        game.addUser(user2);
-//        game.addLoot(loot2);
-//        game = gameRepo.save(game);
-//
-//        userRepo.save(user1);
-//
-//        userRepo.save(user2);
-
+        logger.error(game.getPlayers().toString());
+        // TODO: This returns each player twice but only in testing!!!
         result = positionService.listPositionablesForGame(game.getId());
+        logger.error(result.toString());
         Assert.assertThat(result.size(), is(4));
     }
 }

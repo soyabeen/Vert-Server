@@ -52,12 +52,19 @@ public class Game implements Serializable {
         this.loots = new LinkedHashSet<>();
     }
 
-    //toString
     @Override
     public String toString() {
-        return "Game(id=" + id + ", name=" + name
-                + ", owner=" + owner + ", nrPlayer=" + numberOfPlayers
-                + ", status=" + status + ", currentPlayer=" + currentPlayer + ")";
+        return "Game{" +
+                "loots=" + loots +
+                ", players=" + players +
+                ", nrOfCars=" + nrOfCars +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", owner='" + owner + '\'' +
+                ", numberOfPlayers=" + numberOfPlayers +
+                ", status=" + status +
+                ", currentPlayer=" + currentPlayer +
+                '}';
     }
 
     public void addLoot(Loot loot) {
@@ -109,6 +116,10 @@ public class Game implements Serializable {
         this.players = players;
     }
 
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
     public GameStatus getStatus() {
         return status;
     }
@@ -123,10 +134,6 @@ public class Game implements Serializable {
 
     public void setCurrentPlayer(Integer currentPlayer) {
         this.currentPlayer = currentPlayer;
-    }
-
-    public void addPlayer(Player player) {
-        players.add(player);
     }
 
     public int getNumberOfPlayers() {

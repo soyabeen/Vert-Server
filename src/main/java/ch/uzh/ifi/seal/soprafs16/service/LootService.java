@@ -38,13 +38,6 @@ public class LootService {
 
         if (game != null) {
             result.addAll(game.getLoots());
-
-            // TODO: That's definitely wrong! We want the ownerless loots.
-            List<Player> players = playerService.listPlayersForGame(gameId);
-
-            for (Player player : players) {
-                result.addAll(player.getLoots());
-            }
         } else {
             logger.error("No game found");
         }

@@ -31,9 +31,6 @@ public class Player extends Meeple {
     @Column
     private Integer totalMadeMoves;
 
-    @Column
-    private Long gameId;
-
     @OneToMany(mappedBy = "owner")
     private List<Card> hand;
 
@@ -189,4 +186,5 @@ public class Player extends Meeple {
     public void incrementTotalMadeMoves() {
         this.totalMadeMoves++;
     }
+
 }
