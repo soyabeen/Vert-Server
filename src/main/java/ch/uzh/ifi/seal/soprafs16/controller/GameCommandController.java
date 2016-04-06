@@ -33,8 +33,8 @@ public class GameCommandController
     public Game createGame(@RequestBody Game game, @RequestParam("token") String userToken) {
         logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
-        User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
-        return gameService.createGame(game, tokenOwner, game.getNumberOfPlayers());
+
+        return gameService.createGame(game, userToken, game.getNumberOfPlayers());
     }
 
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
