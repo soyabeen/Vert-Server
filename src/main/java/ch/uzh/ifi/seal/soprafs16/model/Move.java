@@ -22,8 +22,8 @@ public class Move implements Serializable {
     private Game game;
     
     @ManyToOne
-    @JoinColumn(name="USER_ID")
-    private User user;
+    @JoinColumn(name="PLAYER_ID")
+    private Player player;
 
 	@OneToOne
 	private Card playedCard;
@@ -51,12 +51,12 @@ public class Move implements Serializable {
 		this.game = game;
 	}
 
-	public User getUser() {
-		return user;
+	public Player getPlayer() {
+		return player;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public Card getPlayedCard() {
