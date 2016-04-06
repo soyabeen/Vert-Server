@@ -78,7 +78,7 @@ public class PlayerService {
 
         Game game = (Game)InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
-        if (game != null && game.getNumberOfPlayers() < GameConfiguration.MAX_PLAYERS
+        if (game != null && game.getUsers().size() < GameConfiguration.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
 
             // create new player for user

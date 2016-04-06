@@ -13,6 +13,12 @@ import java.util.List;
 @Entity
 public class Player extends Meeple {
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String token;
+
     @Column
     private Character character;
 
@@ -24,7 +30,10 @@ public class Player extends Meeple {
 
     @Column
     private Integer totalMadeMoves;
-    
+
+    @Column
+    private Long gameId;
+
     @OneToMany(mappedBy = "owner")
     private List<Card> hand;
 
@@ -55,6 +64,22 @@ public class Player extends Meeple {
     public Player(Loot loot, CardDeck playerDeck) {
         this(loot);
         this.deck = playerDeck;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**

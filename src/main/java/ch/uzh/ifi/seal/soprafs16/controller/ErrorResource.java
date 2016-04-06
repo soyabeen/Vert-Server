@@ -14,8 +14,10 @@ public class ErrorResource implements Serializable {
         private String status;
         private String message;
 
-        public ErrorResource() {
-
+        protected ErrorResource() {
+            /**
+             * Here just for jackson.
+             */
         }
 
         public ErrorResource(String status, String message) {

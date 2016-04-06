@@ -1,11 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.springframework.data.repository.CrudRepository;
-
-import javax.persistence.Entity;
 
 
 /**

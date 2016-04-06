@@ -22,7 +22,9 @@ public class CharacterService {
     public List<Character> listAvailableCharactersByGame(long gameId) {
         List<Character> result = listCharacters();
         for (Player player : playerService.listPlayersForGame(gameId)) {
-            result.remove(player.getCharacter());
+            if (player != null) {
+                result.remove(player.getCharacter());
+            }
         }
         return result;
     }

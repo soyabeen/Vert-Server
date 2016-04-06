@@ -122,7 +122,6 @@ public class Game implements Serializable {
 
     public void addUser(User user) {
         users.add(user);
-        numberOfPlayers++;
     }
 
     public int getNumberOfPlayers() {

@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
