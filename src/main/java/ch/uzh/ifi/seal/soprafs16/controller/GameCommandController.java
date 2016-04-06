@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import ch.uzh.ifi.seal.soprafs16.service.GameService;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
@@ -20,7 +22,7 @@ public class GameCommandController
     @Autowired
     private GameService gameService;
     @Autowired
-    private UserRepository userRepo;
+    private PlayerRepository playerRepo;
     @Autowired
     private GameRepository gameRepo;
 
@@ -33,7 +35,7 @@ public class GameCommandController
     public Game createGame(@RequestBody Game game, @RequestParam("token") String userToken) {
         logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
 
-        User tokenOwner = InputArgValidator.checkTokenHasValidUser(userToken, userRepo, "token");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         return gameService.createGame(game, tokenOwner, game.getNumberOfPlayers());
     }
 
@@ -52,7 +54,7 @@ public class GameCommandController
         logger.debug("stopGame: " + gameId);
 
         Game game = gameRepo.findOne(gameId);
-        User owner = userRepo.findByToken(userToken);
+        Player owner = playerRepo.findByToken(userToken);
 
         if (owner != null && game != null && game.getOwner().equals(owner.getUsername())) {
             gameRepo.delete(game);
