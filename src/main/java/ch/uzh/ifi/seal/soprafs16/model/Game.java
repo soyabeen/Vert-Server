@@ -52,6 +52,7 @@ public class Game implements Serializable {
         this.loots = new LinkedHashSet<>();
     }
 
+    //toString
     @Override
     public String toString() {
         return "Game(id=" + id + ", name=" + name
