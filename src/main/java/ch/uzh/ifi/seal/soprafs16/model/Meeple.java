@@ -31,6 +31,10 @@ public abstract class Meeple implements Positionable, Serializable {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     /**
      * Sets the horizontal position of the meeple.
      * @param car The number of the car starting from the head.
