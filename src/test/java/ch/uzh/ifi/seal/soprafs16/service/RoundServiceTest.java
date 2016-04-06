@@ -74,11 +74,11 @@ public class RoundServiceTest {
         MockitoAnnotations.initMocks(this);
 
         // List of turns needs to be generated
-        turns = Arrays.asList(new Turn[]{
+        turns = Arrays.asList(
                 Turn.DOUBLE_TURNS,
                 Turn.NORMAL,
                 Turn.NORMAL,
-                Turn.HIDDEN});
+                Turn.HIDDEN);
         nthRound = 1;
         round = new Round(game, nthRound, turns,RoundEndEvent.REBELLION);
 
