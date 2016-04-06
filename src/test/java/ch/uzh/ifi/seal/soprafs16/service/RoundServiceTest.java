@@ -155,8 +155,10 @@ public class RoundServiceTest {
 
     @Test
     public void makeAMoveReturnsTurnId() {
+        move.setPlayer(player);
         move.setPass(false);
         move.setPlayedCard(card1);
+
 
         String result = roundService.makeAMove(1L, 1, move);
 
@@ -171,6 +173,7 @@ public class RoundServiceTest {
 
     @Test
     public void makeAMovePlaysCard() {
+        move.setPlayer(player);
         move.setPass(false);
         move.setPlayedCard(card1);
 
@@ -184,6 +187,7 @@ public class RoundServiceTest {
     @Test
     public void makeAMovePassesTurn() {
         move = new Move();
+        move.setPlayer(player);
         move.setGame(game);
         move.setId(1L);
         move.setPass(true);
