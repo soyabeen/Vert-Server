@@ -1,7 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.TokenGenerator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,83 +25,62 @@ public class UserServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceTest.class);
 
     @Mock
-    private UserRepository userRepository;
+    private PlayerRepository playerRepo;
 
     @Mock
     private TokenGenerator token;
 
     @InjectMocks
-    private UserService userService;
+    private PlayerService playerService;
 
-    private User expectedUser;
+    private Player expectedPlayer;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        User userShell = new User("Tom Turbo", "Bicyclerepairman");
-        userShell.setStatus(UserStatus.ONLINE);
-        userShell.setToken("token string");
+        String token = "token string";
 
-        expectedUser = new User("Tom Turbo", "Bicyclerepairman");
-        expectedUser.setId(1L);
-        expectedUser.setStatus(UserStatus.ONLINE);
-        expectedUser.setToken("token string");
+        Player player = new Player("Bicyclerepairman");
+        player.setToken(token);
 
-        when(token.generateToken()).thenReturn("token string");
-        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
-        when(userRepository.findByUsername("userNameAlreadyInUse")).thenReturn(expectedUser);
+
+        expectedPlayer = new Player("Bicyclerepairman");
+        expectedPlayer.setId(1L);
+        expectedPlayer.setToken(token);
+
+        when(playerRepo.save(any(Player.class))).thenReturn(expectedPlayer);
+        when(playerRepo.findByUsername("userNameAlreadyInUse")).thenReturn(expectedPlayer);
     }
 
     @Test
     public void createNewUserSuccessfully() {
-        User result = userService.createUser("Tom Turbo", "Bicyclerepairman");
+        Player result = playerService.createPlayer(new Player("Bicyclerepairman"));
 
         Assert.assertFalse("User must not be null", result == null);
-        Assert.assertThat(result.getId(), is(expectedUser.getId()));
-        Assert.assertThat(result.getName(), is(expectedUser.getName()));
-        Assert.assertThat(result.getUsername(), is(expectedUser.getUsername()));
-        Assert.assertThat(result.getStatus(), is(expectedUser.getStatus()));
-        Assert.assertThat(result.getToken(), is(expectedUser.getToken()));
-    }
-
-    @Test
-    public void failUserCreationWithInvalidNameArg() {
-
-        try {
-            userService.createUser(null, "userName");
-            Assert.fail("Missing (null) username should throw InvalidInputException");
-        } catch (InvalidInputException e) {
-            Assert.assertTrue("Message must contain 'name'.", e.getMessage().contains("name"));
-        }
-
-        try {
-            userService.createUser("", "userName");
-            Assert.fail("Missing (empty) username should throw InvalidInputException");
-        } catch (InvalidInputException e) {
-            Assert.assertTrue("Message must contain 'name'.", e.getMessage().contains("name"));
-        }
-
+        Assert.assertThat(result.getId(), is(expectedPlayer.getId()));
+        Assert.assertThat(result.getUsername(), is(expectedPlayer.getUsername()));
+        Assert.assertThat(result.getToken(), is(expectedPlayer.getToken()));
     }
 
     @Test
     public void failUserCreationWithInvalidUserNameArg() {
         try {
-            userService.createUser("name", null);
+            playerService.createPlayer(new Player());
             Assert.fail("Missing (null) username should throw InvalidInputException");
         } catch (InvalidInputException e) {
             Assert.assertTrue("Message must contain 'username'.", e.getMessage().contains("username"));
         }
 
         try {
-            userService.createUser("name", "");
+            playerService.createPlayer(new Player(""));
             Assert.fail("Missing (empty) username should throw InvalidInputException");
         } catch (InvalidInputException e) {
             Assert.assertTrue("Message must contain 'username'.", e.getMessage().contains("username"));
         }
 
         try {
-            userService.createUser("name", "userNameAlreadyInUse");
+            playerService.createPlayer(new Player("userNameAlreadyInUse"));
             Assert.fail("Occupied username should throw InvalidInputException");
         } catch (InvalidInputException e) {
             Assert.assertTrue("Message must contain 'is already in use'.", e.getMessage().contains("is already in use"));

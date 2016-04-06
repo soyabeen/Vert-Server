@@ -26,7 +26,6 @@ import static org.eclipse.persistence.jpa.jpql.Assert.fail;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -51,16 +50,15 @@ public class RoundServiceTest {
     private MoveRepository moveRepo;
 
 
-    private Player player;
-
     @Mock
     private Round round;
 
     @Mock
     private Card card1, card2;
 
+    private Player player;
     private Game game;
-    private User user1;
+    //private User user1;
     private Loot loot;
     private CardDeck playerDeck;
     private List<Card> starterDeck;
@@ -97,6 +95,7 @@ public class RoundServiceTest {
 
         player = new Player(loot, playerDeck);
         player.setCharacter(Character.GHOST);
+        player.setToken(UUID.randomUUID().toString());
 
         card1 = new Card();
         card1.setOwner(player);
@@ -118,12 +117,6 @@ public class RoundServiceTest {
         move = new Move();
         move.setGame(game);
         move.setId(1L);
-
-        user1 = new User("abc", "def");
-        user1.setToken(UUID.randomUUID().toString());
-        user1.setPlayer(player);
-
-        move.setPlayer(user1);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
         when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
@@ -192,13 +185,12 @@ public class RoundServiceTest {
     public void makeAMovePassesTurn() {
         move = new Move();
         move.setGame(game);
-        move.setPlayer(user1);
         move.setId(1L);
         move.setPass(true);
 
-        int sizeBefore = move.getPlayer().getPlayer().getHand().size();
+        int sizeBefore = move.getPlayer().getHand().size();
         roundService.makeAMove(1L, 1, move);
-        int sizeAfter = move.getPlayer().getPlayer().getHand().size();
+        int sizeAfter = move.getPlayer().getHand().size();
 
         Assert.assertThat(sizeAfter, is(sizeBefore + 3));
 
