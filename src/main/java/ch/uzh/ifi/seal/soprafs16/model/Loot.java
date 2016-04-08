@@ -53,6 +53,11 @@ public class Loot implements Positionable, Serializable {
         this.level = level;
     }
 
+    @Override
+    public String toString() {
+        return "Loot (id:"+id+", type:"+type+", value:"+value+", car:"+car+", level:"+level+")";
+    }
+
     /**
      * @return int The current car of the train for the positionable object.
      */

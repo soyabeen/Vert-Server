@@ -68,7 +68,7 @@ public class GameConfigurator {
         return loots;
     }
 
-    public List<Loot> generateLootsForNCars(int nrOfCars) {
+    protected List<Loot> generateLootsForNCars(int nrOfCars) {
         ArrayList<Loot> loots = new ArrayList<>();
 
         // locomotive (car #0)
@@ -81,11 +81,16 @@ public class GameConfigurator {
         return loots;
     }
 
-
     /**
+     *
+     * @param nrOfPlayersForGame
      * @return
      */
     public Game createGameEmptyGameShellForNrOfPlayers(int nrOfPlayersForGame) {
+
+        if(MIN_PLAYERS > nrOfPlayersForGame || MAX_PLAYERS < nrOfPlayersForGame) {
+            throw new IllegalArgumentException("Illegal nr of players, must be between "+MIN_PLAYERS +" - "+ MAX_PLAYERS +" but was "+ nrOfPlayersForGame);
+        }
 
         int nrOfCars = (nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame);
 
