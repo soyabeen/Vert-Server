@@ -11,7 +11,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.util.*;
 
-public class GameConfiguration {
+public class GameConfigurator {
     public static final Integer MIN_PLAYERS = 2;
     public static final Integer MAX_PLAYERS = 4;
     public static final Integer MIN_CARS_PER_GAME = 3;
@@ -22,7 +22,7 @@ public class GameConfiguration {
 
     private List<CarConfiguration> carConfigs;
 
-    public GameConfiguration() {
+    public GameConfigurator() {
         initConfigurations();
     }
 
@@ -88,7 +88,6 @@ public class GameConfiguration {
     public Game createGameEmptyGameShellForNrOfPlayers(int nrOfPlayersForGame) {
 
         int nrOfCars = (nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame);
-
 
         Game game = new Game();
         game.setStatus(GameStatus.PENDING);
