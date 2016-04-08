@@ -29,6 +29,13 @@ public class PlayerCommandController
 
     private static final String CONTEXT = "/games/{gameId}/players";
 
+    /**
+     * Assigns player to a game. To be used when joining a game.
+     * @param gameId
+     * @param userToken
+     * @param character
+     * @return
+     */
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Player assignPlayer(@PathVariable Long gameId, @RequestParam("token") String userToken,
@@ -36,5 +43,20 @@ public class PlayerCommandController
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
         return playerService.assignPlayer(gameId, tokenOwner, character);
+    }
+
+    /**
+     * Assign a character to an existing game. To be used only for the game owner.
+     * @param gameId
+     * @param userToken
+     * @param character
+     * @return
+     */
+    @RequestMapping(value = CONTEXT, method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Player assignCharacter(@PathVariable Long gameId, @RequestParam("token") String userToken,
+                                  @RequestParam("character") Character character) {
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
+            return playerService.initializeCharacter(tokenOwner, character);
     }
 }
