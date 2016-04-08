@@ -11,15 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
+ * REST entry point for player services.
+ * <p>
  * Created by antoio on 3/26/16.
  */
 @RestController
-public class PlayerCommandController
-        extends GenericController {
+public class PlayerController extends GenericController {
 
-    @SuppressWarnings("unused")
-    private static final Logger logger = LoggerFactory.getLogger(PlayerCommandController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlayerController.class);
+
+    private static final String CONTEXT = "/games/{gameId}/players";
 
     @Autowired
     private PlayerService playerService;
@@ -27,14 +31,20 @@ public class PlayerCommandController
     @Autowired
     private PlayerRepository playerRepository;
 
-    private static final String CONTEXT = "/games/{gameId}/players";
-
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Player assignPlayer(@PathVariable Long gameId, @RequestParam("token") String userToken,
                                @RequestParam("character") Character character) {
 
+        logger.debug("POST: assignPlayer - Args. gameId <{}>, userToken <{}>.", gameId, userToken);
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
         return playerService.assignPlayer(gameId, tokenOwner, character);
+    }
+
+    @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Player> listPlayersForGame(@PathVariable Long gameId) {
+        logger.debug("GET: listPlayersForGame - Args. gameId <{}>.", gameId);
+        return playerService.listPlayersForGame(gameId);
     }
 }
