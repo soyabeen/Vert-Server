@@ -31,6 +31,13 @@ public class PlayerController extends GenericController {
     @Autowired
     private PlayerRepository playerRepository;
 
+    /**
+     * Assigns player to a game. To be used when joining a game.
+     * @param gameId
+     * @param userToken
+     * @param character
+     * @return
+     */
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Player assignPlayer(@PathVariable Long gameId, @RequestParam("token") String userToken,
@@ -41,10 +48,26 @@ public class PlayerController extends GenericController {
         return playerService.assignPlayer(gameId, tokenOwner, character);
     }
 
+
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Player> listPlayersForGame(@PathVariable Long gameId) {
         logger.debug("GET: listPlayersForGame - Args. gameId <{}>.", gameId);
         return playerService.listPlayersForGame(gameId);
+    }
+
+    /**
+     * Assign a character to an existing game. To be used only for the game owner.
+     * @param gameId
+     * @param userToken
+     * @param character
+     * @return
+     */
+    @RequestMapping(value = CONTEXT, method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Player assignCharacter(@PathVariable Long gameId, @RequestParam("token") String userToken,
+                                  @RequestParam("character") Character character) {
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
+            return playerService.initializeCharacter(tokenOwner, character);
     }
 }

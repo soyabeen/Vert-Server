@@ -119,7 +119,7 @@ public class PlayerService {
      * @param character Users's chosen character.
      * @return new Player.
      */
-    protected Player initializeCharacter(Player player, Character character) {
+    public Player initializeCharacter(Player player, Character character) {
         // TODO: set player pos as loot pos.
         // TODO: move loot for player to game start
 //        Loot loot = new Loot(LootType.PURSE_SMALL, player. LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
@@ -129,5 +129,4 @@ public class PlayerService {
         player.setCharacter(character);
         return playerRepo.save(player);
     }
-
 }
