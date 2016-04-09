@@ -45,7 +45,7 @@ public class Game implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Player> players;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Loot> loots;
 
 
