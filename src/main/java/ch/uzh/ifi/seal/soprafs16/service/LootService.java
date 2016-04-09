@@ -2,9 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +22,19 @@ public class LootService {
     @Autowired
     private GameRepository gameRepo;
 
-    @Autowired
-    private LootRepository lootRepo;
+//    @Autowired
+//    private LootRepository lootRepo;
 
     @Autowired
     private PlayerService playerService;
 
-    public List<Loot> saveLootsOfAGame(List<Loot> loots) {
-        List<Loot> savedLoots = new ArrayList<>();
-        for (Loot loot : loots) {
-            savedLoots.add(lootRepo.save(loot));
-        }
-        return savedLoots;
-    }
+//    public List<Loot> saveLootsOfAGame(List<Loot> loots) {
+//        List<Loot> savedLoots = new ArrayList<>();
+//        for (Loot loot : loots) {
+//            savedLoots.add(lootRepo.save(loot));
+//        }
+//        return savedLoots;
+//    }
 
     public List<Loot> listLootsForGame(Long gameId) {
         logger.debug("listLootsForGame");

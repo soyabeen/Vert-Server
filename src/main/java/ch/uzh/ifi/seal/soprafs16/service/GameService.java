@@ -55,7 +55,6 @@ public class GameService {
         Game pendingGame = gameRepo.save(gameShell);
         logger.debug("game pending " + pendingGame.toString());
         Game game = gameConf.configureGameForNrOfPlayers(pendingGame, players);
-        game.setLoots(lootService.saveLootsOfAGame(game.getLoots()));
         logger.debug("game with loots " + pendingGame.toString());
         return gameRepo.save(game);
     }
