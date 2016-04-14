@@ -3,16 +3,18 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
+import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -27,21 +29,33 @@ public class GameService {
     private PlayerService playerService;
 
     @Autowired
+    private LootService lootService;
+
+    @Autowired
     private GameRepository gameRepo;
 
     @Autowired
     private PlayerRepository playerRepo;
 
-    private GameConfiguration gameConf;
+    private GameConfigurator gameConf;
+
+    public GameService() {
+        gameConf = new GameConfigurator();
+    }
 
 
     private Game createGame(String gameName, Player owner, int players) {
-        //TODO: Fix gameConf NPE
-        //Game game = gameConf.createGameEmptyGameShellForNrOfPlayers(players);
-        Game game = new Game();
-        game.setName(gameName);
-        game.setOwner(owner.getUsername());
-        game.addPlayer(owner);
+        Game gameShell = new Game();
+        gameShell.setStatus(GameStatus.PENDING);
+        gameShell.setName(gameName);
+        gameShell.setOwner(owner.getUsername());
+        gameShell.addPlayer(owner);
+        logger.debug("game shell " + gameShell.toString());
+
+        Game pendingGame = gameRepo.save(gameShell);
+        logger.debug("game pending " + pendingGame.toString());
+        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, players);
+        logger.debug("game with loots " + pendingGame.toString());
         return gameRepo.save(game);
     }
 
@@ -52,22 +66,14 @@ public class GameService {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
 
-//        // game name available?
+       // game name available?
         if (gameRepo.findByName(game.getName()) != null) {
             throw new InvalidInputException("Invalid arg : Name of game is already used.");
         }
 
-        int players = (nrOfPlayers < GameConfiguration.MIN_PLAYERS)
-                ? GameConfiguration.MAX_PLAYERS : nrOfPlayers;
+        int players = (nrOfPlayers < GameConfigurator.MIN_PLAYERS)
+                ? GameConfigurator.MAX_PLAYERS : nrOfPlayers;
         return createGame(game.getName(), tokenOwner, players);
-    }
-
-    private void createNewGameBoardForGame(Game game) {
-        // nr of cars
-        // generate loots
-        // add init loot and card deck to player
-        // set next player
-        // set game state
     }
 
     public void startGame(Long gameId, String userToken) {
@@ -88,9 +94,9 @@ public class GameService {
 
         // Enough players?
         List<Player> players = playerService.listPlayersForGame(game.getId());
-        if (players.size() < GameConfiguration.MIN_PLAYERS) {
+        if (players.size() < GameConfigurator.MIN_PLAYERS) {
             throw new IllegalStateException("Not enough players to start the game. Need at least "
-                    + GameConfiguration.MIN_PLAYERS + " players.");
+                    + GameConfigurator.MIN_PLAYERS + " players.");
         }
 
         // TODO: start game;

@@ -32,7 +32,7 @@ public class GameCommandController
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Game createGame(@RequestBody Game game, @RequestParam("token") String userToken) {
-        logger.debug("POST:{} - token: {}, {}", CONTEXT, userToken, game.toString() );
+        logger.debug("POST:{} - createGame - token: {}, {}", CONTEXT, userToken, game.toString() );
 
         return gameService.createGame(game, userToken, game.getNumberOfPlayers());
     }
@@ -40,7 +40,7 @@ public class GameCommandController
     @RequestMapping(value = CONTEXT + "/{gameId}/start", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
-        logger.debug("POST:{} - token: {}, gameid: {}",  CONTEXT + "/{gameId}/start", userToken, gameId );
+        logger.debug("POST:{} - startGame - token: {}, gameid: {}",  CONTEXT + "/{gameId}/start", userToken, gameId );
 
         gameService.startGame(gameId, userToken);
     }

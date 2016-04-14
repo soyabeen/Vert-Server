@@ -32,6 +32,12 @@ public class Loot implements Positionable, Serializable {
     private int value;
 
     /**
+     * The id of the game to which the loot belongs.
+     */
+    @Column(nullable = false)
+    private Long gameId;
+
+    /**
      * Train car level on which loot is.
      */
     @Column(nullable = false)
@@ -46,11 +52,17 @@ public class Loot implements Positionable, Serializable {
     protected Loot() {
     }
 
-    public Loot(LootType type, int value, int car, Level level) {
+    public Loot(LootType type, Long gameId, int value, int car, Level level) {
         this.type = type;
+        this.gameId = gameId;
         this.value = value;
         this.car = car;
         this.level = level;
+    }
+
+    @Override
+    public String toString() {
+        return "Loot (id:"+id+", type:"+type+", value:"+value+", car:"+car+", level:"+level+")";
     }
 
     /**

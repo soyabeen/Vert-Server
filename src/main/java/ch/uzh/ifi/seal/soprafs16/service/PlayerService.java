@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.utils.GameConfiguration;
+import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
@@ -94,7 +94,7 @@ public class PlayerService {
 
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
-        if (game != null && game.getPlayers().size() < GameConfiguration.MAX_PLAYERS
+        if (game != null && game.getPlayers().size() < GameConfigurator.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
 
             // create new player for user
@@ -119,14 +119,14 @@ public class PlayerService {
      * @param character Users's chosen character.
      * @return new Player.
      */
-    protected Player initializeCharacter(Player player, Character character) {
+    public Player initializeCharacter(Player player, Character character) {
         // TODO: set player pos as loot pos.
-        Loot loot = new Loot(LootType.PURSE_SMALL, LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
-        loot = lootRepo.save(loot);
+        // TODO: move loot for player to game start
+//        Loot loot = new Loot(LootType.PURSE_SMALL, player. LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
+//        loot = lootRepo.save(loot);
+//        player.addLoot(loot);
 
         player.setCharacter(character);
-        player.addLoot(loot);
         return playerRepo.save(player);
     }
-
 }

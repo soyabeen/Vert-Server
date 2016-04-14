@@ -45,14 +45,14 @@ public class Game implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Player> players;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<Loot> loots;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Loot> loots;
 
 
     public Game() {
         this.players = new ArrayList<>();
         this.moves = new LinkedList<>();
-        this.loots = new LinkedHashSet<>();
+        this.loots = new ArrayList<>();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Game implements Serializable {
         loots.add(loot);
     }
 
-    public Collection<Loot> getLoots() {
+    public List<Loot> getLoots() {
         return loots;
     }
 
@@ -155,7 +155,7 @@ public class Game implements Serializable {
         this.nrOfCars = nrOfCars;
     }
 
-    public void setLoots(Set<Loot> loots) {
+    public void setLoots(List<Loot> loots) {
         this.loots = loots;
     }
 }
