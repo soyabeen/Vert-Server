@@ -17,14 +17,14 @@ public abstract class GenericController {
 
 	@ExceptionHandler(TransactionSystemException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
-	public void handleTransactionSystemException(Exception exception, HttpServletRequest request) {
+	public void handleTransactionSystemException(Exception exception) {
 		genLogger.error("", exception);
 	}
 
 	@ExceptionHandler(InvalidInputException.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.PRECONDITION_FAILED, reason = "Invalid input argument")
-	public ErrorResource handleInvalidInputException(Exception exception, HttpServletRequest request) {
+	public ErrorResource handleInvalidInputException(Exception exception) {
 		genLogger.error("", exception);
 		genLogger.info("handleInvalidInputException ....");
 
@@ -33,7 +33,7 @@ public abstract class GenericController {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public void handleException(Exception exception, HttpServletRequest request) {
+	public void handleException(Exception exception) {
 		genLogger.error("", exception);
 	}
 }
