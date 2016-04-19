@@ -13,6 +13,10 @@ public class InputArgValidator {
 
     private static final String MESSAGE_START = "Invalid arg : ";
 
+    private InputArgValidator() {
+        // Non-public constructor since this is a utility class with only static methods.
+    }
+
     /**
      * Check in the given <code>java.lang.Object</code> is not null, otherwise throw exception.
      *
