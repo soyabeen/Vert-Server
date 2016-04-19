@@ -1,15 +1,14 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
-import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
-import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * This class handles the initialisation and configuration of a game.
@@ -151,7 +150,7 @@ public class GameConfigurator {
             throw new IllegalArgumentException("Game object must have an id");
         }
 
-        int nrOfCars = (nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame);
+        int nrOfCars = nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame;
 
         game.setNumberOfPlayers(nrOfPlayersForGame);
         game.setNrOfCars(nrOfCars);
