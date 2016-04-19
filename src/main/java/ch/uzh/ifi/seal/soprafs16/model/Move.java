@@ -66,7 +66,7 @@ public class Move implements Serializable {
 	public void setPlayedCard(Card playedCard) {
 		if(playedCard != null) {
 			this.playedCard = playedCard;
-		} else throw new InvalidInputException();
+		} else throw new IllegalArgumentException("Played card must not be null!");
 	}
 
 	/**
