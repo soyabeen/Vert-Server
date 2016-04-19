@@ -113,7 +113,7 @@ public class RoundService {
             tmpId = move.getPlayer().getId();
             currentPlayer = playerRepo.findOne(tmpId);
 
-        } else throw new InvalidInputException();
+        } else throw new InvalidInputException("Can't play move, that is empty/null.");
 
         if( !move.isPass() ) {
             // Player played a card
