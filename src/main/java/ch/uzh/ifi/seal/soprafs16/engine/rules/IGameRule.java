@@ -1,5 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rules;
 
+import ch.uzh.ifi.seal.soprafs16.model.Positionable;
+
+import java.util.List;
+
 /**
  * Describes the needed methods to evaluate the applied
  * rules/restrictions to a game action.
@@ -23,5 +27,5 @@ public interface IGameRule {
     /**
      * Execute the rule, actually do the
      */
-    public void emulate();
+    public List<Positionable> emulate();
 }

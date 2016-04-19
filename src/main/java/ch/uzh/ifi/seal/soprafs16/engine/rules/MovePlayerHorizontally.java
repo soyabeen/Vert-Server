@@ -2,9 +2,11 @@ package ch.uzh.ifi.seal.soprafs16.engine.rules;
 
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import org.jboss.logging.annotations.Pos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rule to check, how a player can move horizontally.
@@ -15,6 +17,8 @@ public class MovePlayerHorizontally implements IGameRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerHorizontallyOnLowerLevel.class);
     private static final int ALLOWED_DISTANCE = 1;
+    private static final int DIRECTION_TO_HEAD = -1;
+    private static final int DIRECTION_TO_TAIL = 1;
 
     private Player player;
     private int trainLength;
@@ -47,20 +51,39 @@ public class MovePlayerHorizontally implements IGameRule {
         return true;
     }
 
-    @Override
-    public void emulate() {
-
-//        if (evaluate()) {
-//            int position = player.getCar();
-//            for (int i = 1; i <; i++) {
-//
-//            }
-//            if (0 < position) {
-//                // players can move in direction to head/locomotive
-//            }
-//            if (position < trainLength) {
-//                // players can move in direction to tail
-//            }
-//        }
+    /**
+     * @param player
+     * @param boardLength
+     * @param distance
+     * @param direction
+     * @return
+     */
+    private List<Positionable> getPossiblePositions(Player player, int boardLength, int distance, int direction) {
+        ArrayList<Positionable> emulatedPlayerPositions = new ArrayList<>();
+        int playerPosition = player.getCar();
+        for (int i = 1;
+             i <= distance
+                     && playerPosition + (direction * i) < boardLength
+                     && playerPosition + (direction * i) >= 0;
+             i++) {
+            Player emulated = new Player();
+            emulated.setUsername(player.getUsername());
+            emulated.setLevel(player.getLevel());
+            emulated.setCar(playerPosition + i);
+            logger.debug("em " + emulated.toString());
+            emulatedPlayerPositions.add(emulated);
+        }
+        return emulatedPlayerPositions;
     }
+
+    @Override
+    public List<Positionable> emulate() {
+        ArrayList<Positionable> emulatedPlayers = new ArrayList<>();
+        if (evaluate()) {
+            emulatedPlayers.addAll(getPossiblePositions(player, trainLength, distanceToMove, DIRECTION_TO_HEAD));
+            emulatedPlayers.addAll(getPossiblePositions(player, trainLength, distanceToMove, DIRECTION_TO_TAIL));
+        }
+        return emulatedPlayers;
+    }
+
 }

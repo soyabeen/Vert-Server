@@ -143,8 +143,10 @@ public class Player extends Meeple {
     public String toString() {
         return "Player{" +
                 "id=" + getId() +
-                "character=" + character +
+                ", username=" + username +
+                ", character=" + character +
                 ", bullets=" + bullets +
+                ", pos=" + getCar() + "/"+ getLevel() +
                 '}';
     }
 
