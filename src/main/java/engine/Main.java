@@ -17,10 +17,8 @@ public class Main {
 
     }
 
-    public static void main(String[] args) {
-
-
-	    User player1 = new User("Player 1");
+    private static void runExampleSequence() {
+        User player1 = new User("Player 1");
         User player2 = new User("Player 2");
 
         final String delimiter = "------";
@@ -78,4 +76,9 @@ public class Main {
         log.info(player1.toString());
         log.info(player2.toString());
     }
+
+//    public static void main(String[] args) {
+//        runExampleSequence();
+//    }
+
 }
