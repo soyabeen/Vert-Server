@@ -1,9 +1,10 @@
-package ch.uzh.ifi.seal.soprafs16.utility;
+package ch.uzh.ifi.seal.soprafs16.helper;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.User;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +26,20 @@ public class GameBuilder {
     private List<Character> availableCharacter;
 
     @Autowired
-    private UserBuilder userBuilder;
+    private PlayerBuilder playerBuilder;
 
     @Autowired
     private LootBuilder lootBuilder;
 
     @Autowired
-    private LootRepository lootRepo;
-
-    @Autowired
     private GameRepository gameRepo;
 
-
+    /**
+     * Creates a game and saves it.
+     * @param name
+     * @param owner
+     * @return
+     */
     public GameBuilder init(String name, String owner) {
         game = new Game();
         game.setName(name);
@@ -47,12 +50,27 @@ public class GameBuilder {
     }
 
     /**
+     * Creates a game without saving it.
+     * @param name
+     * @param owner
+     * @return
+     */
+    public GameBuilder initNoPersistence(String name, String owner) {
+        game = new Game();
+        game.setName(name);
+        game.setOwner(owner);
+        availableCharacter = new ArrayList<>(Arrays.asList(Character.values()));
+
+        return this;
+    }
+
+    /**
      * Adds a user to game.
      * @param user
      * @return
      */
-    public GameBuilder addUser(User user) {
-        game.addUser(user);
+    public GameBuilder addUser(Player user) {
+        game.addPlayer(user);
         return save();
     }
 
@@ -61,8 +79,8 @@ public class GameBuilder {
      * @param users
      * @return
      */
-    public GameBuilder addUsers(User... users) {
-        for (User user : users) {
+    public GameBuilder addUsers(Player... users) {
+        for (Player user : users) {
             addUser(user);
         }
         return this;
@@ -73,7 +91,7 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomUser() {
-        User user = userBuilder.getRandomUser();
+        Player user = playerBuilder.init(true).build();
         return addUser(user);
     }
 
@@ -104,9 +122,9 @@ public class GameBuilder {
         List<Character> availableChars = availableCharacter;
 
         if (!availableChars.isEmpty() && availableChars.contains(character)) {
-            User user = userBuilder.getRandomUserWithPlayer(character);
+            Player user = playerBuilder.init(true).addCharacter(character).build();
 
-            game.addUser(user);
+            game.addPlayer(user);
         }
 
         return save();
@@ -119,7 +137,7 @@ public class GameBuilder {
      */
     public GameBuilder addLoot(Loot loot) {
         game.addLoot(loot);
-        return this;
+        return save();
     }
 
     /**
@@ -129,8 +147,7 @@ public class GameBuilder {
      */
     public GameBuilder addLootAndSave(Loot loot) {
         game.addLoot(loot);
-        save();
-        return this;
+        return save();
     }
 
     /**
@@ -138,7 +155,12 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomLoot() {
-        return addLootAndSave(lootBuilder.getRandomLootAndSave());
+        return addLoot(lootBuilder.init().build());
+    }
+
+    public GameBuilder setStatus(GameStatus gameStatus) {
+        game.setStatus(gameStatus);
+        return save();
     }
 
     /**

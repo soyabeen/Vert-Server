@@ -1,14 +1,13 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.constant.GameConstants;
+import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 /**
  * Created by soyabeen on 24.03.16.
@@ -30,9 +29,6 @@ public class PlayerService {
     private GameRepository gameRepo;
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
     private PlayerRepository playerRepo;
 
     @Autowired
@@ -41,8 +37,28 @@ public class PlayerService {
     @Autowired
     private LootRepository lootRepo;
 
+
+    public Player createPlayer(Player player) {
+
+        InputArgValidator.checkNotEmpty(player.getUsername(), "username");
+        InputArgValidator.checkUserNameNotUsed(player.getUsername(), playerRepo, "username");
+        player.setToken(UUID.randomUUID().toString());
+        return playerRepo.save(player);
+    }
+
+    public List<Player> listPlayers() {
+        List<Player> result = new ArrayList<>();
+        playerRepo.findAll().forEach(result::add);
+        return result;
+    }
+
+    public Player getPlayer(Long playerId) {
+        return (Player) InputArgValidator.checkAvailabeId(playerId, playerRepo, "playerId");
+    }
+
     /**
      * Lists all players for a given game.
+     *
      * @param gameId
      * @return
      */
@@ -53,7 +69,8 @@ public class PlayerService {
 
         if (game != null) {
             logger.debug("Game id: " + game.getId());
-            result = game.getUsers().stream().map(User::getPlayer).collect(Collectors.toList());
+            logger.debug("Number of player in game: " + game.getPlayers().size());
+            result.addAll(game.getPlayers());
         } else {
             logger.error("No game found for id: " + gameId);
         }
@@ -62,76 +79,54 @@ public class PlayerService {
 
     /**
      * Creates a new player for a given user and adds this player to the game.
-     * @param gameId The game to which we want to add a player.
-     * @param userToken User identifying token.
+     *
+     * @param gameId    The game to which we want to add a player.
+     * @param player    The user owning the player.
      * @param character User's chosen character.
      * @return The id of the newly created player
      */
-    public Long createPlayerForUser(Long gameId, String userToken, Character character) {
-        logger.debug("createPlayerForUser");
+    public Player assignPlayer(Long gameId, Player player, Character character) {
+        logger.debug("assignPlayer");
 
-        Game game = gameRepo.findOne(gameId);
+        InputArgValidator.checkIfPositiveNumber(gameId, "gameid");
+        InputArgValidator.checkNotNull(player, "player");
+        InputArgValidator.checkNotNull(character, "character");
 
-        if (game != null && game.getNumberOfPlayers() < GameConstants.MAX_PLAYERS
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+
+        if (game != null && game.getPlayers().size() < GameConfigurator.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
 
-            // get User
-            User user = userRepo.findByToken(userToken);
-
             // create new player for user
-            Player player = createPlayer(character);
+            player = initializeCharacter(player, character);
 
-            // assign Player to user
-            boolean itWorked = assignPlayerToUser(user, player);
+            // assign user to game
+            game.addPlayer(player);
+            gameRepo.save(game);
 
-            if (itWorked) {
-                // assign user to game
-                game.addUser(user);
-                gameRepo.save(game);
-            }
-
-            return user.getPlayer().getId();
+            return player;
         } else {
             //TODO: Find better way to handle this
             logger.error("No game found/game is full/character not available for id: " + gameId);
         }
 
-        return -1L;
-    }
-
-    /**
-     * Assing player to a user.
-     * @param user
-     * @param player
-     */
-    protected boolean assignPlayerToUser(User user, Player player) {
-        if (user.getPlayer() == null) {
-            user.setPlayer(player);
-            user.setStatus(UserStatus.ONLINE);
-            userRepo.save(user);
-
-            return true;
-        } else {
-            logger.error("User already has Player assigned");
-        }
-
-        return false;
+        return new Player();
     }
 
     /**
      * Creates a new Player with given character.
+     *
      * @param character Users's chosen character.
      * @return new Player.
      */
-    protected Player createPlayer(Character character) {
-        Loot loot = new Loot(LootType.PURSE, 250, Positionable.Level.BOTTOM);
-        loot = lootRepo.save(loot);
+    public Player initializeCharacter(Player player, Character character) {
+        // TODO: set player pos as loot pos.
+        // TODO: move loot for player to game start
+//        Loot loot = new Loot(LootType.PURSE_SMALL, player. LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
+//        loot = lootRepo.save(loot);
+//        player.addLoot(loot);
 
-        Player player = new Player(loot);
         player.setCharacter(character);
-        player = playerRepo.save(player);
-
-        return player;
+        return playerRepo.save(player);
     }
-
 }

@@ -2,14 +2,12 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
-import ch.uzh.ifi.seal.soprafs16.utility.GameBuilder;
-import ch.uzh.ifi.seal.soprafs16.utility.UserBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,18 +52,13 @@ public class PlayerServiceIntegrationTest {
     private GameRepository gameRepo;
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
     private PlayerRepository playerRepo;
 
     @Autowired
     private GameBuilder gameBuilder;
 
     @Autowired
-    private UserBuilder userBuilder;
-
-    private static final String BAD_RESPONSE= "-1";
+    private PlayerBuilder playerBuilder;
 
     @Before
     public void setUp() throws MalformedURLException {
@@ -78,106 +71,88 @@ public class PlayerServiceIntegrationTest {
         Game game = gameBuilder.init("testCreatePlayerForUser", "testCreatePlayerForUser").build();
         String context = base + "games/" + game.getId() + "/players";
 
-        User user1 = userBuilder.getRandomUser();
+        Player player1 = playerBuilder.init(true).build();
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user1.getToken())
+                .queryParam("token", player1.getToken())
                 .queryParam("character", Character.BELLE);
 
-        String response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertNotEquals(response, BAD_RESPONSE);
+        Player response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
 
         // check that player was correctly created
-        Player createdPlayer = playerRepo.findOne(Long.parseLong(response));
-        Assert.assertNotNull(createdPlayer);
-        Assert.assertThat(createdPlayer.getCharacter(), is(Character.BELLE));
-
-        // check that player is assigned to user
-        user1 = userRepo.findOne(user1.getId());
-        Assert.assertNotNull(user1.getPlayer());
-        Assert.assertEquals(user1.getPlayer().getId(), createdPlayer.getId());
-        Assert.assertEquals(user1.getPlayer().getCharacter(), createdPlayer.getCharacter());
+        Player createdPlayer = playerRepo.findOne(response.getId());
+        Assert.assertNotNull("Player1 not null.", createdPlayer);
+        Assert.assertThat("Player1 has char BELLE.", createdPlayer.getCharacter(), is(Character.BELLE));
 
         // check that user was assigned to game
         game = gameRepo.findOne(game.getId());
-        Assert.assertNotNull(game.getUsers());
-        Assert.assertThat(game.getUsers().get(0).getId(), is(user1.getId()));
-        Assert.assertThat(game.getUsers().get(0).getToken(), is(user1.getToken()));
+        Assert.assertNotNull(game.getPlayers());
+        Assert.assertThat(game.getPlayers().get(0).getId(), is(player1.getId()));
+        Assert.assertThat(game.getPlayers().get(0).getToken(), is(player1.getToken()));
 
         // check if it can choose same character as someone else
-        User user2 = userBuilder.getRandomUser();
+        Player player2 = playerBuilder.init(true).build();
 
         uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user2.getToken())
+                .queryParam("token", player2.getToken())
                 .queryParam("character", Character.BELLE);
 
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertThat(response, is(BAD_RESPONSE));
-
-        // check if user has already chosen a player
-        uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user1.getToken())
-                .queryParam("character", Character.DOC);
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-
-        Player createdPlayer2 = playerRepo.findOne(Long.parseLong(response));
-        Assert.assertNotNull(createdPlayer2);
-        Assert.assertThat(createdPlayer2.getCharacter(), is(Character.BELLE));
+        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
+        Assert.assertNull(response.getId());
 
         // game doesn't exist
         uriBuilder = UriComponentsBuilder.fromHttpUrl(base + "games/10000000/players")
-                .queryParam("token", user2.getToken())
+                .queryParam("token", player2.getToken())
                 .queryParam("character", Character.BELLE);
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertThat(response, is(BAD_RESPONSE));
+        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
+        Assert.assertNull(response.getId());
 
         // Check if game is already full
-        User user3 = userBuilder.getRandomUser();
-        User user4 = userBuilder.getRandomUser();
-        User user5 = userBuilder.getRandomUser();
-        User user6 = userBuilder.getRandomUser();
+        Player player3 = playerBuilder.init(true).build();
+        Player player4 = playerBuilder.init(true).build();
+        Player player5 = playerBuilder.init(true).build();
+        Player player6 = playerBuilder.init(true).build();
 
         context = base + "games/" + game.getId() + "/players";
         uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user3.getToken())
+                .queryParam("token", player3.getToken())
                 .queryParam("character", Character.GHOST);
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertNotEquals(response, BAD_RESPONSE);
+        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
+        Assert.assertNotNull(response.getId());
 
         uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user4.getToken())
+                .queryParam("token", player4.getToken())
                 .queryParam("character", Character.DJANGO);
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertNotEquals(response, BAD_RESPONSE);
+        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
+        Assert.assertNotNull(response.getId());
 
         uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user5.getToken())
+                .queryParam("token", player5.getToken())
                 .queryParam("character", Character.CHEYENNE);
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertNotEquals(response, BAD_RESPONSE);
+        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
+        Assert.assertNotNull(response.getId());
 
         uriBuilder = UriComponentsBuilder.fromHttpUrl(context)
-                .queryParam("token", user6.getToken())
+                .queryParam("token", player6.getToken())
                 .queryParam("character", Character.TUCO);
-        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, String.class);
-        Assert.assertThat(response, is(BAD_RESPONSE));
+        response = template.postForObject(uriBuilder.build().encode().toUri(), HttpMethod.POST, Player.class);
+        Assert.assertNull(response.getId());
 
         game = gameRepo.findOne(game.getId());
-        Assert.assertThat(game.getUsers().size(), is(4));
+        Assert.assertThat(game.getPlayers().size(), is(4));
 
 
     }
 
     @Test
     public void testListPlayersForGame() {
-        User user1 = userBuilder.getRandomUserWithPlayer(Character.BELLE);
-        User user2 = userBuilder.getRandomUserWithPlayer(Character.GHOST);
-        Player player1 = user1.getPlayer();
-        Player player2 = user2.getPlayer();
+        Player player1 = playerBuilder.init().addCharacter(Character.BELLE).build();
+        Player player2 = playerBuilder.init().addCharacter(Character.GHOST).build();
 
         Game game = gameBuilder.init("testListPlayersForGame", "testListPlayersForGame")
-                .addUsers(user1, user2)
+                .addUsers(player1, player2)
                 .build();
+
         String context = base + "games/" + game.getId() + "/players";
 
         Player[] response = template.getForObject(context, Player[].class);

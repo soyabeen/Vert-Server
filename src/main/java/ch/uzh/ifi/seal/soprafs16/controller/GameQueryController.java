@@ -1,61 +1,50 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
-import ch.uzh.ifi.seal.soprafs16.service.GenericService;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Move;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Move;
-import ch.uzh.ifi.seal.soprafs16.model.User;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
 public class GameQueryController
-        extends GenericService {
+        extends GenericController {
 
-    private static final Logger logger  = LoggerFactory.getLogger(GameQueryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameQueryController.class);
 
-    @Autowired
-    private UserRepository userRepo;
     @Autowired
     private GameRepository gameRepo;
-    @Autowired
-    private MoveRepository moveRepo;
-
 
     private static final String CONTEXT = "/games";
 
-    /*
-     * Context: /game
+    /**
+     * Context: /games
      */
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Game> listGames() {
+        //TODO: put logic of methods in GameServices
         logger.debug("listGames");
         List<Game> result = new ArrayList<>();
         gameRepo.findAll().forEach(result::add);
         return result;
     }
 
-    /*
-     * Context: /game/{game-id}
+    /**
+     * Context: /games/{game-id}
      */
     @RequestMapping(value = CONTEXT + "/{gameId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Game getGame(@PathVariable Long gameId) {
+        //TODO: put logic of methods in GameServices
         logger.debug("getGame: " + gameId);
 
         Game game = gameRepo.findOne(gameId);
@@ -63,12 +52,13 @@ public class GameQueryController
         return game;
     }
 
-    /*
-     * Context: /game/{game-id}/move
+    /**
+     * Context: /games/{game-id}/move
      */
     @RequestMapping(value = CONTEXT + "/{gameId}/move", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Move> listMoves(@PathVariable Long gameId) {
+        //TODO: put logic of methods in GameServices
         logger.debug("listMoves");
 
         Game game = gameRepo.findOne(gameId);
@@ -76,15 +66,16 @@ public class GameQueryController
             return game.getMoves();
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
-    /*
-     * Context: /game/{game-id}/move/{moveId}
+    /**
+     * Context: /games/{game-id}/move/{moveId}
      */
     @RequestMapping(value = CONTEXT + "/{gameId}/move/{moveId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Move getMove(@PathVariable Long gameId, @PathVariable Integer moveId) {
+        //TODO: put logic of methods in GameServices
         logger.debug("getMove: " + gameId);
 
         Game game = gameRepo.findOne(gameId);
@@ -95,16 +86,23 @@ public class GameQueryController
         return null;
     }
 
-    /*
-     * Context: /game/{game-id}/player/{playerId}
+    /**
+     * Context: /games/{game-id}/player/{playerId}
      */
     @RequestMapping(value = CONTEXT + "/{gameId}/player/{playerId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public User getPlayer(@PathVariable Long gameId, @PathVariable Integer playerId) {
+    public Player getPlayer(@PathVariable Long gameId, @PathVariable Long playerId) {
+        //TODO: put logic of methods in GameServices
         logger.debug("getPlayer: " + gameId);
 
         Game game = gameRepo.findOne(gameId);
 
-        return game.getUsers().get(playerId);
+        for (Player player : game.getPlayers()) {
+            if (player.getId().equals(playerId)) {
+                return player;
+            }
+        }
+
+        return new Player();
     }
 }

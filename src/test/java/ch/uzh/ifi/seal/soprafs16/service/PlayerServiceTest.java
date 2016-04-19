@@ -1,11 +1,10 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.User;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +36,8 @@ public class PlayerServiceTest {
     @Mock
     private GameRepository gameRepo;
 
-    @Mock
-    private UserRepository userRepo;
+    // Cannot @Autowired if test is not inside a spring context
+    private PlayerBuilder playerBuilder;
 
     private Game game;
 
@@ -51,24 +51,13 @@ public class PlayerServiceTest {
 
     @Test
     public void testListPlayers() {
-        Player p1 = new Player();
+        Player p1 = new Player(UUID.randomUUID().toString());
         p1.setCharacter(Character.BELLE);
-        Player p2 = new Player();
+        Player p2 = new Player(UUID.randomUUID().toString());
         p2.setCharacter(Character.GHOST);
 
-        User user1 = new User("abc", "def");
-        user1.setToken(UUID.randomUUID().toString());
-        user1.setPlayer(p1);
-
-        User user2 = new User("def", "abc");
-        user2.setToken(UUID.randomUUID().toString());
-        user2.setPlayer(p2);
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-
-        game.addUser(user1);
-        game.addUser(user2);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
 
         List<Player> players = playerService.listPlayersForGame(1L);
 

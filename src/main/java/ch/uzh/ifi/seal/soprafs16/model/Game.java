@@ -1,129 +1,161 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-
-import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
-
 @Entity
 public class Game implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue
-	private Long id;
-	
-	@Column(nullable = false) 
-	private String name;
-	
-	@Column(nullable = false) 
-	private String owner;
 
-	@Column
-	private int numberOfPlayers;
-	
-	@Column 
-	private GameStatus status;
-	
-	@Column 
-	private int currentPlayer;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-    @OneToMany(mappedBy="game")
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String owner;
+
+    @Column
+    private int numberOfPlayers;
+
+    @Column
+    private GameStatus status;
+
+    @Column
+    private int currentPlayer;
+
+    @Column
+    private int nrOfCars;
+
+    @OneToMany(mappedBy = "game")
     private List<Move> moves;
-    
+
     @OneToMany(fetch = FetchType.EAGER)
-    private List<User> users;
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Player> players;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Loot> loots;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Loot> loots;
 
 
-	public Game() {
-		this.users = new ArrayList<>();
-		this.moves = new LinkedList<>();
-		this.loots = new LinkedHashSet<>();
-	}
+    public Game() {
+        this.players = new ArrayList<>();
+        this.moves = new LinkedList<>();
+        this.loots = new ArrayList<>();
+    }
 
-	public void addLoot(Loot loot) {
-		loots.add(loot);
-	}
+    @Override
+    public String toString() {
+        return "Game{" +
+                "loots=" + loots +
+                ", players=" + players +
+                ", nrOfCars=" + nrOfCars +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", owner='" + owner + '\'' +
+                ", numberOfPlayers=" + numberOfPlayers +
+                ", status=" + status +
+                ", currentPlayer=" + currentPlayer +
+                '}';
+    }
 
-	public Collection<Loot> getLoots() {
-		return loots;
-	}
+    public void addLoot(Loot loot) {
+        loots.add(loot);
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public List<Loot> getLoots() {
+        return loots;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getOwner() {
-		return owner;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    public String getOwner() {
+        return owner;
+    }
 
-	public List<Move> getMoves() {
-		return moves;
-	}
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
-	public void setMoves(List<Move> moves) {
-		this.moves = moves;
-	}
+    public List<Move> getMoves() {
+        return moves;
+    }
 
-	public List<User> getUsers() {
-		return users;
-	}
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
+    }
 
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
 
-	public GameStatus getStatus() {
-		return status;
-	}
+    public List<Player> getPlayers() {
+        return players;
+    }
 
-	public void setStatus(GameStatus status) {
-		this.status = status;
-	}
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 
-	public Integer getCurrentPlayer() {
-		return currentPlayer;
-	}
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
 
-	public void setCurrentPlayer(Integer currentPlayer) {
-		this.currentPlayer = currentPlayer;
-	}
+    public GameStatus getStatus() {
+        return status;
+    }
 
-	public void addUser(User user) {
-		users.add(user);
-		numberOfPlayers++;
-	}
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
 
-	public Integer getNumberOfPlayers() {
-		return numberOfPlayers;
-	}
+    public Integer getCurrentPlayer() {
+        return currentPlayer;
+    }
 
-	public void setNumberOfPlayers(Integer numberOfPlayers) {
-		this.numberOfPlayers = numberOfPlayers;
-	}
+    public void setCurrentPlayer(Integer currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public int getNrOfCars() {
+        return nrOfCars;
+    }
+
+    public void setNrOfCars(int nrOfCars) {
+        this.nrOfCars = nrOfCars;
+    }
+
+    public void setLoots(List<Loot> loots) {
+        this.loots = loots;
+    }
 }

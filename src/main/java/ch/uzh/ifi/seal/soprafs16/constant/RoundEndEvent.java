@@ -13,5 +13,6 @@ public enum RoundEndEvent {
     REBELLION,
     PICKPOCKETING,
     MARSHALS_REVENGE,
-    HOSTAGE
+    HOSTAGE,
+    NONE
 }

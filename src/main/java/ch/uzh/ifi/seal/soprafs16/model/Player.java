@@ -13,6 +13,12 @@ import java.util.List;
 @Entity
 public class Player extends Meeple {
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String token;
+
     @Column
     private Character character;
 
@@ -21,7 +27,10 @@ public class Player extends Meeple {
 
     @Column
     private CardDeck deck;
-    
+
+    @Column
+    private Integer totalMadeMoves;
+
     @OneToMany(mappedBy = "owner")
     private List<Card> hand;
 
@@ -37,8 +46,12 @@ public class Player extends Meeple {
     public Player() {
         this.loots = new ArrayList<>();
         this.hand = new ArrayList<>();
+        totalMadeMoves = 0;
         bullets = MAX_BULLETS;
+    }
 
+    public Player(String username) {
+        this.username = username;
     }
 
     /**
@@ -47,6 +60,27 @@ public class Player extends Meeple {
     public Player(Loot loot) {
         this();
         loots.add(loot);
+    }
+
+    public Player(Loot loot, CardDeck playerDeck) {
+        this(loot);
+        this.deck = playerDeck;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**
@@ -75,7 +109,7 @@ public class Player extends Meeple {
 
     /**
      * Adds a piece of loot.
-     * @param loot Loot to pick.
+     * @param loot
      */
     public void addLoot(Loot loot) {
         loots.add(loot);
@@ -105,9 +139,6 @@ public class Player extends Meeple {
         this.character = character;
     }
 
-    //TODO: add equals method (or implement comparable)
-
-
     @Override
     public String toString() {
         return "Player{" +
@@ -116,4 +147,44 @@ public class Player extends Meeple {
                 ", bullets=" + bullets +
                 '}';
     }
+
+    /**
+     * Gets the players cards in hand.
+     * @return Cards which the player is holding.
+     */
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    /**
+     * Sets the new cards the player is holding.
+     * @param hand Updated collection of cards the player is going to hold.
+     */
+    public void setHand(List<Card> hand) {
+        this.hand = hand;
+    }
+
+    /**
+     * Adds 3 Cards from card deck to players hand.
+     */
+    public void take3Cards() {
+        this.hand.addAll( this.deck.drawCard(3) );
+    }
+
+    /**
+     * Gets the amount of rounds a player made a move.
+     * @return totalMadeMoves
+     */
+    public Integer getTotalMadeMoves() {
+        return totalMadeMoves;
+    }
+
+    /**
+     * Increments the amount of rounds a player made.
+     *
+     */
+    public void incrementTotalMadeMoves() {
+        this.totalMadeMoves++;
+    }
+
 }

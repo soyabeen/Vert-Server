@@ -4,8 +4,8 @@ import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.UserRepository;
-import ch.uzh.ifi.seal.soprafs16.utility.GameBuilder;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class CharacterQueryControllerIntegrationTest {
     private RestTemplate template;
 
     @Autowired
-    private UserRepository userRepo;
+    private PlayerRepository playerRepo;
 
     @Autowired
     private GameRepository gameRepo;
@@ -58,7 +58,7 @@ public class CharacterQueryControllerIntegrationTest {
         this.template = new TestRestTemplate();
 
         gameRepo.deleteAll();
-        userRepo.deleteAll();
+        playerRepo.deleteAll();
     }
 
     @Test

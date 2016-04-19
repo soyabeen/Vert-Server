@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.utility.PlayerBuilder;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
