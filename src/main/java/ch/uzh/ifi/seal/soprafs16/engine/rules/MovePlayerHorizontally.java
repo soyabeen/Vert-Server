@@ -69,8 +69,7 @@ public class MovePlayerHorizontally implements IGameRule {
             Player emulated = new Player();
             emulated.setUsername(player.getUsername());
             emulated.setLevel(player.getLevel());
-            emulated.setCar(playerPosition + i);
-            logger.debug("em " + emulated.toString());
+            emulated.setCar(playerPosition + (direction * i));
             emulatedPlayerPositions.add(emulated);
         }
         return emulatedPlayerPositions;
