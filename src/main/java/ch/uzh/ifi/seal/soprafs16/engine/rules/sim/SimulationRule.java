@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.engine.rules;
+package ch.uzh.ifi.seal.soprafs16.engine.rules.sim;
 
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
@@ -18,11 +18,11 @@ public interface SimulationRule {
      * @return boolean True if the situation satisfy the rule set,
      * so that the action can be executed.
      */
-    public boolean evaluate();
+    public boolean evaluate(Positionable actor);
 
 
     /**
      * Execute the rule, actually do the
      */
-    public List<Positionable> simulate();
+    public List<Positionable> simulate(Positionable actor);
 }

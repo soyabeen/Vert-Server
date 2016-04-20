@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rules;
 
+import ch.uzh.ifi.seal.soprafs16.engine.rules.sim.MovePlayerSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
@@ -25,9 +26,9 @@ public class MovePlayerHorizontallyTest {
         playerOnBottom.setLevel(Positionable.Level.BOTTOM);
         playerOnBottom.setCar(0);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnBottom, 3, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1);
 
-        Assert.assertTrue("Expect true for player on bottom level.", rule.evaluate());
+        Assert.assertTrue("Expect true for player on bottom level.", rule.evaluate(playerOnBottom));
     }
 
     @Test
@@ -36,9 +37,9 @@ public class MovePlayerHorizontallyTest {
         playerOnTop.setLevel(Positionable.Level.TOP);
         playerOnTop.setCar(0);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnTop, 3, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1);
 
-        Assert.assertTrue("Expect true for player on top level.", rule.evaluate());
+        Assert.assertTrue("Expect true for player on top level.", rule.evaluate(playerOnTop));
     }
 
     @Test
@@ -47,9 +48,9 @@ public class MovePlayerHorizontallyTest {
         playerOnUnknown.setLevel(null);
         playerOnUnknown.setCar(0);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnUnknown, 3, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1);
 
-        Assert.assertFalse("Expect false for player on unknown level.", rule.evaluate());
+        Assert.assertFalse("Expect false for player on unknown level.", rule.evaluate(playerOnUnknown));
     }
 
     @Test
@@ -60,8 +61,8 @@ public class MovePlayerHorizontallyTest {
         playerOnTrain.setLevel(Positionable.Level.TOP);
         playerOnTrain.setCar(1);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnTrain, trainLength, 1);
-        Assert.assertTrue("Expect true for player on train.", rule.evaluate());
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1);
+        Assert.assertTrue("Expect true for player on train.", rule.evaluate(playerOnTrain));
     }
 
     @Test
@@ -73,8 +74,8 @@ public class MovePlayerHorizontallyTest {
         playerOnTrain.setLevel(Positionable.Level.TOP);
         playerOnTrain.setCar(posAfterTrain);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnTrain, trainLength, 1);
-        Assert.assertFalse("Expect false for player not on train.", rule.evaluate());
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1);
+        Assert.assertFalse("Expect false for player not on train.", rule.evaluate(playerOnTrain));
     }
 
     @Test
@@ -86,8 +87,8 @@ public class MovePlayerHorizontallyTest {
         playerOnTrain.setLevel(Positionable.Level.TOP);
         playerOnTrain.setCar(posBeforeTrain);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnTrain, trainLength, 1);
-        Assert.assertFalse("Expect false for player not on train.", rule.evaluate());
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1);
+        Assert.assertFalse("Expect false for player not on train.", rule.evaluate(playerOnTrain));
     }
 
     @Test
@@ -97,14 +98,14 @@ public class MovePlayerHorizontallyTest {
         Player playerOnLoc = new Player();
         playerOnLoc.setLevel(Positionable.Level.TOP);
         playerOnLoc.setCar(0);
-        MovePlayerHorizontally ruleLoc = new MovePlayerHorizontally(playerOnLoc, trainLength, 1);
-        Assert.assertTrue("Expect true for player on locomotive.", ruleLoc.evaluate());
+        MovePlayerSimRule ruleLoc = new MovePlayerSimRule(trainLength, 1);
+        Assert.assertTrue("Expect true for player on locomotive.", ruleLoc.evaluate(playerOnLoc));
 
         Player playerOnLast = new Player();
         playerOnLast.setLevel(Positionable.Level.TOP);
         playerOnLast.setCar(trainLength);
-        MovePlayerHorizontally ruleLast = new MovePlayerHorizontally(playerOnLast, trainLength, 1);
-        Assert.assertTrue("Expect true for player on last car.", ruleLast.evaluate());
+        MovePlayerSimRule ruleLast = new MovePlayerSimRule(trainLength, 1);
+        Assert.assertTrue("Expect true for player on last car.", ruleLast.evaluate(playerOnLast));
     }
 
     @Test
@@ -116,11 +117,11 @@ public class MovePlayerHorizontallyTest {
         playerOnLoc.setLevel(Positionable.Level.TOP);
         playerOnLoc.setCar(position);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnLoc, trainCars, distanceToMove);
-        List<Positionable> result = rule.simulate();
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainCars, distanceToMove);
+        List<Positionable> result = rule.simulate(playerOnLoc);
         Assert.assertThat("Expect 3 emulated players", result.size(), is(3));
         for (Positionable em : result) {
-            Assert.assertTrue("New pos ("+em.getCar()+") must be bigger than org ("+position+").", em.getCar()>position);
+            Assert.assertTrue("New pos (" + em.getCar() + ") must be bigger than org (" + position + ").", em.getCar() > position);
         }
     }
 
@@ -133,15 +134,15 @@ public class MovePlayerHorizontallyTest {
         player.setLevel(Positionable.Level.TOP);
         player.setCar(position);
 
-        MovePlayerHorizontally rule = new MovePlayerHorizontally(player, trainCars, distanceToMove);
-        List<Positionable> result = rule.simulate();
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainCars, distanceToMove);
+        List<Positionable> result = rule.simulate(player);
         Assert.assertThat("Expect 3 emulated players", result.size(), is(3));
         List<Positionable> movedToLeft = new ArrayList<>();
         List<Positionable> movedToRight = new ArrayList<>();
         for (Positionable em : result) {
-            if(em.getCar() < position) {
+            if (em.getCar() < position) {
                 movedToLeft.add(em);
-            }else{
+            } else {
                 movedToRight.add(em);
             }
         }
