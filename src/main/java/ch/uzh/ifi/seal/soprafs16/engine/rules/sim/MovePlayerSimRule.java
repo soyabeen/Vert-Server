@@ -16,7 +16,7 @@ import java.util.List;
 public class MovePlayerSimRule implements SimulationRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerSimRule.class);
-    private static final int ALLOWED_DISTANCE = 1;
+
     private static final int DIRECTION_TO_HEAD = -1;
     private static final int DIRECTION_TO_TAIL = 1;
 

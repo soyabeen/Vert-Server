@@ -13,5 +13,6 @@ public enum CardType {
     ROBBERY,
     MARSHAL,
     ROUND,
-    TRAINSTATION
+    TRAINSTATION,
+    DRAW
 }

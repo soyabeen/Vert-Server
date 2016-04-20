@@ -1,5 +1,8 @@
-package ch.uzh.ifi.seal.soprafs16.engine;
+package ch.uzh.ifi.seal.soprafs16.engine.rules;
 
+import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.util.List;
@@ -17,8 +20,8 @@ public interface RuleSet {
      *
      * @return Possibilities The positionable objects that are possible targets for this card.
      */
-    public List<Positionable> simulate();
+    public List<Positionable> simulate(Game game, Player player);
 
-    public void execute();
+    public void execute(ActionCommand command);
 
 }
