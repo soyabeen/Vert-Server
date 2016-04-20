@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.model.repositories;
 
-import ch.uzh.ifi.seal.soprafs16.model.Turn;
+import ch.uzh.ifi.seal.soprafs16.model.TurnPossibilities;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository("turnRepository")
-public interface TurnRepository extends CrudRepository<Turn, Long> {
-    Turn findById(Long id);
+public interface TurnPossibilitiesRepository extends CrudRepository<TurnPossibilities, Long> {
+    TurnPossibilities findById(Long id);
 }

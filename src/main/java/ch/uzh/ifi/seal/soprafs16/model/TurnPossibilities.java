@@ -10,7 +10,7 @@ import java.util.List;
  * Represents a possible outcome of a played Card
  * Created by mirkorichter on 16.04.16.
  */
-public class Turn {
+public class TurnPossibilities {
 
     @Id
     @GeneratedValue
@@ -28,7 +28,7 @@ public class Turn {
     @ManyToMany
     private List<Loot> loots;
 
-    public Turn() { attackablePlayers = new ArrayList<Player>();};
+    public TurnPossibilities() { attackablePlayers = new ArrayList<Player>();};
 
     public List<Player> getAttackablePlayers() {
         return attackablePlayers;
