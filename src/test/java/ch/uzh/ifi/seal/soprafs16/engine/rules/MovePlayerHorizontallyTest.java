@@ -117,7 +117,7 @@ public class MovePlayerHorizontallyTest {
         playerOnLoc.setCar(position);
 
         MovePlayerHorizontally rule = new MovePlayerHorizontally(playerOnLoc, trainCars, distanceToMove);
-        List<Positionable> result = rule.emulate();
+        List<Positionable> result = rule.simulate();
         Assert.assertThat("Expect 3 emulated players", result.size(), is(3));
         for (Positionable em : result) {
             Assert.assertTrue("New pos ("+em.getCar()+") must be bigger than org ("+position+").", em.getCar()>position);
@@ -134,7 +134,7 @@ public class MovePlayerHorizontallyTest {
         player.setCar(position);
 
         MovePlayerHorizontally rule = new MovePlayerHorizontally(player, trainCars, distanceToMove);
-        List<Positionable> result = rule.emulate();
+        List<Positionable> result = rule.simulate();
         Assert.assertThat("Expect 3 emulated players", result.size(), is(3));
         List<Positionable> movedToLeft = new ArrayList<>();
         List<Positionable> movedToRight = new ArrayList<>();

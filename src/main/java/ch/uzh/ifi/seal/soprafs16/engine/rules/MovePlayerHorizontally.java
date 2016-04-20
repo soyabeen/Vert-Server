@@ -13,7 +13,7 @@ import java.util.List;
  * <p>
  * Created by soyabeen on 19.04.16.
  */
-public class MovePlayerHorizontally implements IGameRule {
+public class MovePlayerHorizontally implements SimulationRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerHorizontally.class);
     private static final int ALLOWED_DISTANCE = 1;
@@ -44,7 +44,7 @@ public class MovePlayerHorizontally implements IGameRule {
             return false;
         }
         if (player.getCar() < 0 || player.getCar() > trainLength) {
-            logger.info("Player {} ({},{}) can't move horizontally on lower level, because he is not positioned on the train!",
+            logger.debug("Player {} ({},{}) can't move horizontally on lower level, because he is not positioned on the train!",
                     player.getUsername(), player.getCar(), player.getLevel());
             return false;
         }
@@ -76,7 +76,7 @@ public class MovePlayerHorizontally implements IGameRule {
     }
 
     @Override
-    public List<Positionable> emulate() {
+    public List<Positionable> simulate() {
         ArrayList<Positionable> emulatedPlayers = new ArrayList<>();
         if (evaluate()) {
             emulatedPlayers.addAll(getPossiblePositions(player, trainLength, distanceToMove, DIRECTION_TO_HEAD));
