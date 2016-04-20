@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.engine.rules.sim;
+package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 

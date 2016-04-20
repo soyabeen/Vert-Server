@@ -1,6 +1,6 @@
-package ch.uzh.ifi.seal.soprafs16.engine.rules;
+package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
-import ch.uzh.ifi.seal.soprafs16.engine.rules.sim.MovePlayerSimRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;

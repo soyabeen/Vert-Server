@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs16.engine.rules.sim;
+package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Describes the needed methods to evaluate the applied
- * rules/restrictions to a game action.
+ * rule/restrictions to a game action.
  * <p>
  * Created by soyabeen on 19.04.16.
  */
