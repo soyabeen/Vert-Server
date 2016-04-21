@@ -30,6 +30,9 @@ public class Round implements Serializable {
     @Column(nullable = false, name = "POSITION")
     private Integer nthRound;
 
+    @Column
+    private Long startPlayer;
+
     @OneToMany
     private List<Card> cardStack;
 
@@ -98,5 +101,13 @@ public class Round implements Serializable {
 
     public void incrementNthRound() {
         this.nthRound++;
+    }
+
+    public Long getStartPlayer() {
+        return startPlayer;
+    }
+
+    public void setStartPlayer(Long startPlayer) {
+        this.startPlayer = startPlayer;
     }
 }

@@ -1,10 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OrderBy;
 import java.io.Serializable;
 import java.util.*;
 
@@ -33,7 +35,10 @@ public class Game implements Serializable {
     private GameStatus status;
 
     @Column
-    private int currentPlayer;
+    private Long currentPlayerId;
+
+    @Column
+    private Long nextPlayerId;
 
     @Column
     private int nrOfCars;
@@ -43,6 +48,7 @@ public class Game implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
+    @OrderBy("id")
     private List<Player> players;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -66,7 +72,7 @@ public class Game implements Serializable {
                 ", owner='" + owner + '\'' +
                 ", numberOfPlayers=" + numberOfPlayers +
                 ", status=" + status +
-                ", currentPlayer=" + currentPlayer +
+                ", currentPlayerId=" + currentPlayerId +
                 '}';
     }
 
@@ -131,12 +137,12 @@ public class Game implements Serializable {
         this.status = status;
     }
 
-    public Integer getCurrentPlayer() {
-        return currentPlayer;
+    public Long getCurrentPlayerId() {
+        return currentPlayerId;
     }
 
-    public void setCurrentPlayer(Integer currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    public void setCurrentPlayerId(Long currentPlayerId) {
+        this.currentPlayerId = currentPlayerId;
     }
 
     public int getNumberOfPlayers() {
@@ -157,5 +163,13 @@ public class Game implements Serializable {
 
     public void setLoots(List<Loot> loots) {
         this.loots = loots;
+    }
+
+    public Long getNextPlayerId() {
+        return nextPlayerId;
+    }
+
+    public void setNextPlayerId(Long nextPlayerId) {
+        this.nextPlayerId = nextPlayerId;
     }
 }
