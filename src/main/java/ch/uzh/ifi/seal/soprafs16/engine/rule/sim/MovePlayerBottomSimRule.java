@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
+import ch.uzh.ifi.seal.soprafs16.constant.Distance;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.util.List;
@@ -9,10 +10,8 @@ import java.util.List;
  */
 public class MovePlayerBottomSimRule extends MovePlayerSimRule {
 
-    private static final int DISTANCE_TO_MOVE = 1;
-
     public MovePlayerBottomSimRule(int trainLength) {
-        super(trainLength, DISTANCE_TO_MOVE);
+        super(trainLength, Distance.DISTANCE_TO_MOVE_ON_BOTTOM, Positionable.Level.BOTTOM);
     }
 
     @Override
