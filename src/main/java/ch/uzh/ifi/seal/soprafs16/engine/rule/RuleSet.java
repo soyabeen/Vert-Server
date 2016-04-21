@@ -2,15 +2,14 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.SimulationRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Defines the set of rule needed for a certain card/activity to calculate the possibilities
@@ -20,10 +19,12 @@ import java.util.List;
  */
 public abstract class RuleSet {
 
-    private static HashMap<CardType, Class> mapping;
+    private static final Map<CardType, Class> mapping = initMapping();
 
-    static {
-        mapping.put(CardType.MOVE, MoveCardRuleSet.class);
+    private static Map<CardType, Class> initMapping() {
+        Map<CardType, Class> cardMapping = new EnumMap<>(CardType.class);
+        cardMapping.put(CardType.MOVE, MoveRuleSet.class);
+        return cardMapping;
     }
 
     /**
@@ -34,12 +35,12 @@ public abstract class RuleSet {
      * @throws InvocationTargetException If the instance could not be created.
      * @throws IllegalArgumentException  If no corresponding RuleSet implementation for the given type could be found.
      */
-    public static RuleSet createRuleSet(CardType type) throws InvocationTargetException, IllegalArgumentException {
+    public static RuleSet createRuleSet(CardType type) throws InvocationTargetException {
         if (mapping.containsKey(type)) {
             try {
                 return (RuleSet) mapping.get(type).getConstructor().newInstance();
             } catch (Exception e) {
-                throw new InvocationTargetException(e.getCause());
+                throw new InvocationTargetException(e);
             }
         }
         throw new IllegalArgumentException("Could not create RuleSet for unknown type " + type.toString());
@@ -52,6 +53,6 @@ public abstract class RuleSet {
      */
     public abstract List<Positionable> simulate(Game game, Player player);
 
-    public abstract void execute(ActionCommand command);
+    public abstract List<Positionable> execute(ActionCommand command);
 
 }
