@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
+import ch.uzh.ifi.seal.soprafs16.constant.Direction;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
@@ -22,10 +23,30 @@ public class MovePlayerSimRule implements SimulationRule {
 
     private int trainLength;
     private int distanceToMove;
+    private Positionable.Level level;
 
-    public MovePlayerSimRule(int trainLength, int distanceToMove) {
+    public MovePlayerSimRule(int trainLength, int distanceToMove, Positionable.Level level) {
         this.trainLength = trainLength;
         this.distanceToMove = distanceToMove;
+        this.level = level;
+    }
+
+    private boolean isOnSameLevel(Player player, Positionable.Level level) {
+        boolean res = level == player.getLevel();
+        if (!res) {
+            logger.debug("Player {} ({},{}) has a different level type than {}.",
+                    player, player.getCar(), player.getLevel(), level);
+        }
+        return res;
+    }
+
+    private boolean isPlacedOnTrain(Player player, int train) {
+        boolean res = 0 <= player.getCar() && player.getCar() < train;
+        if (!res) {
+            logger.debug("Player {} ({},{}) is not positioned on the train with length {}.",
+                    player, player.getCar(), player.getLevel(), train);
+        }
+        return res;
     }
 
     /**
@@ -39,19 +60,10 @@ public class MovePlayerSimRule implements SimulationRule {
             return false;
         }
         Player targetPlayer = (Player) player;
-        if (!(Positionable.Level.BOTTOM == player.getLevel() ||
-                Positionable.Level.TOP == player.getLevel())) {
-            logger.debug("Player {} ({},{}) can't move horizontally on lower level, because he has an invalid level type!",
-                    targetPlayer, player.getCar(), player.getLevel());
-            return false;
-        }
-        if (player.getCar() < 0 || player.getCar() > trainLength) {
-            logger.debug("Player {} ({},{}) can't move horizontally on lower level, because he is not positioned on the train!",
-                    targetPlayer, player.getCar(), player.getLevel());
-            return false;
-        }
-        return true;
+        return isOnSameLevel(targetPlayer, level)
+                && isPlacedOnTrain(targetPlayer, trainLength);
     }
+
 
     /**
      * @param player
@@ -81,8 +93,8 @@ public class MovePlayerSimRule implements SimulationRule {
     public List<Positionable> simulate(Positionable player) {
         ArrayList<Positionable> emulatedPlayers = new ArrayList<>();
         if (evaluate(player)) {
-            emulatedPlayers.addAll(getPossiblePositions((Player) player, trainLength, distanceToMove, DIRECTION_TO_HEAD));
-            emulatedPlayers.addAll(getPossiblePositions((Player) player, trainLength, distanceToMove, DIRECTION_TO_TAIL));
+            emulatedPlayers.addAll(getPossiblePositions((Player) player, trainLength, distanceToMove, Direction.TO_HEAD.intValue()));
+            emulatedPlayers.addAll(getPossiblePositions((Player) player, trainLength, distanceToMove, Direction.TO_TAIL.intValue()));
         }
         return emulatedPlayers;
     }

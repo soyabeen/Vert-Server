@@ -25,7 +25,7 @@ public class MovePlayerSimRuleTest {
         playerOnBottom.setLevel(Positionable.Level.BOTTOM);
         playerOnBottom.setCar(0);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1, Positionable.Level.BOTTOM);
 
         Assert.assertTrue("Expect true for player on bottom level.", rule.evaluate(playerOnBottom));
     }
@@ -36,7 +36,7 @@ public class MovePlayerSimRuleTest {
         playerOnTop.setLevel(Positionable.Level.TOP);
         playerOnTop.setCar(0);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1, Positionable.Level.TOP);
 
         Assert.assertTrue("Expect true for player on top level.", rule.evaluate(playerOnTop));
     }
@@ -47,9 +47,20 @@ public class MovePlayerSimRuleTest {
         playerOnUnknown.setLevel(null);
         playerOnUnknown.setCar(0);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1, Positionable.Level.BOTTOM);
 
         Assert.assertFalse("Expect false for player on unknown level.", rule.evaluate(playerOnUnknown));
+    }
+
+    @Test
+    public void evalFalseWhenPositionedOnOppositLevel() {
+        Player playerOnUnknown = new Player();
+        playerOnUnknown.setLevel(Positionable.Level.BOTTOM);
+        playerOnUnknown.setCar(0);
+
+        MovePlayerSimRule rule = new MovePlayerSimRule(3, 1, Positionable.Level.TOP);
+
+        Assert.assertFalse("Expect false for player on different level.", rule.evaluate(playerOnUnknown));
     }
 
     @Test
@@ -60,7 +71,7 @@ public class MovePlayerSimRuleTest {
         playerOnTrain.setLevel(Positionable.Level.TOP);
         playerOnTrain.setCar(1);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1, Positionable.Level.TOP);
         Assert.assertTrue("Expect true for player on train.", rule.evaluate(playerOnTrain));
     }
 
@@ -73,7 +84,7 @@ public class MovePlayerSimRuleTest {
         playerOnTrain.setLevel(Positionable.Level.TOP);
         playerOnTrain.setCar(posAfterTrain);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1, Positionable.Level.TOP);
         Assert.assertFalse("Expect false for player not on train.", rule.evaluate(playerOnTrain));
     }
 
@@ -86,7 +97,7 @@ public class MovePlayerSimRuleTest {
         playerOnTrain.setLevel(Positionable.Level.TOP);
         playerOnTrain.setCar(posBeforeTrain);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1);
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainLength, 1, Positionable.Level.TOP);
         Assert.assertFalse("Expect false for player not on train.", rule.evaluate(playerOnTrain));
     }
 
@@ -97,13 +108,13 @@ public class MovePlayerSimRuleTest {
         Player playerOnLoc = new Player();
         playerOnLoc.setLevel(Positionable.Level.TOP);
         playerOnLoc.setCar(0);
-        MovePlayerSimRule ruleLoc = new MovePlayerSimRule(trainLength, 1);
+        MovePlayerSimRule ruleLoc = new MovePlayerSimRule(trainLength, 1, Positionable.Level.TOP);
         Assert.assertTrue("Expect true for player on locomotive.", ruleLoc.evaluate(playerOnLoc));
 
         Player playerOnLast = new Player();
         playerOnLast.setLevel(Positionable.Level.TOP);
-        playerOnLast.setCar(trainLength);
-        MovePlayerSimRule ruleLast = new MovePlayerSimRule(trainLength, 1);
+        playerOnLast.setCar(trainLength-1);
+        MovePlayerSimRule ruleLast = new MovePlayerSimRule(trainLength, 1, Positionable.Level.TOP);
         Assert.assertTrue("Expect true for player on last car.", ruleLast.evaluate(playerOnLast));
     }
 
@@ -116,7 +127,7 @@ public class MovePlayerSimRuleTest {
         playerOnLoc.setLevel(Positionable.Level.TOP);
         playerOnLoc.setCar(position);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(trainCars, distanceToMove);
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainCars, distanceToMove, Positionable.Level.TOP);
         List<Positionable> result = rule.simulate(playerOnLoc);
         Assert.assertThat("Expect 3 emulated players", result.size(), is(3));
         for (Positionable em : result) {
@@ -133,7 +144,7 @@ public class MovePlayerSimRuleTest {
         player.setLevel(Positionable.Level.TOP);
         player.setCar(position);
 
-        MovePlayerSimRule rule = new MovePlayerSimRule(trainCars, distanceToMove);
+        MovePlayerSimRule rule = new MovePlayerSimRule(trainCars, distanceToMove, Positionable.Level.TOP);
         List<Positionable> result = rule.simulate(player);
         Assert.assertThat("Expect 3 emulated players", result.size(), is(3));
         List<Positionable> movedToLeft = new ArrayList<>();
