@@ -21,6 +21,13 @@ public class ActionCommand {
     private Loot targetLoot;
     private Direction direction;
 
+    public ActionCommand(CardType card, Game game, Player currentPlayer, Player targetPlayer) {
+        this.card = card;
+        this.game = game;
+        this.currentPlayer = currentPlayer;
+        this.targetPlayer = targetPlayer;
+    }
+
     public CardType getCard() {
         return card;
     }

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.MoveCardRuleSet;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleSet;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
