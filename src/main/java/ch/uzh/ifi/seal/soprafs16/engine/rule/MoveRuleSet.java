@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by soyabeen on 20.04.16.
  */
-public class MoveCardRuleSet extends RuleSet {
+public class MoveRuleSet extends RuleSet {
 
     @Override
     public List<Positionable> simulate(Game game, Player player) {

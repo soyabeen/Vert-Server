@@ -1,6 +1,5 @@
-package ch.uzh.ifi.seal.soprafs16.engine.rule;
+package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
-import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
@@ -16,9 +15,9 @@ import static org.hamcrest.core.Is.is;
 /**
  * Created by soyabeen on 19.04.16.
  */
-public class MovePlayerHorizontallyTest {
+public class MovePlayerSimRuleTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(MovePlayerHorizontallyTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(MovePlayerSimRuleTest.class);
 
     @Test
     public void evalTrueWhenPositionedOnBottom() {
