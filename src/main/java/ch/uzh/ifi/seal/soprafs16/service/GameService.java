@@ -52,10 +52,8 @@ public class GameService {
         gameShell.addPlayer(owner);
         logger.debug("game shell " + gameShell.toString());
 
-        Game pendingGame = gameRepo.save(gameShell);
-        logger.debug("game pending " + pendingGame.toString());
-        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, players);
-        logger.debug("game with loots " + pendingGame.toString());
+        Game game = gameRepo.save(gameShell);
+        logger.debug("game pending " + game.toString());
         return gameRepo.save(game);
     }
 
@@ -79,26 +77,32 @@ public class GameService {
     public void startGame(Long gameId, String userToken) {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
-        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+        Game pendingGame = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
         // Game must be in pending state
-        if (!GameStatus.PENDING.equals(game.getStatus())) {
+        if (!GameStatus.PENDING.equals(pendingGame.getStatus())) {
             throw new IllegalStateException("Only games in " + GameStatus.PENDING
-                    + " can be startet. This game is " + game.getStatus());
+                    + " can be startet. This game is " + pendingGame.getStatus());
         }
 
         // Belongs the game to the user?
-        if (!tokenOwner.getUsername().equals(game.getOwner())) {
+        if (!tokenOwner.getUsername().equals(pendingGame.getOwner())) {
             throw new IllegalStateException("User is not allowed to start the game. User must be game owner.");
         }
 
         // Enough players?
-        List<Player> players = playerService.listPlayersForGame(game.getId());
-        if (players.size() < GameConfigurator.MIN_PLAYERS) {
+        List<Player> players = playerService.listPlayersForGame(pendingGame.getId());
+        int nrOfPlayers = players.size();
+        if (nrOfPlayers < GameConfigurator.MIN_PLAYERS) {
             throw new IllegalStateException("Not enough players to start the game. Need at least "
                     + GameConfigurator.MIN_PLAYERS + " players.");
         }
 
-        // TODO: start game;
+        pendingGame.setStatus(GameStatus.PLANNINGPHASE);
+        //TODO GameConf for Nr of Players
+        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
+        logger.debug("game with loots " + game.toString());
+
+        gameRepo.save(game);
     }
 }
