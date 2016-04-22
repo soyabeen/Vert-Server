@@ -34,20 +34,15 @@ public class PlayerService {
     @Autowired
     private CharacterService characterService;
 
-    @Autowired
-    private LootRepository lootRepo;
-
-
     public Player createPlayer(Player player) {
-        logger.debug("createPlayer()");
-        logger.debug(player.toString());
         InputArgValidator.checkNotEmpty(player.getUsername(), "username");
         InputArgValidator.checkUserNameNotUsed(player.getUsername(), playerRepo, "username");
-        player.setToken(UUID.randomUUID().toString());
 
-        Player p = playerRepo.save(player);
-        logger.debug(p.toString());
-        return p;
+        // Take only the username from the player.
+        Player p = new Player();
+        p.setUsername(player.getUsername());
+        p.setToken(UUID.randomUUID().toString());
+        return playerRepo.save(p);
     }
 
     public List<Player> listPlayers() {
