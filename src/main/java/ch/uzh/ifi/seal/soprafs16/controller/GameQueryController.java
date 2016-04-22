@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class GameQueryController
     @Autowired
     private GameRepository gameRepo;
 
+    @Autowired
+    private GameService gameService;
+
     private static final String CONTEXT = "/games";
 
     /**
@@ -30,12 +34,9 @@ public class GameQueryController
      */
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Game> listGames() {
-        //TODO: put logic of methods in GameServices
-        logger.debug("listGames");
-        List<Game> result = new ArrayList<>();
-        gameRepo.findAll().forEach(result::add);
-        return result;
+    public List<Game> listGames(@RequestParam(value = "filter", required = false) String filter) {
+        logger.debug("listGames " + (filter == null ? "" : filter));
+        return gameService.listGames(filter);
     }
 
     /**

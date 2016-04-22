@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by soyabeen on 31.03.16.
@@ -43,6 +45,16 @@ public class GameService {
         gameConf = new GameConfigurator();
     }
 
+    public List<Game> listGames(String filter) {
+        List<Game> result = new ArrayList<>();
+        gameRepo.findAll().forEach(result::add);
+
+        if ("AVAILABLE".equals(filter)) {
+            result = result.stream().filter(g -> g.getPlayers().size() < 4).collect(Collectors.toList());
+        }
+
+        return result;
+    }
 
     private Game createGame(String gameName, Player owner, int players) {
         Game gameShell = new Game();
