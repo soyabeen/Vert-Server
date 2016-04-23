@@ -51,6 +51,7 @@ public class Player extends Meeple {
     }
 
     public Player(String username) {
+        this();
         this.username = username;
     }
 
