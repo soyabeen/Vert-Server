@@ -129,7 +129,7 @@ public class InputArgValidator {
      * @param nthRound
      * @throws InvalidInputException
      */
-    private void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
+    private static void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
 
         if (gameId == null || gameId <= 0) {
             throw new InvalidInputException("Invalid arg. gameId <" + gameId + ">, must be a positive number.");
