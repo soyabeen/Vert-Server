@@ -94,7 +94,7 @@ public class GameService {
         // Game must be in pending state
         if (!GameStatus.PENDING.equals(pendingGame.getStatus())) {
             throw new IllegalStateException("Only games in " + GameStatus.PENDING
-                    + " can be startet. This game is " + pendingGame.getStatus());
+                    + " can be started. This game is " + pendingGame.getStatus());
         }
 
         // Belongs the game to the user?
