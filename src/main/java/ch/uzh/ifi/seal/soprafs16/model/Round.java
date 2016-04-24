@@ -5,8 +5,10 @@ import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * This class represents a round card as well as a train station card.
@@ -35,7 +37,7 @@ public class Round implements Serializable {
     private Long startPlayerId;
 
     @OneToMany
-    private List<Card> cardStack;
+    private LinkedList<Card> cardStack;
 
     @ElementCollection(targetClass = Turn.class)
     @CollectionTable(name = "round_turn")
@@ -60,7 +62,7 @@ public class Round implements Serializable {
         this.nthRound = nthRound;
         this.turns = turns;
         this.end = endEvent;
-        this.cardStack = new Stack<>();
+        this.cardStack = new LinkedList<Card>();
     }
 
     public void executeActionPhase() {

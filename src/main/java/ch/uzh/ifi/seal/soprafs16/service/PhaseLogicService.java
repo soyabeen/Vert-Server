@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
@@ -29,6 +30,7 @@ public class PhaseLogicService {
     Player currentPlayer;
     Player startPlayer;
     String startPlayerToken;
+    TurnDTO turnDTO;
 
     /**
      * Returns the Player ID of the following Player. This way a client can poll more frequently if desired.
@@ -108,6 +110,13 @@ public class PhaseLogicService {
     public void getPossibilities() {
         // give played card to rule engine
         // take back result
+        throw new IllegalStateException("Not yet implemented");
+    }
+
+    public TurnDTO getPossibilities() {
+        //turnDTO = new TurnDTO();
+        //TODO: fill DTO object with possibilities from current turn
+        //return turnDTO;
         throw  new IllegalStateException("Not yet implemented");
     }
 
