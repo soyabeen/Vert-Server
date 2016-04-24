@@ -27,6 +27,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -92,6 +94,24 @@ public class GameQueryControllerTest {
         Assert.assertThat(game2.getId(), is(result[1].getId()));
         Assert.assertThat(game2.getName(), is(result[1].getName()));
         Assert.assertThat(game2.getOwner(), is(result[1].getOwner()));
+
+        // Test full game
+        Game fullGame = gameBuilder.init("listGamesTestFull", "listGamesFull")
+                .addRandomUser()
+                .addRandomUser()
+                .addRandomUser()
+                .addRandomUser()
+                .build();
+
+
+        uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString()).queryParam("filter", "AVAILABLE");
+        response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Game[].class);
+        result = response.getBody();
+
+        List<Game> resultList = Arrays.asList(result);
+        Assert.assertThat(result.length, is(2));
+        Assert.assertThat(resultList.contains(fullGame.getId()), is(false));
+
     }
 
     @Test

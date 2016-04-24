@@ -25,9 +25,13 @@ public class Card implements Serializable {
     /**
      * Defines owner of this card
      */
-
     @ManyToOne
     private Player owner;
+
+    /**
+     * Determines whether card was played face up or face down
+     */
+    boolean isFaceUp = true;
 
     /**
      * Returns owner of this card.
