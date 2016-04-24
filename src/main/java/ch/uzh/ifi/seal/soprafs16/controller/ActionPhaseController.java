@@ -32,7 +32,7 @@ public class ActionPhaseController extends GenericController {
 
     private final String CONTEXT = "/games/{gameId}/rounds/{nthRound}/turns";
 
-    @RequestMapping(value = CONTEXT + "/{nthTurn}", method = RequestMethod.GET)
+    @RequestMapping(value = CONTEXT + "/{nthTurn}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public TurnDTO getPossibilities(@PathVariable Long gameId, @PathVariable Integer nthRound,
                                 @PathVariable Integer nthTurn, @RequestParam("token") String userToken) {
@@ -41,6 +41,16 @@ public class ActionPhaseController extends GenericController {
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
         return phaseLogicService.getPossibilities();
+    }
+
+    @RequestMapping(value = CONTEXT + "/{nthTurn}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void chosenPossibility(@PathVariable Long gameId, @PathVariable Integer nthRound,
+                                    @PathVariable Integer nthTurn, @RequestBody TurnDTO turnDTO) {
+
+        //TODO: Check if DTO is valid
+        //TODO: Use DTO to update game
+        throw  new IllegalStateException("Not yet implemented");
     }
 
 
