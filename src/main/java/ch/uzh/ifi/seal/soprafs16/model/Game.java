@@ -169,7 +169,7 @@ public class Game implements Serializable {
         return nextPlayerId;
     }
 
-    public void setNextPlayerId(Long nextPlayerId) {
+    public void setNextPlayerId(Long foundPlayerId) {
         this.nextPlayerId = nextPlayerId;
     }
 }
