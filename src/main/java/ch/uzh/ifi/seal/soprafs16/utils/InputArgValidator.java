@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -100,5 +101,21 @@ public class InputArgValidator {
             throw new InvalidInputException(MESSAGE_START + " No valid object for " + argName + " " + id + ".");
         }
         return e;
+    }
+
+
+    /**
+     * Check if a request to get possibilities for a turn is made from the player, who's turn it actually is.
+     *
+     * @param player    Made the request for a turn.
+     * @param game      Game the request was made in.
+     * @throws InvalidInputException to indicate the checks negative result.
+     */
+    public static void checkItIsPlayersTurn(Player player, Game game) {
+
+        if(game.getCurrentPlayerId() != player.getId()) {
+            throw new InvalidInputException(MESSAGE_START + " It is not the player's turn");
+        }
+
     }
 }
