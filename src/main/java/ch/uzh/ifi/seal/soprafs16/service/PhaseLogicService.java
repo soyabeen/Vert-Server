@@ -54,7 +54,7 @@ public class PhaseLogicService {
 
         foundPlayerId = getNextPlayerId(game);
 
-        //reexamine what happens when nextPlayer is startPlayer again. debug?
+        //reexamine what happens when nextPlayer is startPlayer again. ☠ debug?
         if(round.getStartPlayerId() == foundPlayerId) {
             foundPlayerId = getNextPlayerId(game);
             setStartPlayer(game, nthround, foundPlayerId);
@@ -106,10 +106,13 @@ public class PhaseLogicService {
     }
 
     public void getPossibilities() {
+        // give played card to rule engine
+        // take back result
         throw  new IllegalStateException("Not yet implemented");
     }
 
     public void setPlayerDecision() {
+        // give chosen possibilities of a players made move to rule engine
         throw  new IllegalStateException("Not yet implemented");
     }
 
