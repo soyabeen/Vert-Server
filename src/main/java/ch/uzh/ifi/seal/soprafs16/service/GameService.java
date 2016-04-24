@@ -34,6 +34,9 @@ public class GameService {
     private LootService lootService;
 
     @Autowired
+    private PhaseLogicService logicService;
+
+    @Autowired
     private GameRepository gameRepo;
 
     @Autowired
@@ -114,6 +117,9 @@ public class GameService {
         //TODO GameConf for Nr of Players
         Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
         logger.debug("game with loots " + game.toString());
+
+        // set game owner to start player of round
+        logicService.setStartPlayer(game, 0, tokenOwner.getId());
 
         gameRepo.save(game);
     }
