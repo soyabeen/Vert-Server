@@ -152,7 +152,7 @@ public class RoundService {
         return roundRepo.save(round);
     }
 
-    private void removeCardFromHand(Player currentPlayer, Card playedCard) {
+    protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
         List<Card> playerHand = currentPlayer.getHand();
 
         // go through hand and remove same card type
