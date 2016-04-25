@@ -86,7 +86,7 @@ public class Round implements Serializable {
         return game;
     }
 
-    public List<Card> getCardStack() {
+    public LinkedList<Card> getCardStack() {
         return cardStack;
     }
 
