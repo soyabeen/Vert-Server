@@ -118,8 +118,11 @@ public class GameService {
         Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
         logger.debug("game with loots " + game.toString());
 
+        //TODO: create first Round
         // set game owner to start player of round
-        logicService.setStartPlayer(game, 0, tokenOwner.getId());
+        // (rounds start with 1)
+        logicService.setStartPlayer(game, 1, tokenOwner.getId());
+
 
         gameRepo.save(game);
     }
