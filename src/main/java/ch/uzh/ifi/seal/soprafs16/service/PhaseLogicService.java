@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -7,9 +9,11 @@ import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import jdk.internal.util.xml.impl.Input;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -28,8 +32,7 @@ public class PhaseLogicService {
     PlayerRepository playerRepo;
 
     Player currentPlayer;
-    Player startPlayer;
-    String startPlayerToken;
+    LinkedList<Card> cardStack;
     TurnDTO turnDTO;
 
     /**
@@ -38,19 +41,22 @@ public class PhaseLogicService {
      * @return Player ID for the following Player
      */
     public Long getNextPlayer(Long gameId, Integer nthround) {
-        Long foundPlayerId = -1L;
+        Long nextPlayerId = -1L;
 
-        // TODO: add error checking
+        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
 
         //get all prerequisites
         Game game = gameRepo.findOne(gameId);
-        foundPlayerId = getNextPlayerId(game);
-        return foundPlayerId;
+        nextPlayerId = getNextPlayerId(game);
+        return nextPlayerId;
     }
 
     public void setNextPlayer(Long gameId, Integer nthround) {
-        //TODO: add error checking
         Long foundPlayerId = -1L;
+
+        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+
+
         Game game = gameRepo.findOne(gameId);
         Round round = roundRepo.findByGameAndNthRound(game, nthround);
 
@@ -58,6 +64,7 @@ public class PhaseLogicService {
 
         //reexamine what happens when nextPlayer is startPlayer again. ☠ debug?
         if(round.getStartPlayerId() == foundPlayerId) {
+            // execute Action Phase
             foundPlayerId = getNextPlayerId(game);
             setStartPlayer(game, nthround, foundPlayerId);
         }
@@ -67,15 +74,22 @@ public class PhaseLogicService {
     }
 
     public void setCurrentPlayer(Long gameId, Integer nthround, Long playerId) {
+        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+        InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
+                "\'setCurrentPlayer()\' in PhaseLogicService.java");
+
         Game game = gameRepo.findOne(gameId);
         game.setCurrentPlayerId(playerId);
         gameRepo.save(game);
         setNextPlayer(gameId, nthround);
     }
 
-    //should return array index
-    private Long getNextPlayerId(Game game) {
-        //TODO: add error checking
+    /**
+     * Returns only the ID of the next player in collection. Steps through
+     * @param game
+     * @return player ID of next player
+     */
+    protected Long getNextPlayerId(Game game) {
         currentPlayer = playerRepo.findOne( game.getCurrentPlayerId() );
         List<Player> playerList = game.getPlayers();
 
@@ -89,8 +103,9 @@ public class PhaseLogicService {
         }
     }
 
-    private Long getStartPlayerId(Long gameId, Integer nthround) {
-        //TODO: add error checking
+    protected Long getStartPlayerId(Long gameId, Integer nthround) {
+        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+
         Game game = gameRepo.findOne(gameId);
         Round round = roundRepo.findByGameAndNthRound(game, nthround);
 
@@ -98,7 +113,9 @@ public class PhaseLogicService {
     }
 
     public void setStartPlayer(Game game, Integer nthround, Long playerId) {
-        //TODO: add error checking
+        InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
+        InputArgValidator.checkAvailabeId(playerId, playerRepo, "No valid player found for \'setStartPlayer\' in " +
+                "PhaseLogicService");
         Round round = roundRepo.findByGameAndNthRound(game, nthround);
 
         round.setStartPlayerId(playerId);
@@ -107,29 +124,54 @@ public class PhaseLogicService {
         setCurrentPlayer(game.getId(), nthround, playerId);
     }
 
-    public void getPossibilities() {
+    /**
+     * Method is called first when Action Phase is initiated.
+     * @param game
+     * @param nthround
+     */
+    public void peekAndSetCurrentPlayer(Game game, Integer nthround) {
+        InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
+        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+
+        cardStack = round.getCardStack();
+        //set owner of top card to current player
+        setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwner().getId());
+    }
+
+    /**
+     * Start computing possibilities for Player.
+     * @param gameId
+     * @param nthround
+     */
+    public void receivePossibilities(Long gameId, Integer nthround) {
+        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+        Game game = gameRepo.findOne(gameId);
+        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+
+        // retrieve played card
+        Card top = round.getCardStack().peek();
+
         // give played card to rule engine
-        // take back result
+
+        // take back result and give it to sendPossibilities()
+
         throw new IllegalStateException("Not yet implemented");
     }
 
-    public TurnDTO getPossibilities() {
+    /**
+     * Send the calculated possbilities from the rule engine to the client.
+     * @return object with possible selections for the user
+     */
+    public TurnDTO sendPossibilities() {
         //turnDTO = new TurnDTO();
         //TODO: fill DTO object with possibilities from current turn
         //return turnDTO;
         throw  new IllegalStateException("Not yet implemented");
     }
 
-    public void setPlayerDecision() {
-        // give chosen possibilities of a players made move to rule engine
-        throw  new IllegalStateException("Not yet implemented");
-    }
-
-    public void startGame() {
-        throw  new IllegalStateException("Not yet implemented");
-    }
-
-    public void gameOver() {
+    protected void updateGameState(Game game) {
+        // update Game State with new game object
+        // or update game without asking rule engine
         throw  new IllegalStateException("Not yet implemented");
     }
 }
