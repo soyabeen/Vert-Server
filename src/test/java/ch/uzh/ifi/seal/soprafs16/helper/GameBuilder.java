@@ -44,6 +44,7 @@ public class GameBuilder {
         game = new Game();
         game.setName(name);
         game.setOwner(owner);
+        game.setStatus(GameStatus.PENDING);
         availableCharacter = new ArrayList<>(Arrays.asList(Character.values()));
 
         return save();

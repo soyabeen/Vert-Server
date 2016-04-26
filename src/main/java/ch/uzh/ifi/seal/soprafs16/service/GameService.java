@@ -1,12 +1,15 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.*;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.CardDeckRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.CardConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
@@ -14,9 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +40,15 @@ public class GameService {
     @Autowired
     private PlayerRepository playerRepo;
 
+    @Autowired
+    private CardDeckRepository deckRepo;
+
+    @Autowired
+    private LootRepository lootRepo;
+
     private GameConfigurator gameConf;
+
+    private CardConfigurator cardConf;
 
     public GameService() {
         gameConf = new GameConfigurator();
@@ -94,7 +103,7 @@ public class GameService {
         // Game must be in pending state
         if (!GameStatus.PENDING.equals(pendingGame.getStatus())) {
             throw new IllegalStateException("Only games in " + GameStatus.PENDING
-                    + " can be startet. This game is " + pendingGame.getStatus());
+                    + " can be started. This game is " + pendingGame.getStatus());
         }
 
         // Belongs the game to the user?
@@ -115,6 +124,39 @@ public class GameService {
         Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
         logger.debug("game with loots " + game.toString());
 
+
+        // Build decks for players in game
+        players.forEach(this::buildPlayerDeck);
+
+        // Each player received a piece of loot.
+        for (Player p : players){
+            Loot l = new Loot(LootType.PURSE_SMALL, gameId, 250, 0, Positionable.Level.BOTTOM);
+            l = lootRepo.save(l);
+
+            p.addLoot(l);
+            playerRepo.save(p);
+        }
+
         gameRepo.save(game);
+    }
+
+    private void buildPlayerDeck(Player player) {
+        CardConfigurator conf = new CardConfigurator(player);
+        CardDeck deck = conf.buildDeck();
+        deck = deckRepo.save(deck);
+
+        player.setDeck(deck);
+
+        drawCards(player);
+
+        playerRepo.save(player);
+    }
+
+    private void drawCards(Player player) {
+        if (player.getCharacter().equals(Character.DOC)) {
+            player.setHand(player.getDeck().drawCard(7));
+        } else {
+            player.setHand(player.getDeck().drawCard(6));
+        }
     }
 }

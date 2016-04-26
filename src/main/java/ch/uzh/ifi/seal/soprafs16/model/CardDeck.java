@@ -1,11 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class CardDeck implements Serializable {
     /**
      * List of cards in this deck.
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Card> deck;
 
     protected CardDeck() {
@@ -62,4 +60,14 @@ public class CardDeck implements Serializable {
         return drawnCards;
     }
 
+    public void shuffle() {
+        Collections.shuffle(deck);
+    }
+
+    @Override
+    public String toString() {
+        return "CardDeck{" +
+                "deck=" + deck +
+                '}';
+    }
 }

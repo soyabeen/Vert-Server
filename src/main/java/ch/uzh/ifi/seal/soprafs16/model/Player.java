@@ -25,13 +25,13 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    @Column
+    @OneToOne
     private CardDeck deck;
 
     @Column
     private Integer totalMadeMoves;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Card> hand;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -100,6 +100,14 @@ public class Player extends Meeple {
         this.bullets = bullets;
     }
 
+    public CardDeck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(CardDeck deck) {
+        this.deck = deck;
+    }
+
     /**
      * Gets a list of loots.
      * @return
@@ -143,9 +151,14 @@ public class Player extends Meeple {
     @Override
     public String toString() {
         return "Player{" +
-                "id=" + getId() +
-                "character=" + character +
+                "username='" + username + '\'' +
+                ", token='" + token + '\'' +
+                ", character=" + character +
                 ", bullets=" + bullets +
+                ", deck=" + deck +
+                ", totalMadeMoves=" + totalMadeMoves +
+                ", hand=" + hand +
+                ", loots=" + loots +
                 '}';
     }
 

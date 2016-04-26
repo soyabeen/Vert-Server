@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
-import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import org.junit.Assert;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 
 
