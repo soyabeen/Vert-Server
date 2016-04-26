@@ -42,11 +42,8 @@ public class TargetPlayerFinderTest {
     @Test
     public void findsOnlyPlayerInSight() {
         List<Player> positionedPlayers = new ArrayList<>();
-        positionedPlayers.add(PositionedPlayer
-                        .builder()
-                        .withUserName("Player0a")
-                        .onUpperLevelAt(0)
-                        .build());
+        positionedPlayers.add(PositionedPlayer.builder().
+                withUserName("Player0a").onUpperLevelAt(0).build());
         positionedPlayers.add(PositionedPlayer.builder().
                 withUserName("Player0b").onUpperLevelAt(0).build());
         positionedPlayers.add(PositionedPlayer.builder().
