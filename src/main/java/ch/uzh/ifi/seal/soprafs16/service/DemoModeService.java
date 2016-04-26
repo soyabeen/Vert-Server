@@ -3,6 +3,9 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.utils.DemoRoundConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,8 @@ import java.util.UUID;
  */
 @Service("demoModeService")
 public class DemoModeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DemoModeService.class);
 
     private static final int NR_OF_DEMO_PLAYERS = 2;
 
@@ -36,18 +41,32 @@ public class DemoModeService {
     }
 
     public Game initDemoGame() {
+
+        logger.debug("Generated players:");
         List<Player> players = generateRandomPlayers(NR_OF_DEMO_PLAYERS);
+        for (Player p : players
+                ) {
+            logger.debug(p.toString());
+        }
 
         Game shell = new Game();
         shell.setName("Demo-" + UUID.randomUUID().toString());
         Game demo = gameService.createGame(shell, players.get(0).getToken(), NR_OF_DEMO_PLAYERS);
+        logger.debug("Created {}", demo.toString());
 
-        for (Player p : players) {
-            demo.addPlayer(playerService.assignPlayer(demo.getId(), p, Character.CHEYENNE));
-        }
+//        for (Player p : players) {
+//            logger.debug("Add to game {}", p.toString());
+//            demo.addPlayer(playerService.assignPlayer(demo.getId(), p, Character.CHEYENNE));
+//        }
+//      {
+        logger.debug("Add to game {}", players.get(1).toString());
+//        demo.addPlayer(playerService.assignPlayer(demo.getId(), players.get(1), Character.CHEYENNE));
+        playerService.assignPlayer(demo.getId(), players.get(1), Character.CHEYENNE);
 
-      gameService.startGame();
-        return demo;
+        logger.debug("start game ...");
+        gameService.startGame(demo.getId(), players.get(0).getToken(), new DemoRoundConfigurator());
+
+        return gameService.loadGameFromRepo(demo.getId());
     }
 
 }

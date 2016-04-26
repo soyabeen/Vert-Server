@@ -9,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
+import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class GameService {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
 
-       // game name available?
+        // game name available?
         if (gameRepo.findByName(game.getName()) != null) {
             throw new InvalidInputException("Invalid arg : Name of game is already used.");
         }
@@ -87,6 +88,11 @@ public class GameService {
     }
 
     public void startGame(Long gameId, String userToken) {
+        startGame(gameId, userToken, new RoundConfigurator());
+    }
+
+    public void startGame(Long gameId, String userToken, RoundConfigurator configurator) {
+        logger.debug("Start game {} for {}", gameId, userToken );
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game pendingGame = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
@@ -110,11 +116,22 @@ public class GameService {
                     + GameConfigurator.MIN_PLAYERS + " players.");
         }
 
-        pendingGame.setStatus(GameStatus.PLANNINGPHASE);
-        //TODO GameConf for Nr of Players
-        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
-        logger.debug("game with loots " + game.toString());
+        logger.debug("input val ok.");
 
+        // Get car configurations and loots
+        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
+        logger.debug("game with cars ...");
+
+        // Get rounds
+        configurator.generateRoundsForGame(game);
+        logger.debug("game with rounds ...");
+
+        pendingGame.setStatus(GameStatus.PLANNINGPHASE);
         gameRepo.save(game);
     }
+
+    protected Game loadGameFromRepo(long gameIdToLoad) {
+        return gameRepo.findOne(gameIdToLoad);
+    }
+
 }
