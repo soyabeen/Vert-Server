@@ -32,6 +32,9 @@ public class PlayerService {
     private PlayerRepository playerRepo;
 
     @Autowired
+    private LootRepository lootRepo;
+
+    @Autowired
     private CharacterService characterService;
 
     public Player createPlayer(Player player) {
@@ -97,7 +100,7 @@ public class PlayerService {
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
 
             // create new player for user
-            player = initializeCharacter(player, character);
+            player = initializeCharacter(gameId, player, character);
 
             // assign user to game
             game.addPlayer(player);
@@ -118,14 +121,18 @@ public class PlayerService {
      * @param character Users's chosen character.
      * @return new Player.
      */
-    public Player initializeCharacter(Player player, Character character) {
-        // TODO: set player pos as loot pos.
-        // TODO: move loot for player to game start
-//        Loot loot = new Loot(LootType.PURSE_SMALL, player. LootType.PURSE_SMALL.value(), 0, Positionable.Level.BOTTOM);
-//        loot = lootRepo.save(loot);
-//        player.addLoot(loot);
+    public Player initializeCharacter(Long gameId, Player player, Character character) {
+
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+
+        // give player the start loot
+        Loot loot = new Loot(LootType.PURSE_SMALL, gameId, LootType.PURSE_SMALL.value());
+        loot = lootRepo.save(loot);
+        player.addLoot(loot);
 
         player.setCharacter(character);
         return playerRepo.save(player);
     }
+
+
 }
