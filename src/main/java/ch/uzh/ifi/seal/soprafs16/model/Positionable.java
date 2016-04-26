@@ -24,6 +24,8 @@ public interface Positionable {
      */
     public Level getLevel();
 
+    public void setLevel(Level newLevel);
+
     /**
      * Moves the positionable object n cars in the direction of the locomotive.
      * @param nrOfCarsToMove Number of cars to move.

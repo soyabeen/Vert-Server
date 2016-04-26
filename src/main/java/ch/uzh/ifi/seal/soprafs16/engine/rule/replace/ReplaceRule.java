@@ -7,6 +7,8 @@ import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import java.util.List;
 
 /**
+ * Repace rules take a list of positionables and replace that list with an other list.
+ * <p/>
  * Created by soyabeen on 27.04.16.
  */
 public interface ReplaceRule {
@@ -15,19 +17,4 @@ public interface ReplaceRule {
 
     public List<Positionable> replace(List<Positionable> actors);
 
-    /**
-     * Created by soyabeen on 20.04.16.
-     */
-    class CheckMarshalExecRule implements ExecutionRule {
-
-        @Override
-        public boolean evaluate(ActionCommand command) {
-            return false;
-        }
-
-        @Override
-        public List<Positionable> execute(ActionCommand command) {
-            return null;
-        }
-    }
 }

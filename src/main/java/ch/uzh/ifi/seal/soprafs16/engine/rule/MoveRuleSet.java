@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.ExecutionRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.MovePlayerExecRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerBottomSimRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerTopSimRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.SimulationRule;
@@ -41,10 +42,11 @@ public class MoveRuleSet extends RuleSet {
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
         MovePlayerExecRule rule = new MovePlayerExecRule();
+        MarshalRepRule marhasl = new MarshalRepRule();
+
         logger.debug("eval: " + rule.evaluate(command));
         if(rule.evaluate(command)) {
-            result.addAll(rule.execute(command));
-            // TODO: Chain marshal event.
+           result.addAll(marhasl.replace(rule.execute(command)));
         }
         logger.debug("res: " + result.size());
         return result;

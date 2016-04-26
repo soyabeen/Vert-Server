@@ -62,7 +62,7 @@ public class Loot implements Positionable, Serializable {
 
     @Override
     public String toString() {
-        return "Loot (id:"+id+", type:"+type+", value:"+value+", car:"+car+", level:"+level+")";
+        return "Loot (id:" + id + ", type:" + type + ", value:" + value + ", car:" + car + ", level:" + level + ")";
     }
 
     /**
@@ -79,6 +79,11 @@ public class Loot implements Positionable, Serializable {
     @Override
     public Level getLevel() {
         return level;
+    }
+
+    @Override
+    public void setLevel(Level newLevel) {
+        level = newLevel;
     }
 
     /**
