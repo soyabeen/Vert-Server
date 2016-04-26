@@ -57,7 +57,7 @@ public class PhaseLogicService {
 
 
         Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
         foundPlayerId = getNextPlayerId(game);
 
@@ -106,7 +106,7 @@ public class PhaseLogicService {
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
 
         Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
         return round.getStartPlayerId();
     }
@@ -115,7 +115,7 @@ public class PhaseLogicService {
         InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
         InputArgValidator.checkAvailabeId(playerId, playerRepo, "No valid player found for \'setStartPlayer\' in " +
                 "PhaseLogicService");
-        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
         round.setStartPlayerId(playerId);
         roundRepo.save(round);
@@ -130,7 +130,7 @@ public class PhaseLogicService {
      */
     public void peekAndSetCurrentPlayer(Game game, Integer nthround) {
         InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
-        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
         cardStack = (LinkedList<Card>) round.getCardStack();
         //set owner of top card to current player
@@ -145,7 +145,7 @@ public class PhaseLogicService {
     public void receivePossibilities(Long gameId, Integer nthround) {
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
         Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameAndNthRound(game, nthround);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
         // retrieve played card
         cardStack = (LinkedList<Card>) round.getCardStack();

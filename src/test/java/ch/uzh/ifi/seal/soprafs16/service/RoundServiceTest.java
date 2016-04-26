@@ -78,7 +78,7 @@ public class RoundServiceTest {
                 Turn.NORMAL,
                 Turn.HIDDEN);
         nthRound = 1;
-        round = new Round(game, nthRound, turns,RoundEndEvent.REBELLION);
+        round = new Round(game.getId(), nthRound, turns,RoundEndEvent.REBELLION);
 
         game = new Game();
         game.setId(1L);
@@ -119,7 +119,7 @@ public class RoundServiceTest {
         move.setId(1L);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
-        when(roundRepo.findByGameAndNthRound(game, nthRound)).thenReturn(round);
+        when(roundRepo.findByGameIdAndNthRound(game.getId(), nthRound)).thenReturn(round);
         when(playerRepo.findOne(anyLong())).thenReturn(player);
         when(moveRepo.save((Move) any())).thenReturn(move);
     }

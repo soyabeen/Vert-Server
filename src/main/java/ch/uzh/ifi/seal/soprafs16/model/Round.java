@@ -25,7 +25,7 @@ public class Round implements Serializable {
     private Long id;
 
     @Column(nullable = false, name = "GAME_ID")
-    private Game game;
+    private Long gameId;
 
     @Column(nullable = false, name = "POSITION")
     private Integer nthRound;
@@ -51,12 +51,12 @@ public class Round implements Serializable {
     /**
      * Create a new Round event with the given configuration.
      *
-     * @param game     The game to which the round belongs.
+     * @param gameId     The game to which the round belongs.
      * @param turns    The turns for that round.
      * @param endEvent The end event.
      */
-    public Round(Game game, Integer nthRound, List<Turn> turns, RoundEndEvent endEvent) {
-        this.game = game;
+    public Round(Long gameId, Integer nthRound, List<Turn> turns, RoundEndEvent endEvent) {
+        this.gameId = gameId;
         this.nthRound = nthRound;
         this.turns = turns;
         this.end = endEvent;
@@ -80,8 +80,8 @@ public class Round implements Serializable {
         cardStack.add(playedCard);
     }
 
-    public Game getGame() {
-        return game;
+    public Long getGameId() {
+        return gameId;
     }
 
     public List<Card> getCardStack() {

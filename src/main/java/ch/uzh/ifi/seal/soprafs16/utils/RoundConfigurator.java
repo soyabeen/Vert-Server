@@ -44,7 +44,7 @@ public class RoundConfigurator {
     }
 
     protected Round buildRoundWithConfig(Game game, Integer position, RoundConfiguration config) {
-        return new Round(game, position, Arrays.asList(config.turns), config.event);
+        return new Round(game.getId(), position, Arrays.asList(config.turns), config.event);
     }
 
     /**

@@ -73,7 +73,7 @@ public class RoundService {
             throw new InvalidInputException("Invalid arg. gameId  <" + gameId + ">, could not find a matching game.");
         }
 
-        return roundRepo.findByGameAndNthRound(game, nthRound);
+        return roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
     }
 
     /**
@@ -105,7 +105,7 @@ public class RoundService {
 
         Game game = gameRepo.findOne(gameId);
         move.setGame(game);
-        Round round = roundRepo.findByGameAndNthRound(game, nthRound);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
 
         Player currentPlayer;
         if( move != null  ) {
