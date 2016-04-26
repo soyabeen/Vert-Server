@@ -14,6 +14,10 @@ public class BelleNoTargetFilterRule implements FilterRule {
 
     @Override
     public boolean evaluate(List<Positionable> actors) {
+        // Belles special ability only triggers if there are other possible targets.
+        if(actors.size() <= 1) {
+            return false;
+        }
         return true;
     }
 
