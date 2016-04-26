@@ -42,22 +42,25 @@ public class TargetPlayerFinderTest {
     @Test
     public void findsOnlyPlayerInSight() {
         List<Player> positionedPlayers = new ArrayList<>();
-        positionedPlayers.add(PositionedPlayer.builder().
-                withUserName("Player0a").onUpperLevelAt(0).build());
+        positionedPlayers.add(PositionedPlayer
+                        .builder()
+                        .withUserName("Player0a")
+                        .onUpperLevelAt(0)
+                        .build());
         positionedPlayers.add(PositionedPlayer.builder().
                 withUserName("Player0b").onUpperLevelAt(0).build());
         positionedPlayers.add(PositionedPlayer.builder().
-                withUserName("Player1").onLowerLevelAt(1).build());
+                withUserName("Player1-bottom").onLowerLevelAt(1).build());
         positionedPlayers.add(PositionedPlayer.builder().
-                withUserName("Player2").onLowerLevelAt(2).build());
+                withUserName("Player2").onUpperLevelAt(2).build());
         positionedPlayers.add(PositionedPlayer.builder().
-                withUserName("Player3a").onLowerLevelAt(3).build());
+                withUserName("Player3a").onUpperLevelAt(3).build());
         positionedPlayers.add(PositionedPlayer.builder().
-                withUserName("Player3b").onLowerLevelAt(3).build());
+                withUserName("Player3b").onUpperLevelAt(3).build());
         positionedPlayers.add(PositionedPlayer.builder().
                 withUserName("Player3-bottom").onLowerLevelAt(3).build());
 
-        Player actor = PositionedPlayer.builder().withUserName("Actor").onUpperLevelAt(2).build();
+        Player actor = PositionedPlayer.builder().withUserName("Actor").onUpperLevelAt(1).build();
 
         TargetFinder tf = new TargetFinder();
         List<Player> result = tf.findTargetToShootOnUpperLevel(actor, positionedPlayers);

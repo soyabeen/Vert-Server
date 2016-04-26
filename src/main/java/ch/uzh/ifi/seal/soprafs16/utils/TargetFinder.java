@@ -5,7 +5,10 @@ import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -59,47 +62,86 @@ public class TargetFinder {
         return result;
     }
 
-    public List<Player> findTargetToShootOnUpperLevel(Player actor, List<Player> players) {
+
+    public List<Player> filterPlayersOnSameCar(Player actor, List<Player> players) {
         List<Player> result = new ArrayList<>();
-        int negDiff = 100;
-        int posDiff = 100;
-        List<Player> left = new ArrayList<>();
-        List<Player> right = new ArrayList<>();
-        for (Player pos : filterPlayersByLevel(players, Positionable.Level.TOP)) {
-            if (!actor.getUsername().equals(pos.getUsername())) {
-                if (actor.getCar() != pos.getCar()) {
-                    int distance = calculateDistance(actor, pos);
-                    if (actor.getCar() - pos.getCar() < 0) {
-                        if (distance < negDiff) {
-                            left.clear();
-                            left.add(pos);
-                            negDiff = distance;
-                        }
-                        if (distance == negDiff) {
-                            left.add(pos);
-                        }
-                    } else {
-                        if (distance < posDiff) {
-                            right.clear();
-                            right.add(pos);
-                            posDiff = distance;
-                        }
-                        if (distance == posDiff) {
-                            right.add(pos);
-                        }
-                    }
-                }
+        for (Player target : players) {
+            if (actor.getCar() != target.getCar()) {
+                result.add(target);
             }
         }
-        result.addAll(right);
-        result.addAll(left);
+        return result;
+    }
+
+    /**
+     * Extract the players that are in sight (means smallest car nr.)
+     *
+     * @param players
+     * @return
+     */
+    private List<Player> extractPlayersInSight(ArrayList<Player> players) {
+        ArrayList<Player> extracted = new ArrayList<>();
+        int inSight = -1;
+        for (Player p : players) {
+            logger.debug("Extract: {}", p);
+            if (inSight == -1) {
+                inSight = p.getCar();
+            }
+            if (inSight == p.getCar()) {
+                extracted.add(p);
+            }
+        }
+        return extracted;
+    }
+
+    public List<Player> findTargetToShootOnUpperLevel(Player actor, List<Player> players) {
+        List<Player> result = new ArrayList<>();
+
+        List<Player> filtered = filterPlayersOnSameCar(actor, players);
+        List<Player> onSameLevel = filterPlayersByLevel(filtered, Positionable.Level.TOP);
+        ArrayList<Player> towardsHead = new ArrayList<>();
+        ArrayList<Player> towardsTail = new ArrayList<>();
+
+        for (Player p : onSameLevel) {
+            logger.debug("level {}", p);
+        }
+
+        // Filter target players for position.
+        // Target players between the train head and the actor are stored to the head list.
+        for (Player p : onSameLevel) {
+            if (p.getCar() < actor.getCar()) {
+                towardsHead.add(p);
+            } else {
+                towardsTail.add(p);
+            }
+        }
+
+        // Get players in sight - direction towards train tail
+        Collections.sort(towardsTail, new ByCarOrder());
+        for (Player p : towardsTail) {
+            logger.debug("tail {}", p);
+        }
+        result.addAll(extractPlayersInSight(towardsTail));
+
+        // Get players in sight - direction towards train head
+        Collections.sort(towardsHead, new ByCarOrder());
+        Collections.reverse(towardsHead);
+        for (Player p : towardsHead) {
+            logger.debug("head {}", p);
+        }
+        result.addAll(extractPlayersInSight(towardsHead));
+
+        for (Player p : result) {
+            logger.debug("res {}", p);
+        }
+
         return result;
     }
 
     public List<Player> findTargetToShoot(Player actor, List<Player> players) {
-        if(Positionable.Level.TOP == actor.getLevel()) {
+        if (Positionable.Level.TOP == actor.getLevel()) {
             return findTargetToShootOnUpperLevel(actor, players);
-        }else{
+        } else {
             return findTargetToShootOnLowerLevel(actor, players);
         }
     }
@@ -116,5 +158,19 @@ public class TargetFinder {
             }
         }
         return result;
+    }
+
+    /**
+     * Helper class to sort players by car nr.
+     */
+    private class ByCarOrder implements Comparator {
+
+        @Override
+        public int compare(Object o1, Object o2) {
+            Positionable p1 = (Positionable) o1;
+            Positionable p2 = (Positionable) o2;
+            return p1.getCar() - p2.getCar();
+        }
+
     }
 }
