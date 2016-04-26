@@ -59,6 +59,15 @@ public class Round implements Serializable {
         this.cardStack = new Stack<>();
     }
 
+    @Override
+    public String toString() {
+        return "Round{" +
+                "game=" + game.getId() +
+                ", turns=" + turns +
+                ", end=" + end +
+                '}';
+    }
+
     public void executeActionPhase() {
 
         throw new IllegalStateException("Method not yet implemented!");
