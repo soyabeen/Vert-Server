@@ -48,6 +48,12 @@ public class PlayerService {
         return playerRepo.save(p);
     }
 
+    protected Player updatePlayer(Player player) {
+        InputArgValidator.checkIfPositiveNumber(player.getId(), "userid");
+        return playerRepo.save(player);
+    }
+
+
     public List<Player> listPlayers() {
         List<Player> result = new ArrayList<>();
         playerRepo.findAll().forEach(result::add);

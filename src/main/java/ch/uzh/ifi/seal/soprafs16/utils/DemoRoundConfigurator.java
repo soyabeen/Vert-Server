@@ -16,7 +16,7 @@ public class DemoRoundConfigurator extends RoundConfigurator {
     @Override
     public LinkedList<Round> generateRoundsForGame(Game game) {
         LinkedList<Round> rounds = new LinkedList<>();
-        rounds.add(buildRoundWithConfig(game, 0, getStationConfigurations().get(0)));
+        rounds.add(buildRoundWithConfig(game, 1, getStationConfigurations().get(0)));
         return rounds;
     }
 }

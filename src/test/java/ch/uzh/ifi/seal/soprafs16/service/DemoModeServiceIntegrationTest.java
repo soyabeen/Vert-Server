@@ -2,11 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
-import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +13,6 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -49,6 +43,7 @@ public class DemoModeServiceIntegrationTest {
 
         Assert.assertThat(demo.getStatus(), is(GameStatus.PLANNINGPHASE));
         Assert.assertTrue("Game name starts with demo." , demo.getName().startsWith("Demo-"));
+        Assert.assertTrue("Game owner is Demo-1-. player", demo.getOwner().startsWith("Demo-1-"));
     }
 
 }

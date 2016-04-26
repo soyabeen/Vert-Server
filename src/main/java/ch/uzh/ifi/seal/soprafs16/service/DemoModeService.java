@@ -31,41 +31,23 @@ public class DemoModeService {
     @Autowired
     private PlayerService playerService;
 
-    private List<Player> generateRandomPlayers(int nrOfPlayers) {
-        List<Player> generated = new ArrayList<>();
-        for (int i = 0; i < nrOfPlayers; i++) {
-            Player p = new Player("DemoPlayer-" + i + "-" + UUID.randomUUID().toString());
-            generated.add(playerService.createPlayer(p));
-        }
-        return generated;
+    private Player createRandomPlayer(String username) {
+        Player p = new Player(username);
+        return playerService.createPlayer(p);
     }
 
     public Game initDemoGame() {
-
-        logger.debug("Generated players:");
-        List<Player> players = generateRandomPlayers(NR_OF_DEMO_PLAYERS);
-        for (Player p : players
-                ) {
-            logger.debug(p.toString());
-        }
+        Player owner = createRandomPlayer("DemoPlayer-1-" + UUID.randomUUID().toString());
+        owner.setCharacter(Character.TUCO);
+        owner = playerService.updatePlayer(owner);
+        Player secondPlayer = createRandomPlayer("DemoPlayer-2-" + UUID.randomUUID().toString());
 
         Game shell = new Game();
         shell.setName("Demo-" + UUID.randomUUID().toString());
-        Game demo = gameService.createGame(shell, players.get(0).getToken(), NR_OF_DEMO_PLAYERS);
-        logger.debug("Created {}", demo.toString());
+        Game demo = gameService.createGame(shell, owner.getToken(), NR_OF_DEMO_PLAYERS);
 
-//        for (Player p : players) {
-//            logger.debug("Add to game {}", p.toString());
-//            demo.addPlayer(playerService.assignPlayer(demo.getId(), p, Character.CHEYENNE));
-//        }
-//      {
-        logger.debug("Add to game {}", players.get(1).toString());
-//        demo.addPlayer(playerService.assignPlayer(demo.getId(), players.get(1), Character.CHEYENNE));
-        playerService.assignPlayer(demo.getId(), players.get(1), Character.CHEYENNE);
-
-        logger.debug("start game ...");
-        gameService.startGame(demo.getId(), players.get(0).getToken(), new DemoRoundConfigurator());
-
+        playerService.assignPlayer(demo.getId(), secondPlayer, Character.CHEYENNE);
+        gameService.startGame(demo.getId(), owner.getToken(), new DemoRoundConfigurator());
         return gameService.loadGameFromRepo(demo.getId());
     }
 
