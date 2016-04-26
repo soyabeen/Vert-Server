@@ -19,13 +19,13 @@ import java.util.List;
  * <p>
  * Created by soyabeen on 20.04.16.
  */
-public class RuleEngine {
+public class GameEngine {
 
-    private static final Logger logger = LoggerFactory.getLogger(RuleEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameEngine.class);
 
     private HashMap<CardType, RuleSet> mappingStore;
 
-    public RuleEngine() {
+    public GameEngine() {
         mappingStore = new HashMap<>();
     }
 
