@@ -7,8 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * This class represents a round card as well as a train station card.
@@ -37,7 +35,7 @@ public class Round implements Serializable {
     private Long startPlayerId;
 
     @OneToMany
-    private LinkedList<Card> cardStack;
+    private List<Card> cardStack;
 
     @ElementCollection(targetClass = Turn.class)
     @CollectionTable(name = "round_turn")
@@ -86,7 +84,7 @@ public class Round implements Serializable {
         return game;
     }
 
-    public LinkedList<Card> getCardStack() {
+    public List<Card> getCardStack() {
         return cardStack;
     }
 

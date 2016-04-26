@@ -132,7 +132,7 @@ public class PhaseLogicService {
         InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
         Round round = roundRepo.findByGameAndNthRound(game, nthround);
 
-        cardStack = round.getCardStack();
+        cardStack = (LinkedList<Card>) round.getCardStack();
         //set owner of top card to current player
         setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwner().getId());
     }
@@ -148,7 +148,8 @@ public class PhaseLogicService {
         Round round = roundRepo.findByGameAndNthRound(game, nthround);
 
         // retrieve played card
-        Card top = round.getCardStack().peek();
+        cardStack = (LinkedList<Card>) round.getCardStack();
+        Card top = cardStack.peek();
 
         // give played card to rule engine
 
