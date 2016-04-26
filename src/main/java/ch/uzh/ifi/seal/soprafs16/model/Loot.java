@@ -40,7 +40,7 @@ public class Loot implements Positionable, Serializable {
     /**
      * Train car level on which loot is.
      */
-    @Column(nullable = false)
+    @Column
     private Positionable.Level level;
 
     /**
@@ -58,6 +58,12 @@ public class Loot implements Positionable, Serializable {
         this.value = value;
         this.car = car;
         this.level = level;
+    }
+
+    public Loot(LootType type, Long gameId, int value) {
+        this.type = type;
+        this.gameId = gameId;
+        this.value = value;
     }
 
     @Override
