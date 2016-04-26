@@ -43,6 +43,9 @@ public class Game implements Serializable {
     @Column
     private int nrOfCars;
 
+    @Column
+    private int roundId;
+
     @OneToMany(mappedBy = "game")
     private List<Move> moves;
 
@@ -172,4 +175,8 @@ public class Game implements Serializable {
     public void setNextPlayerId(Long foundPlayerId) {
         this.nextPlayerId = nextPlayerId;
     }
+
+    public int getRoundId() {return roundId;}
+
+    public void setRoundId(int roundId) {this.roundId = roundId;}
 }
