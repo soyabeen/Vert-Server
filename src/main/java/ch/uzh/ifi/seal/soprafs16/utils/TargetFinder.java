@@ -102,10 +102,6 @@ public class TargetFinder {
         ArrayList<Player> towardsHead = new ArrayList<>();
         ArrayList<Player> towardsTail = new ArrayList<>();
 
-        for (Player p : onSameLevel) {
-            logger.debug("level {}", p);
-        }
-
         // Filter target players for position.
         // Target players between the train head and the actor are stored to the head list.
         for (Player p : onSameLevel) {
@@ -118,22 +114,12 @@ public class TargetFinder {
 
         // Get players in sight - direction towards train tail
         Collections.sort(towardsTail, new ByCarOrder());
-        for (Player p : towardsTail) {
-            logger.debug("tail {}", p);
-        }
         result.addAll(extractPlayersInSight(towardsTail));
 
         // Get players in sight - direction towards train head
         Collections.sort(towardsHead, new ByCarOrder());
         Collections.reverse(towardsHead);
-        for (Player p : towardsHead) {
-            logger.debug("head {}", p);
-        }
         result.addAll(extractPlayersInSight(towardsHead));
-
-        for (Player p : result) {
-            logger.debug("res {}", p);
-        }
 
         return result;
     }
