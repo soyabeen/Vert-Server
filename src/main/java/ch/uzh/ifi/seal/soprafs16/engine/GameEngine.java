@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs16.engine;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleSet;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +43,23 @@ public class GameEngine {
     }
 
 
-
-    public List<Positionable> simulatePlayedAction(ActionCommand commandInfo) throws InvocationTargetException {
+    public List<Positionable> simulateAction(ActionCommand commandInfo) throws InvocationTargetException {
         return getRuleSetForCardType(commandInfo.getCard()).simulate(commandInfo.getGame(), commandInfo.getCurrentPlayer());
+    }
+
+    public List<Positionable> executeAction(ActionCommand commandInfo) throws InvocationTargetException {
+        RuleSet rs = getRuleSetForCardType(commandInfo.getCard());
+        List<Positionable> result = rs.execute(commandInfo);
+        for (Positionable pos : result = rs.execute(commandInfo)) {
+            if (pos instanceof Player) {
+                logger.debug(((Player) pos).toString());
+            } else if (pos instanceof Loot) {
+                logger.debug(((Loot) pos).toString());
+            } else {
+                logger.warn("Unknown positionable object (no palyer/loot). It will be returned without saving.");
+            }
+        }
+
+        return result;
     }
 }
