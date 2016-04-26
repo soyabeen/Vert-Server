@@ -77,6 +77,10 @@ public class RoundConfigurator {
         return rounds;
     }
 
+    protected List<RoundConfiguration> getStationConfigurations() {
+        return stationConfigs;
+    }
+
     protected class RoundConfiguration {
 
         private int rcId;

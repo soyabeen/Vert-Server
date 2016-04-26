@@ -48,11 +48,8 @@ public class GameService {
 
     private GameConfigurator gameConf;
 
-    private RoundConfigurator roundConf;
-
     public GameService() {
         gameConf = new GameConfigurator();
-        roundConf = new RoundConfigurator();
     }
 
     public List<Game> listGames(String filter) {
@@ -87,7 +84,7 @@ public class GameService {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
 
-       // game name available?
+        // game name available?
         if (gameRepo.findByName(game.getName()) != null) {
             throw new InvalidInputException("Invalid arg : Name of game is already used.");
         }
@@ -98,6 +95,11 @@ public class GameService {
     }
 
     public void startGame(Long gameId, String userToken) {
+        startGame(gameId, userToken, new RoundConfigurator());
+    }
+
+    public void startGame(Long gameId, String userToken, RoundConfigurator configurator) {
+        logger.debug("Start game {} for {}", gameId, userToken );
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game pendingGame = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
@@ -120,19 +122,17 @@ public class GameService {
             throw new IllegalStateException("Not enough players to start the game. Need at least "
                     + GameConfigurator.MIN_PLAYERS + " players.");
         }
+        //Get Car and Loot configurations
+        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
+        logger.debug("game with loots and cars" + game.toString());
+        logger.debug("input val ok.");
 
         pendingGame.setStatus(GameStatus.PLANNINGPHASE);
-        Game game = gameConf.configureGameForNrOfPlayers(pendingGame, nrOfPlayers);
-        logger.debug("game with loots " + game.toString());
         gameRepo.save(game);
 
         //Choose, initialize and save rounds for the new game
-        List<Round> rounds = roundConf.generateRoundsForGame(game);
+        List<Round> rounds = configurator.generateRoundsForGame(game);
         roundRepo.save(rounds);
-
-        //testing
-        Round r = roundRepo.findByGameIdAndNthRound(gameId,1);
-        roundRepo.save(r);
 
         //Set start and next player
         logicService.setStartPlayer(game, 1, players.get(0).getId());
@@ -148,10 +148,13 @@ public class GameService {
 
         int nrOfCars = game.getNrOfCars();
 
-        for(int i = 0; i < game.getNumberOfPlayers(); i++) {
+        for (int i = 0; i < game.getNumberOfPlayers(); i++) {
             players.get(i).setCar(nrOfCars - (i % 2));
             players.get(i).setLevel(Positionable.Level.BOTTOM);
         }
+    }
+    protected Game loadGameFromRepo(long gameIdToLoad) {
+        return gameRepo.findOne(gameIdToLoad);
     }
 
 }

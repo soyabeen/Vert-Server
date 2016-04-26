@@ -63,6 +63,15 @@ public class Round implements Serializable {
         this.cardStack = new LinkedList<Card>();
     }
 
+    @Override
+    public String toString() {
+        return "Round{" +
+                "game=" + gameId +
+                ", turns=" + turns +
+                ", end=" + end +
+                '}';
+    }
+
     public void executeActionPhase() {
 
         throw new IllegalStateException("Method not yet implemented!");
