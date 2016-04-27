@@ -218,4 +218,11 @@ public class Player extends Meeple {
         this.totalMadeMoves++;
     }
 
+    public CardDeck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(CardDeck deck) {
+        this.deck = deck;
+    }
 }

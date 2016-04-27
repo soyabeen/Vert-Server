@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.MovePlayerExecRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.ShootExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.filter.BelleNoTargetFilterRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerBottomSimRule;
@@ -35,6 +36,7 @@ public class ShootRuleSet extends RuleSet {
     @Override
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
-        return result;
+        ShootExecRule shoot = new ShootExecRule();
+        return shoot.execute(command);
     }
 }
