@@ -41,7 +41,7 @@ public class DemoModeServiceIntegrationTest {
         Game demo = demoModeService.initDemoGame();
         logger.debug(demo.toString());
 
-        Assert.assertThat(demo.getStatus(), is(GameStatus.PLANNINGPHASE));
+        Assert.assertThat(demo.getStatus(), is(GameStatus.PENDING));
         Assert.assertTrue("Game name starts with demo." , demo.getName().startsWith("Demo-"));
         Assert.assertTrue("Game owner is Demo-1-. player", demo.getOwner().startsWith("DemoPlayer-1-"));
     }
