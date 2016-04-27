@@ -24,6 +24,7 @@ public abstract class RuleSet {
     private static Map<CardType, Class> initMapping() {
         Map<CardType, Class> cardMapping = new EnumMap<>(CardType.class);
         cardMapping.put(CardType.MOVE, MoveRuleSet.class);
+        cardMapping.put(CardType.FIRE, ShootRuleSet.class);
         return cardMapping;
     }
 
