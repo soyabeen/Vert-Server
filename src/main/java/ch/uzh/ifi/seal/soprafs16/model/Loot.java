@@ -49,6 +49,9 @@ public class Loot implements Positionable, Serializable {
     @Column
     private int car;
 
+    @Column
+    private Long ownerId;
+
     protected Loot() {
     }
 
@@ -68,7 +71,7 @@ public class Loot implements Positionable, Serializable {
 
     @Override
     public String toString() {
-        return "Loot (id:"+id+", type:"+type+", value:"+value+", car:"+car+", level:"+level+")";
+        return "Loot (id:" + id + ", type:" + type + ", value:" + value + ", car:" + car + ", level:" + level + ")";
     }
 
     /**
@@ -85,6 +88,11 @@ public class Loot implements Positionable, Serializable {
     @Override
     public Level getLevel() {
         return level;
+    }
+
+    @Override
+    public void setLevel(Level newLevel) {
+        level = newLevel;
     }
 
     /**
@@ -152,4 +160,13 @@ public class Loot implements Positionable, Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
 }

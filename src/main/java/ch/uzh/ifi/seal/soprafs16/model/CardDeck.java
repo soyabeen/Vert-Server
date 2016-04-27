@@ -26,7 +26,8 @@ public class CardDeck implements Serializable {
     @OneToMany
     private List<Card> deck;
 
-    protected CardDeck() {
+    public CardDeck() {
+        deck = new ArrayList<>();
     }
 
     public CardDeck(List<Card> bunchOfCards) {
@@ -62,4 +63,7 @@ public class CardDeck implements Serializable {
         return drawnCards;
     }
 
+    public int size() {
+        return deck.size();
+    }
 }
