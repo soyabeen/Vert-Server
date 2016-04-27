@@ -1,12 +1,15 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,12 +111,11 @@ public class RoundService {
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
 
         Player currentPlayer;
-        if( move != null  ) {
-            // get owner of card (= player) to access players hand
-            tmpId = move.getPlayer().getId();
-            currentPlayer = playerRepo.findOne(tmpId);
 
-        } else throw new InvalidInputException("Can't play move, that is empty/null.");
+        // get owner of card (= player) to access players hand
+        tmpId = move.getPlayer().getId();
+        currentPlayer = playerRepo.findOne(tmpId);
+
 
         if( !move.isPass() ) {
             // Player played a card
@@ -127,11 +129,42 @@ public class RoundService {
 
         }
 
+        game.setCurrentPlayerId(game.getNextPlayerId());
+        logger.debug("This is new currentPlayerId " + game.getCurrentPlayerId() + " and nextPlayerId " + game.getNextPlayerId());
+
+        // save game
+        gameRepo.save(game);
         // save Move
-        moveRepo.save(move);
+        //moveRepo.save(move);
 
         // return turnId for player (where turnId is nth-move of player)
         return String.valueOf(currentPlayer.getTotalMadeMoves());
+    }
+
+    public Move getMoveFromDTO(Long gameId, String userToken, TurnDTO turnDTO) {
+
+        InputArgValidator.checkAvailabeId(gameId, gameRepo, "MakeMove in Planningphase gamecheck");
+        InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "MakeMove in Planningphase playercheck");
+        Player player = playerRepo.findByToken(userToken);
+        Game game = gameRepo.findOne(gameId);
+
+        InputArgValidator.checkItIsPlayersTurn(player,game);
+
+        Card card = new Card();
+
+        card.setOwner(player.getId());
+        card.setType(turnDTO.getType());
+
+        Move move = new Move();
+
+        move.setGame(game);
+        move.setPlayer(player);
+        move.setPlayedCard(card);
+
+        if(card.getType().equals(CardType.DRAW)) move.setPass(true);
+
+        return move;
+
     }
 
     /**
@@ -144,10 +177,11 @@ public class RoundService {
         // add played card to card stack
         round.addNewlyPlayedCard(playedCard);
 
-        playedCard.getOwner().incrementTotalMadeMoves();
-
+        Player player = playerRepo.findOne(playedCard.getOwner());
+        player.incrementTotalMadeMoves();
         // remove Card from player hand
-        removeCardFromHand(playedCard.getOwner(), playedCard);
+        removeCardFromHand(player, playedCard);
+
 
         return roundRepo.save(round);
     }
@@ -155,12 +189,15 @@ public class RoundService {
     protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
         List<Card> playerHand = currentPlayer.getHand();
 
-        // go through hand and remove same card type
-        playerHand.remove(playedCard);
+        if(playerHand.size() != 0) {
+            // go through hand and remove same card type
+            playerHand.remove(playedCard);
 
-        // save new hand
-        currentPlayer.setHand(playerHand);
-        playerRepo.save(currentPlayer);
+            // save new hand
+            currentPlayer.setHand(playerHand);
+            playerRepo.save(currentPlayer);
+        }
+            //TODO: throw new InvalidInputException("Player has no card on hand.");
     }
 
     /**

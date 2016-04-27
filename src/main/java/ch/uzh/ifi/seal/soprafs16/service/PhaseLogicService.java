@@ -147,7 +147,7 @@ public class PhaseLogicService {
 
         cardStack = (LinkedList<Card>) round.getCardStack();
         //set owner of top card to current player
-        setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwner().getId());
+        setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwner());
     }
 
     /**

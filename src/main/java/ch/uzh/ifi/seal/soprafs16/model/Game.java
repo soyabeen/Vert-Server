@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -46,9 +47,6 @@ public class Game implements Serializable {
     @Column
     private int roundId;
 
-    @OneToMany(mappedBy = "game")
-    private List<Move> moves;
-
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
@@ -60,7 +58,6 @@ public class Game implements Serializable {
 
     public Game() {
         this.players = new ArrayList<>();
-        this.moves = new LinkedList<>();
         this.loots = new ArrayList<>();
     }
 
@@ -77,6 +74,23 @@ public class Game implements Serializable {
                 ", status=" + status +
                 ", currentPlayerId=" + currentPlayerId +
                 '}';
+    }
+
+
+
+    private void setNextPlayer(Long gameId, Long currPlayerId) {
+        Player tmp = players.get(0);
+
+        while(tmp.getId() != currPlayerId) {
+            tmp = players.get(players.indexOf(tmp) + 1);
+        }
+        if( (players.indexOf(tmp) + 1) == players.size()) {
+            //at end of List, next Player will be at Index 0
+            nextPlayerId = players.get(0).getId();
+        } else {
+            //if currentPlayer not at the end of the list (1 because of indices starting at 0)
+            nextPlayerId = players.get( players.indexOf(currPlayerId) + 1).getId();
+        }
     }
 
     public void addLoot(Loot loot) {
@@ -111,14 +125,6 @@ public class Game implements Serializable {
         this.owner = owner;
     }
 
-    public List<Move> getMoves() {
-        return moves;
-    }
-
-    public void setMoves(List<Move> moves) {
-        this.moves = moves;
-    }
-
 
     public List<Player> getPlayers() {
         return players;
@@ -146,6 +152,7 @@ public class Game implements Serializable {
 
     public void setCurrentPlayerId(Long currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
+        setNextPlayerId(currentPlayerId);
     }
 
     public int getNumberOfPlayers() {

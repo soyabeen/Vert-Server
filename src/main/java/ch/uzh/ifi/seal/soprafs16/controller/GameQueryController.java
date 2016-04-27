@@ -53,39 +53,6 @@ public class GameQueryController
         return game;
     }
 
-    /**
-     * Context: /games/{game-id}/move
-     */
-    @RequestMapping(value = CONTEXT + "/{gameId}/move", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public List<Move> listMoves(@PathVariable Long gameId) {
-        //TODO: put logic of methods in GameServices
-        logger.debug("listMoves");
-
-        Game game = gameRepo.findOne(gameId);
-        if (game != null) {
-            return game.getMoves();
-        }
-
-        return new ArrayList<>();
-    }
-
-    /**
-     * Context: /games/{game-id}/move/{moveId}
-     */
-    @RequestMapping(value = CONTEXT + "/{gameId}/move/{moveId}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public Move getMove(@PathVariable Long gameId, @PathVariable Integer moveId) {
-        //TODO: put logic of methods in GameServices
-        logger.debug("getMove: " + gameId);
-
-        Game game = gameRepo.findOne(gameId);
-        if (game != null) {
-            return game.getMoves().get(moveId);
-        }
-
-        return null;
-    }
 
     /**
      * Context: /games/{game-id}/player/{playerId}
