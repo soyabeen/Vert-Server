@@ -20,9 +20,9 @@ public class ShootPlayerSimRuleTest {
     public void evalFalseWhenNoBulletsLeft() {
         Player actor = PositionedPlayer.builder().withUserName("Actor1-bottom").onLowerLevelAt(1).build();
         actor.setBullets(0);
-        ActionCommand actionInfo = new ActionCommand(null, null, actor, null);
+//        ActionCommand actionInfo = new ActionCommand(null, null, actor, null);
 
-        ShootPlayerSimRule rule = new ShootPlayerSimRule(actionInfo);
+        ShootPlayerSimRule rule = new ShootPlayerSimRule(null);
 
         Assert.assertFalse("Expect false when no bullets left.", rule.evaluate(actor));
     }
@@ -45,7 +45,7 @@ public class ShootPlayerSimRuleTest {
         ActionCommand actionInfo = new ActionCommand(null, game, actor, null);
 
 
-        ShootPlayerSimRule rule = new ShootPlayerSimRule(actionInfo);
+        ShootPlayerSimRule rule = new ShootPlayerSimRule(game);
 
         Assert.assertTrue("Expect true for neighboring player on bottom level.", rule.evaluate(actor));
     }
@@ -66,7 +66,7 @@ public class ShootPlayerSimRuleTest {
 
         ActionCommand actionInfo = new ActionCommand(null, game, actor, null);
 
-        ShootPlayerSimRule rule = new ShootPlayerSimRule(actionInfo);
+        ShootPlayerSimRule rule = new ShootPlayerSimRule(game);
 
         Assert.assertFalse("Expect false for no neighboring player on bottom level.", rule.evaluate(actor));
     }
