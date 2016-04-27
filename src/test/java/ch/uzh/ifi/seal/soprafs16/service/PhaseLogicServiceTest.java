@@ -102,20 +102,20 @@ public class PhaseLogicServiceTest {
         when(playerRepo.findOne(2L)).thenReturn(expectedPlayer2);
     }
 
-    @Test
-    public void testSetStartPlayer() {
-        // Test for start player at beginning of game
-        phaseLogic.setStartPlayer(game, nthRound, expectedPlayer1.getId());
-        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
-
-        // Test for start player after finish of 1st round
-        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer2.getId());
-        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer2.getId());
-
-        // Test for start player after finish of 2nd round
-        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer1.getId());
-        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
-    }
+//    @Test
+//    public void testSetStartPlayer() {
+//        // Test for start player at beginning of game
+//        phaseLogic.setStartPlayer(game, nthRound, expectedPlayer1.getId());
+//        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
+//
+//        // Test for start player after finish of 1st round
+//        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer2.getId());
+//        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer2.getId());
+//
+//        // Test for start player after finish of 2nd round
+//        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer1.getId());
+//        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
+//    }
 
     @Test
     public void testSetCurrentPlayer() {
