@@ -149,7 +149,7 @@ public class GameService {
         int nrOfCars = game.getNrOfCars();
 
         for (int i = 0; i < game.getNumberOfPlayers(); i++) {
-            players.get(i).setCar(nrOfCars - (i % 2));
+            players.get(i).setCar(nrOfCars - (i % 2) - 1);
             players.get(i).setLevel(Positionable.Level.BOTTOM);
         }
     }
