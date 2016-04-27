@@ -171,7 +171,7 @@ public class Game implements Serializable {
     public Long getNextPlayerId() {
         return nextPlayerId;
     }
-
+    
     public void setNextPlayerId(Long nextPlayerId) {
         this.nextPlayerId = nextPlayerId;
     }
