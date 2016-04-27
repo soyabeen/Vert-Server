@@ -4,6 +4,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
+import ch.uzh.ifi.seal.soprafs16.model.CardDeck;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
@@ -77,9 +78,11 @@ public class MoveRuleSetTest {
         Player player = PositionedPlayer.builder()
                 .withUserName("original player")
                 .onLowerLevelAt(1).build();
+        player.setDeck(new CardDeck());
 
         Player target = PositionedPlayer.builder()
                 .onLowerLevelAt(0).build();
+
 
         Player expected = PositionedPlayer.builder()
                 .onUpperLevelAt(0).build();
@@ -93,5 +96,6 @@ public class MoveRuleSetTest {
         Assert.assertThat(resultPlayer.getUsername(), is("original player"));
         Assert.assertSame(resultPlayer.getCar(), expected.getCar());
         Assert.assertThat(resultPlayer.getLevel(), is(expected.getLevel()));
+        Assert.assertThat("Player got shot by marshal.", resultPlayer.getDeck().size(), is(1));
     }
 }
