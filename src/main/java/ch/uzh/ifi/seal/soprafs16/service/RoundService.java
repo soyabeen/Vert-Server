@@ -133,10 +133,9 @@ public class RoundService {
         }
 
         // Advance current Player to the next Player
-
-        logicService.setCurrentPlayer(game.getId(), nthRound, game.getNextPlayerId());
+        logicService.advancePlayer(gameId, nthRound);
         //game.setCurrentPlayerId(game.getNextPlayerId());
-        logger.debug("This is new currentPlayerId " + game.getCurrentPlayerId() + " and nextPlayerId " + game.getNextPlayerId());
+        logger.debug("This is new currentPlayerId " + game.getCurrentPlayerId());
 
         // save game
         gameRepo.save(game);

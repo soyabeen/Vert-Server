@@ -39,9 +39,6 @@ public class Game implements Serializable {
     private Long currentPlayerId;
 
     @Column
-    private Long nextPlayerId;
-
-    @Column
     private int nrOfCars;
 
     @Column
@@ -76,22 +73,6 @@ public class Game implements Serializable {
                 '}';
     }
 
-
-
-    private void setNextPlayer(Long currPlayerId) {
-        Player tmp = players.get(0);
-
-        while(tmp.getId() != currPlayerId) {
-            tmp = players.get(players.indexOf(tmp) + 1);
-        }
-        if( (players.indexOf(tmp) + 1) == players.size()) {
-            //at end of List, next Player will be at Index 0
-            nextPlayerId = players.get(0).getId();
-        } else {
-            //if currentPlayer not at the end of the list (1 because of indices starting at 0)
-            nextPlayerId = players.get( players.indexOf(currPlayerId) + 1).getId();
-        }
-    }
 
     public void addLoot(Loot loot) {
         loots.add(loot);
@@ -152,7 +133,6 @@ public class Game implements Serializable {
 
     public void setCurrentPlayerId(Long currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
-        setNextPlayer(currentPlayerId);
     }
 
     public int getNumberOfPlayers() {
@@ -173,14 +153,6 @@ public class Game implements Serializable {
 
     public void setLoots(List<Loot> loots) {
         this.loots = loots;
-    }
-
-    public Long getNextPlayerId() {
-        return nextPlayerId;
-    }
-    
-    public void setNextPlayerId(Long nextPlayerId) {
-        this.nextPlayerId = nextPlayerId;
     }
 
     public int getRoundId() {return roundId;}
