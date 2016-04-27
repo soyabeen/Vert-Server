@@ -1,8 +1,11 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.service.PhaseLogicService;
 import ch.uzh.ifi.seal.soprafs16.service.RoundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ public class RoundQueryController extends GenericController {
     @Autowired
     private RoundService roundService;
 
+
     private final String CONTEXT = "/games/{gameId}/rounds";
 
     @RequestMapping(value = CONTEXT + "/{nthRound}", method = RequestMethod.GET)
@@ -41,8 +45,9 @@ public class RoundQueryController extends GenericController {
 
     @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public String makeAMove(@PathVariable Long gameId, @PathVariable Integer nthRound,
-                            @RequestBody Move move) {
+    public String makeAMove(@PathVariable Long gameId, @PathVariable Integer nthRound, @RequestParam String token,
+                            @RequestBody TurnDTO turnDTO) {
+        Move move = roundService.getMoveFromDTO(gameId, token, turnDTO);
         return roundService.makeAMove(gameId, nthRound, move);
     }
 

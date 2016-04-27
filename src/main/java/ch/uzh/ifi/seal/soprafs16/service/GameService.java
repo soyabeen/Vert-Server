@@ -136,7 +136,7 @@ public class GameService {
 
         //Set start and next player
         logicService.setStartPlayer(game, 1, players.get(0).getId());
-        logicService.setNextPlayer(game.getId(), 1);
+        logicService.setNextPlayer(game.getId(), 1, players.get(0).getId());
 
         setPositionOfPlayers(game, players);
         playerRepo.save(players);

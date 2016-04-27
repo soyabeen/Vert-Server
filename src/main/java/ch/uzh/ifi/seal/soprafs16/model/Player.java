@@ -32,7 +32,7 @@ public class Player extends Meeple {
     @Column
     private Integer totalMadeMoves;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany
     private List<Card> hand;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -85,7 +85,7 @@ public class Player extends Meeple {
      * Player gets shot, add a bullet card to deck.
      */
     public void getsShotBy(Player shooter) {
-        deck.addCard(new Card(CardType.BULLET, shooter));
+        deck.addCard(new Card(CardType.BULLET, shooter.getId()));
     }
 
     public String getUsername() {

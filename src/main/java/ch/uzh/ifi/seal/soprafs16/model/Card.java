@@ -25,14 +25,14 @@ public class Card implements Serializable {
     /**
      * Defines owner of this card
      */
-    @ManyToOne
-    private Player owner;
+    @Column
+    private Long ownerId;
 
     public Card() { }
 
-    public Card(CardType type, Player owner) {
+    public Card(CardType type, Long ownerId) {
         this.type = type;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
     /**
@@ -43,19 +43,19 @@ public class Card implements Serializable {
     /**
      * Returns owner of this card.
      *
-     * @return owner.
+     * @return ownerId.
      */
-    public Player getOwner() {
-        return owner;
+    public Long getOwner() {
+        return ownerId;
     }
 
     /**
      * Sets owner for this card
      *
-     * @param owner player or game
+     * @param ownerId player or game
      */
-    public void setOwner(Player owner) {
-        this.owner = owner;
+    public void setOwner(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     /**
