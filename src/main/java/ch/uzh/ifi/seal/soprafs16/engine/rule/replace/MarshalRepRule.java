@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.replace;
 
+import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleUtils;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.jboss.logging.annotations.Pos;
@@ -13,15 +14,6 @@ import java.util.List;
  * Created by soyabeen on 27.04.16.
  */
 public class MarshalRepRule implements ReplaceRule {
-
-    private Positionable swapLevel(Positionable actor) {
-        if (Positionable.Level.TOP == actor.getLevel()) {
-            actor.setLevel(Positionable.Level.BOTTOM);
-        } else {
-            actor.setLevel(Positionable.Level.TOP);
-        }
-        return actor;
-    }
 
     private boolean isOnSameFloorAsMarshal(Positionable actor) {
         // TODO: use real marshal position
@@ -48,7 +40,7 @@ public class MarshalRepRule implements ReplaceRule {
         List<Positionable> replaced = new ArrayList<>();
         for (Positionable pos : actors) {
             if (isOnSameFloorAsMarshal(pos)) {
-                Player target = (Player) swapLevel(pos);
+                Player target = (Player) RuleUtils.swapLevel(pos);
                 // TODO: Check if we can set null as owner for marshal case
                 target.getsShotBy(null);
                 replaced.add(target);
