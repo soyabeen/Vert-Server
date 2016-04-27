@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,9 @@ public class DemoModeServiceIntegrationTest {
         Assert.assertThat(demo.getStatus(), is(GameStatus.PLANNINGPHASE));
         Assert.assertTrue("Game name starts with demo." , demo.getName().startsWith("Demo-"));
         Assert.assertTrue("Game owner is Demo-1-. player", demo.getOwner().startsWith("DemoPlayer-1-"));
+        for (Player p : demo.getPlayers()) {
+            Assert.assertThat("Player "+p.getUsername()+" must have a loot.", p.getLoots().size(), is(1));
+        }
     }
 
 }

@@ -38,13 +38,13 @@ public class DemoModeService {
 
     public Game initDemoGame() {
         Player owner = createRandomPlayer("DemoPlayer-1-" + UUID.randomUUID().toString());
-        owner.setCharacter(Character.TUCO);
-        owner = playerService.updatePlayer(owner);
         Player secondPlayer = createRandomPlayer("DemoPlayer-2-" + UUID.randomUUID().toString());
 
         Game shell = new Game();
         shell.setName("Demo-" + UUID.randomUUID().toString());
         Game demo = gameService.createGame(shell, owner.getToken(), NR_OF_DEMO_PLAYERS);
+
+        owner = playerService.initializeCharacter(demo.getId(), owner, Character.TUCO);
 
         playerService.assignPlayer(demo.getId(), secondPlayer, Character.CHEYENNE);
         gameService.startGame(demo.getId(), owner.getToken(), new DemoRoundConfigurator());
