@@ -78,7 +78,7 @@ public class Game implements Serializable {
 
 
 
-    private void setNextPlayer(Long gameId, Long currPlayerId) {
+    private void setNextPlayer(Long currPlayerId) {
         Player tmp = players.get(0);
 
         while(tmp.getId() != currPlayerId) {
@@ -152,7 +152,7 @@ public class Game implements Serializable {
 
     public void setCurrentPlayerId(Long currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
-        setNextPlayerId(currentPlayerId);
+        setNextPlayer(currentPlayerId);
     }
 
     public int getNumberOfPlayers() {
