@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -38,6 +39,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.print.attribute.standard.PrinterURI;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -73,8 +77,8 @@ public class GameCommandControllerTest {
         this.base = new URL("http://localhost:" + port + "/games");
         this.template = new TestRestTemplate();
 
-        gameRepo.deleteAll();
-        playerRepo.deleteAll();
+//        gameRepo.deleteAll();
+//        playerRepo.deleteAll();
     }
 
     @Test
@@ -83,6 +87,8 @@ public class GameCommandControllerTest {
         // test valid query
         Player player = playerBuilder.init(true).build();
         Game game = gameBuilder.initNoPersistence("addGameTest", player.getUsername()).build();
+
+        player = playerRepo.save(player);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString())
                 .queryParam("token", player.getToken());
@@ -135,13 +141,14 @@ public class GameCommandControllerTest {
             // Has a deck
             Assert.assertNotNull(p.getDeck());
 
-            logger.error(p.getHand().toString());
+            // TODO: Find a way to correctly get hand cards.
+            List<Card> hand = p.getHand().stream().filter(Card::isOnHand).collect(Collectors.toList());
 
             // Has 6 (7) cards in hand
             if (p.getCharacter().equals(Character.DOC)) {
-                Assert.assertThat(p.getHand().size(), is(7));
+                Assert.assertThat(hand.size(), is(7));
             } else {
-                Assert.assertThat(p.getHand().size(), is(6));
+                Assert.assertThat(hand.size(), is(6));
             }
         }
 

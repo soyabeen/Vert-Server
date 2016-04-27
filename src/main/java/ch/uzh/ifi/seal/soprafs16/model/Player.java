@@ -11,6 +11,7 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Defines the state of a playing character.
@@ -38,7 +39,6 @@ public class Player extends Meeple {
     private Integer totalMadeMoves;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
     private List<Card> hand;
 
     @OneToMany(fetch = FetchType.EAGER)

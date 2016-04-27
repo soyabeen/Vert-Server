@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  * Created by alexanderhofmann on 27/04/16.
  */
 public interface CardRepository extends CrudRepository<Card, Long> {
-    Card findByOnHand(Long cardId);
+    Card findByOnHand(boolean onHand);
 }
