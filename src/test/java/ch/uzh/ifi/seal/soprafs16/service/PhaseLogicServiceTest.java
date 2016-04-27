@@ -108,9 +108,13 @@ public class PhaseLogicServiceTest {
         phaseLogic.setStartPlayer(game, nthRound, expectedPlayer1.getId());
         Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
 
-        // Test for start player after finish of 1 round
+        // Test for start player after finish of 1st round
         phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer2.getId());
         Assert.assertEquals(round.getStartPlayerId(), expectedPlayer2.getId());
+
+        // Test for start player after finish of 2nd round
+        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer1.getId());
+        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
     }
 
     @Test
