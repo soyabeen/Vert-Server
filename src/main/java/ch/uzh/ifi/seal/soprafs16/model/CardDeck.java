@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,10 +20,11 @@ public class CardDeck implements Serializable {
     /**
      * List of cards in this deck.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Card> deck;
 
-    protected CardDeck() {
+    public CardDeck() {
+        deck = new ArrayList<>();
     }
 
     public CardDeck(List<Card> bunchOfCards) {
@@ -60,14 +60,15 @@ public class CardDeck implements Serializable {
         return drawnCards;
     }
 
-    public void shuffle() {
-        Collections.shuffle(deck);
+    public int size() {
+        return deck.size();
     }
 
-    @Override
-    public String toString() {
-        return "CardDeck{" +
-                "deck=" + deck +
-                '}';
+    public List<Card> getDeck() {
+        return deck;
+    }
+
+    public void setDeck(List<Card> deck) {
+        this.deck = deck;
     }
 }

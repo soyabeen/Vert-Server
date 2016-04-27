@@ -1,6 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
+import org.eclipse.persistence.annotations.VariableOneToOne;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,7 +37,8 @@ public class Player extends Meeple {
     @Column
     private Integer totalMadeMoves;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     private List<Card> hand;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -68,6 +75,25 @@ public class Player extends Meeple {
         this.deck = playerDeck;
     }
 
+    /**
+     * Player shoots, reduce the nr of bullets by one.
+     *
+     * @return The nr of bullets left.
+     */
+    public int shoots() {
+        if (bullets > 0) {
+            bullets = bullets - 1;
+        }
+        return bullets;
+    }
+
+    /**
+     * Player gets shot, add a bullet card to deck.
+     */
+    public void getsShotBy(Player shooter) {
+        deck.addCard(new Card(CardType.BULLET, shooter));
+    }
+
     public String getUsername() {
         return username;
     }
@@ -86,6 +112,7 @@ public class Player extends Meeple {
 
     /**
      * Gets the bullets the player has left.
+     *
      * @return bullets left in chamber.
      */
     public int getBullets() {
@@ -94,22 +121,16 @@ public class Player extends Meeple {
 
     /**
      * Sets the number of bullets.
+     *
      * @param bullets number of bullets to set.
      */
     public void setBullets(int bullets) {
         this.bullets = bullets;
     }
 
-    public CardDeck getDeck() {
-        return deck;
-    }
-
-    public void setDeck(CardDeck deck) {
-        this.deck = deck;
-    }
-
     /**
      * Gets a list of loots.
+     *
      * @return
      */
     public List<Loot> getLoots() {
@@ -118,6 +139,7 @@ public class Player extends Meeple {
 
     /**
      * Adds a piece of loot.
+     *
      * @param loot
      */
     public void addLoot(Loot loot) {
@@ -126,6 +148,7 @@ public class Player extends Meeple {
 
     /**
      * Drops a piece of loot.
+     *
      * @param loot Loot to drop.
      */
     public void dropLoot(Loot loot) {
@@ -134,6 +157,7 @@ public class Player extends Meeple {
 
     /**
      * Gets the player's special character.
+     *
      * @return player's character.
      */
     public Character getCharacter() {
@@ -142,6 +166,7 @@ public class Player extends Meeple {
 
     /**
      * Sets the player's special character.
+     *
      * @param character Player's special character.
      */
     public void setCharacter(Character character) {
@@ -151,19 +176,17 @@ public class Player extends Meeple {
     @Override
     public String toString() {
         return "Player{" +
-                "username='" + username + '\'' +
-                ", token='" + token + '\'' +
+                "id=" + getId() +
+                ", username=" + username +
                 ", character=" + character +
                 ", bullets=" + bullets +
-                ", deck=" + deck +
-                ", totalMadeMoves=" + totalMadeMoves +
-                ", hand=" + hand +
-                ", loots=" + loots +
+                ", pos=" + getCar() + "/" + getLevel() +
                 '}';
     }
 
     /**
      * Gets the players cards in hand.
+     *
      * @return Cards which the player is holding.
      */
     public List<Card> getHand() {
@@ -172,6 +195,7 @@ public class Player extends Meeple {
 
     /**
      * Sets the new cards the player is holding.
+     *
      * @param hand Updated collection of cards the player is going to hold.
      */
     public void setHand(List<Card> hand) {
@@ -182,11 +206,12 @@ public class Player extends Meeple {
      * Adds 3 Cards from card deck to players hand.
      */
     public void take3Cards() {
-        this.hand.addAll( this.deck.drawCard(3) );
+        this.hand.addAll(this.deck.drawCard(3));
     }
 
     /**
      * Gets the amount of rounds a player made a move.
+     *
      * @return totalMadeMoves
      */
     public Integer getTotalMadeMoves() {
@@ -195,10 +220,16 @@ public class Player extends Meeple {
 
     /**
      * Increments the amount of rounds a player made.
-     *
      */
     public void incrementTotalMadeMoves() {
         this.totalMadeMoves++;
     }
 
+    public CardDeck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(CardDeck deck) {
+        this.deck = deck;
+    }
 }

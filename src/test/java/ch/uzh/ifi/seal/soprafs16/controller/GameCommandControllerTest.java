@@ -135,13 +135,8 @@ public class GameCommandControllerTest {
             // Has a deck
             Assert.assertNotNull(p.getDeck());
 
-            // Has a purse with value 250
-            Assert.assertThat(p.getLoots().size(), is(1));
-            Loot loot = p.getLoots().get(0);
-            Assert.assertThat(loot.getValue(), is(250));
-            Assert.assertThat(loot.getType(), is(LootType.PURSE_SMALL));
+            logger.error(p.getHand().toString());
 
-            logger.error(p.toString());
             // Has 6 (7) cards in hand
             if (p.getCharacter().equals(Character.DOC)) {
                 Assert.assertThat(p.getHand().size(), is(7));

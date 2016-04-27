@@ -68,6 +68,6 @@ public class PlayerController extends GenericController {
     public Player assignCharacter(@PathVariable Long gameId, @RequestParam("token") String userToken,
                                   @RequestParam("character") Character character) {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepository, "token");
-            return playerService.initializeCharacter(tokenOwner, character);
+            return playerService.initializeCharacter(gameId,tokenOwner, character);
     }
 }

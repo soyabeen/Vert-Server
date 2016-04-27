@@ -25,12 +25,22 @@ public class Card implements Serializable {
     /**
      * Defines owner of this card
      */
-
     @ManyToOne
     private Player owner;
 
-    public Card() {
+    @Column
+    private boolean onHand;
 
+    public boolean isOnHand() {
+        return onHand;
+    }
+
+    public void setOnHand(boolean onHand) {
+        this.onHand = onHand;
+    }
+
+    public Card() {
+        onHand = false;
     }
 
     public Card(CardType type, Player owner) {
@@ -39,7 +49,13 @@ public class Card implements Serializable {
     }
 
     /**
+     * Determines whether card was played face up or face down
+     */
+    boolean isFaceUp = true;
+
+    /**
      * Returns owner of this card.
+     *
      * @return owner.
      */
     public Player getOwner() {
@@ -48,6 +64,7 @@ public class Card implements Serializable {
 
     /**
      * Sets owner for this card
+     *
      * @param owner player or game
      */
     public void setOwner(Player owner) {
@@ -56,6 +73,7 @@ public class Card implements Serializable {
 
     /**
      * Returns type of this card.
+     *
      * @return
      */
     public CardType getType() {
@@ -64,6 +82,7 @@ public class Card implements Serializable {
 
     /**
      * Sets type for this card.
+     *
      * @param type on of CardType.
      */
     public void setType(CardType type) {
@@ -72,7 +91,7 @@ public class Card implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof Card)) {
+        if (!(o instanceof Card)) {
             return false;
         }
 

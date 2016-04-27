@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -100,5 +101,42 @@ public class InputArgValidator {
             throw new InvalidInputException(MESSAGE_START + " No valid object for " + argName + " " + id + ".");
         }
         return e;
+    }
+
+
+    /**
+     * Check if a request to get possibilities for a turn is made from the player, who's turn it actually is.
+     *
+     * @param player    Made the request for a turn.
+     * @param game      Game the request was made in.
+     * @throws InvalidInputException to indicate the checks negative result.
+     */
+    public static void checkItIsPlayersTurn(Player player, Game game) {
+
+        if(game.getCurrentPlayerId() != player.getId()) {
+            throw new InvalidInputException(MESSAGE_START + " It is not the player's turn");
+        }
+
+    }
+
+    /**
+     * Check the input arguments gameId and nthRound. Both must be: <br/>
+     * - not null
+     * - not 0
+     * - positive numbers
+     *
+     * @param gameId
+     * @param nthRound
+     * @throws InvalidInputException
+     */
+    public static void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
+
+        if (gameId == null || gameId <= 0) {
+            throw new InvalidInputException("Invalid arg. gameId <" + gameId + ">, must be a positive number.");
+        }
+        if (nthRound == null || nthRound <= 0) {
+            throw new InvalidInputException("Invalid arg. ntRound <" + nthRound + ">, must be a positive number.");
+        }
+
     }
 }

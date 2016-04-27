@@ -44,7 +44,7 @@ public class RoundConfigurator {
     }
 
     protected Round buildRoundWithConfig(Game game, Integer position, RoundConfiguration config) {
-        return new Round(game, position, Arrays.asList(config.turns), config.event);
+        return new Round(game.getId(), position, new LinkedList<Turn>(Arrays.asList(config.turns)), config.event);
     }
 
     /**
@@ -68,13 +68,17 @@ public class RoundConfigurator {
         Collections.shuffle(stationConfigs);
 
         for (int i = 0; i < MAX_ROUNDS_FOR_GAME; i++) {
-            logger.debug("Create round with round configuration id {} at position {}", roundConfigs.get(i).getRcId(), i);
-            rounds.add(buildRoundWithConfig(game, Integer.valueOf(i), roundConfigs.get(i)));
+            logger.debug("Create round with round configuration id {} at position {}", roundConfigs.get(i).getRcId(), i+1);
+            rounds.add(buildRoundWithConfig(game, Integer.valueOf(i+1), roundConfigs.get(i)));
         }
-        logger.debug("Create train station with round configuration id {} at position {}", stationConfigs.get(0).getRcId(), MAX_ROUNDS_FOR_GAME);
-        rounds.add(buildRoundWithConfig(game, Integer.valueOf(MAX_ROUNDS_FOR_GAME), stationConfigs.get(0)));
+        logger.debug("Create train station with round configuration id {} at position {}", stationConfigs.get(0).getRcId(), MAX_ROUNDS_FOR_GAME+1);
+        rounds.add(buildRoundWithConfig(game, Integer.valueOf(MAX_ROUNDS_FOR_GAME+1), stationConfigs.get(0)));
 
         return rounds;
+    }
+
+    protected List<RoundConfiguration> getStationConfigurations() {
+        return stationConfigs;
     }
 
     protected class RoundConfiguration {

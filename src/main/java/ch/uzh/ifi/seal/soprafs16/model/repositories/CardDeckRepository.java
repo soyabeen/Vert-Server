@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository;
  * Created by alexanderhofmann on 26/04/16.
  */
 public interface CardDeckRepository extends CrudRepository<CardDeck, Long> {
+    CardDeck findById(Long cardId);
 }
