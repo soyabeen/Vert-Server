@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,6 +27,7 @@ public class Card implements Serializable {
      * Defines owner of this card
      */
     @ManyToOne
+    @JsonBackReference
     private Player owner;
 
     @Column

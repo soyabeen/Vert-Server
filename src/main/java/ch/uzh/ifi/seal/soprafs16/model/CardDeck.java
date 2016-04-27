@@ -20,7 +20,7 @@ public class CardDeck implements Serializable {
     /**
      * List of cards in this deck.
      */
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     private List<Card> deck;
 
     public CardDeck() {

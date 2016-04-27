@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
 import org.eclipse.persistence.annotations.VariableOneToOne;
@@ -33,6 +34,7 @@ public class Player extends Meeple {
     private int bullets;
 
     @OneToOne
+    @JsonManagedReference
     private CardDeck deck;
 
     @Column
