@@ -47,6 +47,7 @@ public class DemoModeService {
         Game demo = gameService.createGame(shell, owner.getToken(), NR_OF_DEMO_PLAYERS);
 
         playerService.assignPlayer(demo.getId(), secondPlayer, Character.CHEYENNE);
+        gameService.startGame(demo.getId(), owner.getToken(), new DemoRoundConfigurator());
         return gameService.loadGameFromRepo(demo.getId());
     }
 
