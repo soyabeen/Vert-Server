@@ -4,6 +4,8 @@ import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.service.PhaseLogicService;
 import ch.uzh.ifi.seal.soprafs16.service.RoundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ public class RoundQueryController extends GenericController {
 
     @Autowired
     private RoundService roundService;
+
 
     private final String CONTEXT = "/games/{gameId}/rounds";
 

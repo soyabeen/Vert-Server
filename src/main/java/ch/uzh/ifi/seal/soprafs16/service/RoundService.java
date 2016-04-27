@@ -37,6 +37,9 @@ public class RoundService {
     @Autowired
     private MoveRepository moveRepo;
 
+    @Autowired
+    private PhaseLogicService logicService;
+
     /**
      * Check the input arguments gameId and nthRound. Both must be: <br/>
      * - not null
@@ -129,7 +132,10 @@ public class RoundService {
 
         }
 
-        game.setCurrentPlayerId(game.getNextPlayerId());
+        // Advance current Player to the next Player
+
+        logicService.setCurrentPlayer(game.getId(), nthRound, game.getNextPlayerId());
+        //game.setCurrentPlayerId(game.getNextPlayerId());
         logger.debug("This is new currentPlayerId " + game.getCurrentPlayerId() + " and nextPlayerId " + game.getNextPlayerId());
 
         // save game
