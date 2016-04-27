@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.FloorChangeExecRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.FloorChangeSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -25,6 +27,8 @@ public class FloorChangeRuleSet extends RuleSet {
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
-        return null;
+        FloorChangeExecRule floorChange = new FloorChangeExecRule();
+        MarshalRepRule marshal = new MarshalRepRule();
+        return marshal.replace(floorChange.execute(command));
     }
 }
