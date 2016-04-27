@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Players on the same floor as the marshal will be shoot and placed on the other floor of the car.
+ * <p>
  * Created by soyabeen on 27.04.16.
  */
 public class MarshalRepRule implements ReplaceRule {
