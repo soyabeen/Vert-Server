@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,10 +36,10 @@ public class Round implements Serializable {
     //private String startPlayer;
     private Long startPlayerId;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Card> cardStack;
 
-    @ElementCollection(targetClass = Turn.class)
+    @ElementCollection(targetClass = Turn.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "round_turn")
     @Column(name = "turns")
     private List<Turn> turns;
@@ -51,7 +53,7 @@ public class Round implements Serializable {
     /**
      * Create a new Round event with the given configuration.
      *
-     * @param gameId     The game to which the round belongs.
+     * @param gameId   The game to which the round belongs.
      * @param turns    The turns for that round.
      * @param endEvent The end event.
      */
