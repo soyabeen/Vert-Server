@@ -81,7 +81,7 @@ public class PhaseLogicService {
         Game game = gameRepo.findOne(gameId);
         game.setCurrentPlayerId(playerId);
         gameRepo.save(game);
-        setNextPlayer(gameId, nthround);
+        //setNextPlayer(gameId, nthround);
     }
 
     /**
