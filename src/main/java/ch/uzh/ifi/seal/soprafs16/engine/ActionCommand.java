@@ -48,8 +48,14 @@ public class ActionCommand {
         return targetLoot;
     }
 
+    public void setTargetLoot(Loot loot) {
+        this.targetLoot = loot;
+    }
+
     public Direction getDirection() {
         return direction;
     }
+
+
 
 }

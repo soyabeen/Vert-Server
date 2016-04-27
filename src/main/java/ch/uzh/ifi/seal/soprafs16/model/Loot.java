@@ -49,6 +49,9 @@ public class Loot implements Positionable, Serializable {
     @Column
     private int car;
 
+    @Column
+    private Long ownerId;
+
     protected Loot() {
     }
 
@@ -142,5 +145,22 @@ public class Loot implements Positionable, Serializable {
     public int getValue() {
 
         return value;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

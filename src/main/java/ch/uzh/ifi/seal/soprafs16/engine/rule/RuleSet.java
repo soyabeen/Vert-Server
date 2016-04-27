@@ -26,6 +26,7 @@ public abstract class RuleSet {
         cardMapping.put(CardType.MOVE, MoveRuleSet.class);
         cardMapping.put(CardType.FIRE, ShootRuleSet.class);
         cardMapping.put(CardType.FLOORCHANGE, FloorChangeRuleSet.class);
+        cardMapping.put(CardType.ROBBERY, RobberyRuleSet.class);
         return cardMapping;
     }
 
