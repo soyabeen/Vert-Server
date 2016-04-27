@@ -41,12 +41,12 @@ public class MoveRuleSet extends RuleSet {
     @Override
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
-        MovePlayerExecRule rule = new MovePlayerExecRule();
-        MarshalRepRule marhasl = new MarshalRepRule();
+        MovePlayerExecRule move = new MovePlayerExecRule();
+        MarshalRepRule marshal = new MarshalRepRule();
 
-        logger.debug("eval: " + rule.evaluate(command));
-        if(rule.evaluate(command)) {
-           result.addAll(marhasl.replace(rule.execute(command)));
+        logger.debug("eval: " + move.evaluate(command));
+        if(move.evaluate(command)) {
+           result.addAll(marshal.replace(move.execute(command)));
         }
         logger.debug("res: " + result.size());
         return result;
