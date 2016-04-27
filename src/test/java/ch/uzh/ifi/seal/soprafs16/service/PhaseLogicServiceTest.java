@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -95,6 +96,7 @@ public class PhaseLogicServiceTest {
         game.addPlayer(expectedPlayer2);
 
         when(gameRepo.findOne(1L)).thenReturn(game);
+        when(gameRepo.save(any(Game.class))).thenReturn(game);
         when(roundRepo.findByGameIdAndNthRound(game.getId(), nthRound)).thenReturn(round);
         when(playerRepo.findOne(1L)).thenReturn(expectedPlayer1);
         when(playerRepo.findOne(2L)).thenReturn(expectedPlayer2);
@@ -102,9 +104,13 @@ public class PhaseLogicServiceTest {
 
     @Test
     public void testSetStartPlayer() {
+        // Test for start player at beginning of game
         phaseLogic.setStartPlayer(game, nthRound, expectedPlayer1.getId());
-
         Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
+
+        // Test for start player after finish of 1 round
+        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer2.getId());
+        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer2.getId());
     }
 
     @Test
@@ -131,12 +137,12 @@ public class PhaseLogicServiceTest {
     public void testGetNextPlayerId() {
         // Test with first player
         game.setCurrentPlayerId(expectedPlayer1.getId());
-        Long result = phaseLogic.getNextPlayerId(game);
+        Long result = phaseLogic.getNextPlayerId(game.getId(), nthRound);
         Assert.assertEquals(result, expectedPlayer2.getId());
 
         // Test with second player
         game.setCurrentPlayerId(expectedPlayer2.getId());
-        result = phaseLogic.getNextPlayerId(game);
+        result = phaseLogic.getNextPlayerId(game.getId(), nthRound);
         Assert.assertEquals(result, expectedPlayer1.getId());
 
     }

@@ -105,7 +105,7 @@ public class Round implements Serializable {
     }
 
     public Long getStartPlayerId() {
-        return startPlayerId;
+        return this.startPlayerId;
     }
 
     public void setStartPlayerId(Long startPlayerId) {

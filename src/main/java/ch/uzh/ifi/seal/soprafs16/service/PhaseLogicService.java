@@ -46,7 +46,7 @@ public class PhaseLogicService {
 
         //get all prerequisites
         Game game = gameRepo.findOne(gameId);
-        nextPlayerId = getNextPlayerId(game);
+        nextPlayerId = getNextPlayerId(gameId, nthround);
         return nextPlayerId;
     }
 
@@ -59,17 +59,18 @@ public class PhaseLogicService {
         Game game = gameRepo.findOne(gameId);
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
-        foundPlayerId = getNextPlayerId(game);
-
-        //reexamine what happens when nextPlayer is startPlayer again. ☠ debug?
-        if(round.getStartPlayerId() == foundPlayerId) {
-            // execute Action Phase
-            foundPlayerId = getNextPlayerId(game);
-            setStartPlayer(game, nthround, foundPlayerId);
-        }
+        foundPlayerId = getNextPlayerId(gameId, nthround);
 
         game.setNextPlayerId(foundPlayerId);
         gameRepo.save(game);
+
+        /*
+        //reexamine what happens when nextPlayer is startPlayer again. ☠ debug?
+        if(round.getStartPlayerId() == foundPlayerId) {
+            // TODO: execute Action Phase
+            setStartPlayer(game, nthround, foundPlayerId);
+        }
+        */
     }
 
     public void setCurrentPlayer(Long gameId, Integer nthround, Long playerId) {
@@ -84,21 +85,33 @@ public class PhaseLogicService {
     }
 
     /**
-     * Returns only the ID of the next player in collection. Steps through
-     * @param game
+     * Returns the ID of the next player in collection based on the current player.
+     * @param gameId
+     * @param nthround
      * @return player ID of next player
      */
-    protected Long getNextPlayerId(Game game) {
+    protected Long getNextPlayerId(Long gameId, Integer nthround) {
+        Round round = roundRepo.findByGameIdAndNthRound(gameId, nthround);
+        Long startPlayerId = round.getStartPlayerId();
+        Game game = gameRepo.findOne(gameId);
         currentPlayer = playerRepo.findOne( game.getCurrentPlayerId() );
         List<Player> playerList = game.getPlayers();
+        Integer nextPlayerIndex = (playerList.indexOf(currentPlayer) + 1) % playerList.size();
+        Long nextPlayerId = playerList.get( nextPlayerIndex ).getId();
+        Player nextPlayer = playerRepo.findOne( nextPlayerId );
 
+        if(startPlayerId == nextPlayerId) {
+            // nextPlayerIndex muss um 1 inkrementiert werden (aber Out of Bounds Index beachten!)
+            startPlayerId = playerList.get( (playerList.indexOf(nextPlayer) + 1) % playerList.size() ).getId();
+            setStartPlayer(game, nthround, startPlayerId);
+            return startPlayerId;
 
-        if( (playerList.indexOf(currentPlayer) + 1) == playerList.size()) {
+        } else if( (playerList.indexOf(currentPlayer) + 1) == playerList.size()) {
             //at end of List, next Player will be at Index 0
             return playerList.get(0).getId();
         } else {
             //if currentPlayer not at the end of the list (1 because of indices starting at 0)
-            return playerList.get(playerList.indexOf(currentPlayer) + 1).getId();
+            return playerList.get( playerList.indexOf(currentPlayer) + 1).getId();
         }
     }
 
