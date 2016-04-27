@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.RobberyExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.RobberySimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -20,6 +21,7 @@ public class RobberyRuleSet extends RuleSet {
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
-        return null;
+        RobberyExecRule robbery = new RobberyExecRule();
+        return robbery.execute(command);
     }
 }

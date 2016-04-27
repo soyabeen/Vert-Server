@@ -68,6 +68,32 @@ public class RobberyRuleSetTest {
                 .withUserName("actor")
                 .onLowerLevelAt(1).build();
 
+        Loot l1 = PositionedLoot.builder()
+                .withType(LootType.STRONGBOX)
+                .onUpperLevelAt(1).build();
+        game.addLoot(l1);
+
+        Loot l2 = PositionedLoot.builder()
+                .withType(LootType.STRONGBOX)
+                .onLowerLevelAt(2).build();
+        game.addLoot(l2);
+
+        List<Positionable> resultList = mrs.simulate(game, player);
+        Assert.assertThat(resultList.size(), is(0));
+    }
+
+    @Test
+    public void execRobbery() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+        RuleSet mrs = RuleSet.createRuleSet(CardType.ROBBERY);
+        Game game = new Game();
+        game.setId(1L);
+        game.setNrOfCars(3);
+
+        Player player = PositionedPlayer.builder()
+                .withUserName("actor")
+                .onLowerLevelAt(1).build();
+        player.setId(1L);
+
         Loot lootOnSameFloor1 = PositionedLoot.builder()
                 .withType(LootType.PURSE_SMALL)
                 .onLowerLevelAt(1).build();
@@ -83,31 +109,18 @@ public class RobberyRuleSetTest {
 
         List<Positionable> resultList = mrs.execute(command);
         Assert.assertThat(resultList.size(), is(2));
-    }
-
-
-    @Test
-    public void execRobbery() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-        RuleSet mrs = RuleSet.createRuleSet(CardType.ROBBERY);
-        Game game = new Game();
-        game.setId(1L);
-        game.setNrOfCars(3);
-
-        Player player = PositionedPlayer.builder()
-                .withUserName("actor")
-                .onLowerLevelAt(1).build();
-
-        Loot l1 = PositionedLoot.builder()
-                .withType(LootType.STRONGBOX)
-                .onUpperLevelAt(1).build();
-        game.addLoot(l1);
-
-        Loot l2 = PositionedLoot.builder()
-                .withType(LootType.STRONGBOX)
-                .onLowerLevelAt(2).build();
-        game.addLoot(l2);
-
-        List<Positionable> resultList = mrs.simulate(game, player);
-        Assert.assertThat(resultList.size(), is(0));
+        Player resPlayer = null;
+        Loot resLoot = null;
+        for (Positionable p : resultList) {
+            if(p instanceof Player) {
+                resPlayer = (Player) p;
+            } else if(p instanceof Loot) {
+                resLoot = (Loot) p;
+            }else {
+                Assert.fail("Unknown positionable object (no player, nor loot");
+            }
+        }
+        Assert.assertThat("Loot has owner.", resLoot.getOwnerId(), is(1L));
+        Assert.assertThat("Player has a loot.", resPlayer.getLoots().size(), is(1));
     }
 }
