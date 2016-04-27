@@ -29,8 +29,16 @@ public class Card implements Serializable {
     @ManyToOne
     private Player owner;
 
+    public Card() { }
+
+    public Card(CardType type, Player owner) {
+        this.type = type;
+        this.owner = owner;
+    }
+
     /**
      * Returns owner of this card.
+     *
      * @return owner.
      */
     public Player getOwner() {
@@ -39,6 +47,7 @@ public class Card implements Serializable {
 
     /**
      * Sets owner for this card
+     *
      * @param owner player or game
      */
     public void setOwner(Player owner) {
@@ -47,6 +56,7 @@ public class Card implements Serializable {
 
     /**
      * Returns type of this card.
+     *
      * @return
      */
     public CardType getType() {
@@ -55,6 +65,7 @@ public class Card implements Serializable {
 
     /**
      * Sets type for this card.
+     *
      * @param type on of CardType.
      */
     public void setType(CardType type) {
@@ -63,7 +74,7 @@ public class Card implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof Card)) {
+        if (!(o instanceof Card)) {
             return false;
         }
 

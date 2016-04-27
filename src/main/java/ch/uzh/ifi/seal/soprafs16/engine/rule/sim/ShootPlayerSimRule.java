@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
-import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import ch.uzh.ifi.seal.soprafs16.utils.TargetFinder;
@@ -17,16 +17,18 @@ public class ShootPlayerSimRule implements SimulationRule {
 
     private static final Logger logger = LoggerFactory.getLogger(ShootPlayerSimRule.class);
 
-    private ActionCommand commandInfo;
-    TargetFinder finder;
+    //    private ActionCommand commandInfo;
+    private Game game;
+    private TargetFinder finder;
 
-    public ShootPlayerSimRule(ActionCommand commandInfo) {
-        this.commandInfo = commandInfo;
+    public ShootPlayerSimRule(Game game) {
+//        this.commandInfo = commandInfo;
+        this.game = game;
         finder = new TargetFinder();
     }
 
     public boolean hasBulletLeft(Player player) {
-        boolean res = commandInfo.getCurrentPlayer().getBullets() > 0;
+        boolean res = player.getBullets() > 0;
         if (!res) {
             logger.debug("Player {} has no bullets left.", player);
         }
@@ -43,14 +45,16 @@ public class ShootPlayerSimRule implements SimulationRule {
 
     @Override
     public boolean evaluate(Positionable actor) {
-        return hasBulletLeft(commandInfo.getCurrentPlayer())
-                && seesATargetToShoot(commandInfo.getCurrentPlayer(), commandInfo.getGame().getPlayers());
+        Player player = (Player) actor;
+        return hasBulletLeft(player)
+                && seesATargetToShoot(player, game.getPlayers());
     }
 
     @Override
     public List<Positionable> simulate(Positionable actor) {
+        Player player = (Player) actor;
         List<Positionable> result = new ArrayList<>();
-        result.addAll(finder.findTargetToShoot(commandInfo.getCurrentPlayer(), commandInfo.getGame().getPlayers()));
+        result.addAll(finder.findTargetToShoot(player, game.getPlayers()));
         return result;
     }
 }
