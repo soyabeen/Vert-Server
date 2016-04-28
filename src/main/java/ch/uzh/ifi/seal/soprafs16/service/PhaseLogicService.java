@@ -44,6 +44,12 @@ public class PhaseLogicService {
     TurnDTO turnDTO;
 
     // -- Player Order Logic
+
+    /**
+     * This method is only called at the initialization of a game to set the beginning player.
+     * @param gameId
+     * @param playerId Starting Player
+     */
     public void setInitialPlayer(Long gameId, Long playerId) {
         InputArgValidator.checkAvailabeId(gameId, gameRepo, "Given gameId is no valid game for method " +
                 "\'setCurrentPlayer()\' in PhaseLogicService");
@@ -60,7 +66,11 @@ public class PhaseLogicService {
                 "already set!");
     }
 
-    // Single entry point to Logic
+    /**
+     * This method is the single entry point to the Business Logic.
+     * @param gameId
+     * @param nthround
+     */
     public void advancePlayer(Long gameId, Integer nthround) {
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
 
