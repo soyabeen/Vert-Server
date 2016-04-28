@@ -45,19 +45,30 @@ public class CardDeck implements Serializable {
      * @return returns ArrayList of cards on hand of player.
      */
     public List<Card> drawCard(int numOfCards) {
+        List<Card> currentDeck = getCardsInDeck();
         List<Card> drawnCards = new ArrayList<>();
         List<Integer> random = new ArrayList<>();
 
-        for(int i = 0; i < deck.size(); i++) {
+        numOfCards = (numOfCards > currentDeck.size()) ? currentDeck.size() : numOfCards;
+
+        for(int i = 0; i < currentDeck.size(); i++) {
             random.add(i);
         }
 
-        Collections.shuffle(drawnCards);
+        Collections.shuffle(currentDeck);
 
         for(int i = 0; i < numOfCards; i++) {
-            drawnCards.add(deck.get(random.get(i)));
+            drawnCards.add(currentDeck.get(random.get(i)));
         }
         return drawnCards;
+    }
+
+    private List<Card> getCardsInDeck() {
+        List<Card> currentDeck = new ArrayList<>();
+        for (Card c: deck) {
+            if(!c.isOnHand()) currentDeck.add(c);
+        }
+        return currentDeck;
     }
 
     public int size() {
