@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.dto;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,8 +16,10 @@ public class TurnDTO implements Serializable {
 
     private CardType type;
 
-    //Future Meeple destinations
+    //Future Meeple or Loot destinations
     private List<Player> players;
+
+    private List<Loot> loots;
 
     private boolean punchRight;
 
@@ -23,7 +27,13 @@ public class TurnDTO implements Serializable {
 
 
     public TurnDTO() {
-        players = new ArrayList<Player>();
+        loots = new ArrayList<>();
+        players = new ArrayList<>();
+    }
+
+    public TurnDTO(CardType type, List<Player> positionables) {
+        this.type = type;
+        this.players = positionables;
     }
 
     public List<Player> getPlayers() {
@@ -34,10 +44,9 @@ public class TurnDTO implements Serializable {
         players.add(player);
     }
 
-    public CardType getType() {
+    public void addPlayersAsList(List<Player> players) {this.players = players;}
 
-        return type;
-    }
+    public CardType getType() { return type; }
 
     public void setType(CardType type) {
         this.type = type;
@@ -57,5 +66,17 @@ public class TurnDTO implements Serializable {
 
     public void setLootID(int lootID) {
         this.lootID = lootID;
+    }
+
+    public List<Loot> getLoots() {
+        return loots;
+    }
+
+    public void addLoot(Loot loot) {
+        loots.add(loot);
+    }
+
+    public void addLootsAsList(List<Loot> loot) {
+        loots =loot;
     }
 }
