@@ -155,6 +155,7 @@ public class RoundServiceTest {
         }
     }
 
+    /*
     @Test
     public void makeAMoveReturnsTurnId() {
         move.setPlayer(player);
@@ -215,6 +216,7 @@ public class RoundServiceTest {
             Assert.assertTrue(e instanceof InvalidInputException);
         }
     }
+    */
 
     @Test
     public void testGetRoundById() {
