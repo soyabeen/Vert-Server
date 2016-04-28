@@ -15,7 +15,7 @@ import java.util.*;
 public class RoundConfigurator {
 
     private static final Logger logger  = LoggerFactory.getLogger(RoundConfigurator.class);
-    protected static final int MAX_ROUNDS_FOR_GAME = 4;
+    public static final int MAX_ROUNDS_FOR_GAME = 4;
 
     private List<RoundConfiguration> roundConfigs;
     private List<RoundConfiguration> stationConfigs;

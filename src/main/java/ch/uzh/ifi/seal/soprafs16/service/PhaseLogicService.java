@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
+import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -9,6 +10,10 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
+import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
+import org.hibernate.cfg.NotYetImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,7 @@ import java.util.List;
  */
 @Service("PhaseLogicService")
 public class PhaseLogicService {
+    private static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
     @Autowired
     GameRepository gameRepo;
@@ -30,119 +36,145 @@ public class PhaseLogicService {
     @Autowired
     PlayerRepository playerRepo;
 
+    Game game;
+    Round round;
     Player currentPlayer;
+    List<Player> players;
     LinkedList<Card> cardStack;
     TurnDTO turnDTO;
 
-    /**
-     * Returns the Player ID of the following Player. This way a client can poll more frequently if desired.
-     * @param gameId
-     * @return Player ID for the following Player
-     */
-    public Long getNextPlayer(Long gameId, Integer nthround) {
-        Long nextPlayerId = -1L;
+    // -- Player Order Logic
+    public void setInitialPlayer(Long gameId, Long playerId) {
+        InputArgValidator.checkAvailabeId(gameId, gameRepo, "Given gameId is no valid game for method " +
+                "\'setCurrentPlayer()\' in PhaseLogicService");
+        InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
+                "\'setCurrentPlayer()\' in PhaseLogicService");
 
+        // initialize needed repositories
+        game = gameRepo.findOne(gameId);
+
+        if( gameRepo.findOne(gameId).getCurrentPlayerId() == null ) {
+            setCurrentPlayerId(gameId, playerId);
+
+        } else throw new InvalidInputException("In PhaseLogic -> setInitialPlayer(): Current Player is " +
+                "already set!");
+    }
+
+    // Single entry point to Logic
+    public void advancePlayer(Long gameId, Integer nthround) {
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
 
-        //get all prerequisites
-        Game game = gameRepo.findOne(gameId);
-        nextPlayerId = getNextPlayerId(gameId, nthround);
+        // initialize needed repositories
+        game = gameRepo.findOne(gameId);
+        round = roundRepo.findByGameIdAndNthRound(gameId, nthround);
+        players = game.getPlayers();
+
+        if( !isGameOver(nthround) ){
+            // set new current player
+            setCurrentPlayerId(gameId, getNextPlayer());
+        }
+    }
+
+    protected void setCurrentPlayerId(Long gameId, Long playerId) {
+        InputArgValidator.checkAvailabeId(gameId, gameRepo, "Given gameId is no valid game for method " +
+                "\'setCurrentPlayer()\' in PhaseLogicService");
+        InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
+                "\'setCurrentPlayer()\' in PhaseLogicService");
+
+        game.setCurrentPlayerId(playerId);
+        gameRepo.save(game);
+    }
+
+    /**
+     * Returns the Player ID of the following Player. Return value depends on type of Turn.
+     * @return Player ID for the following Player
+     */
+    protected Long getNextPlayer() {
+        Long nextPlayerId = -1L;
+
+        // can be replaced by factory pattern!
+        switch(round.getTurns().get( round.getCurrentTurnIndex() )) {
+            case NORMAL:
+                nextPlayerId = getPlayerForNormalTurn( game.getCurrentPlayerId() );
+                break;
+
+            case HIDDEN:
+                nextPlayerId = getPlayerForNormalTurn( game.getCurrentPlayerId() );
+                break;
+
+            case DOUBLE_TURNS:
+                nextPlayerId = getPlayerForDoubleTurn( game.getCurrentPlayerId() );
+                break;
+
+            case REVERSE:
+                nextPlayerId = getPlayerForReverseTurn( game.getCurrentPlayerId() );
+                break;
+
+            default:
+                break;
+        }
+
         return nextPlayerId;
     }
 
-    public void setNextPlayer(Long gameId, Integer nthround, Long currPlayerId) {
-        Long nextPlayerId = -1L;
-
-        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
-        InputArgValidator.checkAvailabeId(currPlayerId, playerRepo, "setNextPlayer() in PhaseLogicService has wrong " +
-                "PlayerId");
-
-
-        Game game = gameRepo.findOne(gameId);
+    protected Long getPlayerForNormalTurn(Long currentPlayerId) {
         List<Player> players = game.getPlayers();
-        currentPlayer = playerRepo.findOne(currPlayerId);
+        currentPlayer = playerRepo.findOne(currentPlayerId);
 
         if( (players.indexOf( currentPlayer ) + 1) == players.size()) {
             //at end of List, next Player will be at Index 0
-            nextPlayerId = players.get(0).getId();
+            return players.get(0).getId();
         } else {
             //if currentPlayer not at the end of the list (1 because of indices starting at 0)
-            nextPlayerId = players.get( players.indexOf( currentPlayer ) + 1).getId();
+            return players.get( players.indexOf( currentPlayer ) + 1).getId();
         }
-
-        game.setNextPlayerId(nextPlayerId);
-        gameRepo.save(game);
-
-        /*
-        //reexamine what happens when nextPlayer is startPlayer again. ☠ debug?
-        if(round.getStartPlayerId() == foundPlayerId) {
-            // TODO: execute Action Phase
-            setStartPlayer(game, nthround, foundPlayerId);
-        }
-        */
     }
 
-    public void setCurrentPlayer(Long gameId, Integer nthround, Long playerId) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
-        InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService.java");
+    protected Long getPlayerForDoubleTurn(Long currentPlayerId) {
+        throw new NotYetImplementedException("getPlayerForDoubleTurn() is missing");
 
-        Game game = gameRepo.findOne(gameId);
-        game.setCurrentPlayerId(playerId);
-        gameRepo.save(game);
-        //setNextPlayer(gameId, nthround, playerId);
+
     }
 
-    /**
-     * Returns the ID of the next player in collection based on the current player.
-     * @param gameId
-     * @param nthround
-     * @return player ID of next player
-     */
-    protected Long getNextPlayerId(Long gameId, Integer nthround) {
-        Round round = roundRepo.findByGameIdAndNthRound(gameId, nthround);
-        Long startPlayerId = round.getStartPlayerId();
-        Game game = gameRepo.findOne(gameId);
-        currentPlayer = playerRepo.findOne( game.getCurrentPlayerId() );
-        List<Player> playerList = game.getPlayers();
-        Integer nextPlayerIndex = (playerList.indexOf(currentPlayer) + 1) % playerList.size();
-        Long nextPlayerId = playerList.get( nextPlayerIndex ).getId();
-        Player nextPlayer = playerRepo.findOne( nextPlayerId );
+    protected Long getPlayerForReverseTurn(Long currentPlayerId) {
+        List<Player> players = game.getPlayers();
+        currentPlayer = playerRepo.findOne(currentPlayerId);
+        Integer listEnd = players.size() - 1;
 
-        if(startPlayerId == nextPlayerId) {
-            // nextPlayerIndex muss um 1 inkrementiert werden (aber Out of Bounds Index beachten!)
-            startPlayerId = playerList.get( (playerList.indexOf(nextPlayer) + 1) % playerList.size() ).getId();
-            setStartPlayer(game, nthround, startPlayerId);
-            return startPlayerId;
-
-        } else if( (playerList.indexOf(currentPlayer) + 1) == playerList.size()) {
-            //at end of List, next Player will be at Index 0
-            return playerList.get(0).getId();
+        if( (players.indexOf( currentPlayer ) - 1) < 0 ) {
+            //at beginning of List, next Player will be at end of list
+            return players.get( listEnd ).getId();
         } else {
             //if currentPlayer not at the end of the list (1 because of indices starting at 0)
-            return playerList.get( playerList.indexOf(currentPlayer) + 1).getId();
+            return players.get( players.indexOf( currentPlayer ) - 1).getId();
         }
     }
 
-    protected Long getStartPlayerId(Long gameId, Integer nthround) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+    protected boolean isGameOver(Integer nthround) {
+        // initialize helper variables
+        Integer lastTurnIndex = round.getTurns().size() - 1;
+        Integer lastPlayerIndex = players.size() - 1;
+        Long lastPlayerId = players.get( lastPlayerIndex ).getId();
 
-        Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
+        // check for end of Turn (only works for Normal Round!)
+        if( game.getCurrentPlayerId() == lastPlayerId ) {
+            // TODO: execute ActionPhase
 
-        return round.getStartPlayerId();
-    }
+            // check for end of Round
+            if( round.getCurrentTurnIndex() == lastTurnIndex ) {
+                // TODO: execute Round End Event
+                // TODO: increment nthRound
 
-    public void setStartPlayer(Game game, Integer nthround, Long playerId) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
-        InputArgValidator.checkAvailabeId(playerId, playerRepo, "No valid player found for \'setStartPlayer\' in " +
-                "PhaseLogicService");
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
+                // check for end of Game
+                if( nthround > RoundConfigurator.MAX_ROUNDS_FOR_GAME) {
+                    // TODO: end game
+                    return true;
+                }
 
-        round.setStartPlayerId(playerId);
-        roundRepo.save(round);
+            }
+        }
 
-        setCurrentPlayer(game.getId(), nthround, playerId);
+        return false;
     }
 
     /**
@@ -156,7 +188,7 @@ public class PhaseLogicService {
 
         cardStack = (LinkedList<Card>) round.getCardStack();
         //set owner of top card to current player
-        setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwnerId());
+        //setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwnerId());
     }
 
     /**

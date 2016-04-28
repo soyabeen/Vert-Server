@@ -2,8 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,10 +30,6 @@ public class Round implements Serializable {
     @Column(nullable = false, name = "POSITION")
     private Integer nthRound;
 
-    @Column
-    //private String startPlayer;
-    private Long startPlayerId;
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Card> cardStack;
 
@@ -43,6 +37,9 @@ public class Round implements Serializable {
     @CollectionTable(name = "round_turn")
     @Column(name = "turns")
     private List<Turn> turns;
+
+    @Column(name = "current_turn")
+    private Integer currentTurnIndex;
 
     @Enumerated(EnumType.STRING)
     private RoundEndEvent end;
@@ -61,6 +58,7 @@ public class Round implements Serializable {
         this.gameId = gameId;
         this.nthRound = nthRound;
         this.turns = turns;
+        this.currentTurnIndex = 0;
         this.end = endEvent;
         this.cardStack = new LinkedList<Card>();
     }
@@ -115,11 +113,11 @@ public class Round implements Serializable {
         this.nthRound++;
     }
 
-    public Long getStartPlayerId() {
-        return this.startPlayerId;
+    public Integer getCurrentTurnIndex() {
+        return currentTurnIndex;
     }
 
-    public void setStartPlayerId(Long startPlayerId) {
-        this.startPlayerId = startPlayerId;
+    public void setCurrentTurnIndex(Integer currentTurnIndex) {
+        this.currentTurnIndex = currentTurnIndex;
     }
 }

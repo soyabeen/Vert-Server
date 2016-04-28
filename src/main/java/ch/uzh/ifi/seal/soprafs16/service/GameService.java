@@ -148,9 +148,8 @@ public class GameService {
         List<Round> rounds = configurator.generateRoundsForGame(game);
         roundRepo.save(rounds);
 
-        //Set start and next player
-        logicService.setStartPlayer(game, 1, players.get(0).getId());
-        logicService.setNextPlayer(game.getId(), 1, players.get(0).getId());
+        //Set start player
+        logicService.setInitialPlayer(game.getId(), tokenOwner.getId());
 
         setPositionOfPlayers(game, players);
         playerRepo.save(players);
