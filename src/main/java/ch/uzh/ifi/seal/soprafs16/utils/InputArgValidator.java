@@ -1,10 +1,14 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
 
 
 /**
@@ -137,6 +141,23 @@ public class InputArgValidator {
         if (nthRound == null || nthRound <= 0) {
             throw new InvalidInputException("Invalid arg. ntRound <" + nthRound + ">, must be a positive number.");
         }
+
+    }
+
+    /**
+     * Check if player plays card from hand
+     *
+     * @param type      CardType for card to play
+     * @param player    Player wants to play card
+     * @return          found Card on hand
+     * @throws          InvalidInputException
+     */
+    public static Card checkIfSuchCardOnHand(CardType type, Player player) {
+        List<Card> cardsOnHand = player.getHand();
+        for (Card c: cardsOnHand) {
+            if(c.getType().equals(type)) return c;
+        }
+        throw new InvalidInputException("Player is trying to play card which is not in his hand");
 
     }
 }

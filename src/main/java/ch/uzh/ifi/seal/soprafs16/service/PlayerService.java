@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.utils.CardConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.model.*;
@@ -133,6 +134,7 @@ public class PlayerService {
 
         // give player the start loot
         Loot loot = new Loot(LootType.PURSE_SMALL, gameId, LootType.PURSE_SMALL.value());
+        loot.setOwnerId(player.getId());
         loot = lootRepo.save(loot);
         player.addLoot(loot);
 

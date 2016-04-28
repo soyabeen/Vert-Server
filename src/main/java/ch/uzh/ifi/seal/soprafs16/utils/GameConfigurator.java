@@ -1,14 +1,10 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Positionable;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * This class handles the initialisation and configuration of a game.
@@ -155,6 +151,7 @@ public class GameConfigurator {
         game.setNumberOfPlayers(nrOfPlayersForGame);
         game.setNrOfCars(nrOfCars);
         game.setLoots(generateLootsForNCars(game.getId(), nrOfCars));
+
         return game;
     }
 

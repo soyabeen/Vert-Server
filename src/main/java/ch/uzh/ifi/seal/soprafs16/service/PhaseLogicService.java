@@ -75,6 +75,7 @@ public class PhaseLogicService {
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
 
         // initialize needed repositories
+        game = gameRepo.findOne(gameId);
         round = roundRepo.findByGameIdAndNthRound(gameId, nthround);
         players = game.getPlayers();
 
@@ -104,6 +105,10 @@ public class PhaseLogicService {
         // can be replaced by factory pattern!
         switch(round.getTurns().get( round.getCurrentTurnIndex() )) {
             case NORMAL:
+                nextPlayerId = getPlayerForNormalTurn( game.getCurrentPlayerId() );
+                break;
+
+            case HIDDEN:
                 nextPlayerId = getPlayerForNormalTurn( game.getCurrentPlayerId() );
                 break;
 
@@ -193,7 +198,7 @@ public class PhaseLogicService {
 
         cardStack = (LinkedList<Card>) round.getCardStack();
         //set owner of top card to current player
-        //setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwner());
+        //setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwnerId());
     }
 
     /**
