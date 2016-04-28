@@ -52,9 +52,9 @@ public class PhaseLogicService {
      */
     public void setInitialPlayer(Long gameId, Long playerId) {
         InputArgValidator.checkAvailabeId(gameId, gameRepo, "Given gameId is no valid game for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService");
+                "\'setInitialPlayer()\' in PhaseLogicService");
         InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService");
+                "\'setInitialPlayer()\' in PhaseLogicService");
 
         // initialize needed repositories
         game = gameRepo.findOne(gameId);
@@ -102,7 +102,6 @@ public class PhaseLogicService {
     protected Long getNextPlayer() {
         Long nextPlayerId = -1L;
 
-        // can be replaced by factory pattern!
         switch(round.getTurns().get( round.getCurrentTurnIndex() )) {
             case NORMAL:
                 nextPlayerId = getPlayerForNormalTurn( game.getCurrentPlayerId() );
@@ -121,6 +120,7 @@ public class PhaseLogicService {
                 break;
 
             default:
+                // TODO: what to do if program gets here?
                 break;
         }
 
