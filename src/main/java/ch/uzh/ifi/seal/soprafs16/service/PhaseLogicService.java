@@ -127,10 +127,22 @@ public class PhaseLogicService {
 
     protected Long getPlayerForDoubleTurn(Long currentPlayerId) {
         throw new NotYetImplementedException("getPlayerForDoubleTurn() is missing");
+
+
     }
 
     protected Long getPlayerForReverseTurn(Long currentPlayerId) {
-        throw new NotYetImplementedException("getPlayerForReverseTurn() is missing");
+        List<Player> players = game.getPlayers();
+        currentPlayer = playerRepo.findOne(currentPlayerId);
+        Integer listEnd = players.size() - 1;
+
+        if( (players.indexOf( currentPlayer ) - 1) < 0 ) {
+            //at beginning of List, next Player will be at end of list
+            return players.get( listEnd ).getId();
+        } else {
+            //if currentPlayer not at the end of the list (1 because of indices starting at 0)
+            return players.get( players.indexOf( currentPlayer ) - 1).getId();
+        }
     }
 
     protected boolean isGameOver(Integer nthround) {
@@ -139,7 +151,7 @@ public class PhaseLogicService {
         Integer lastPlayerIndex = players.size() - 1;
         Long lastPlayerId = players.get( lastPlayerIndex ).getId();
 
-        // check for end of Turn
+        // check for end of Turn (only works for Normal Round!)
         if( game.getCurrentPlayerId() == lastPlayerId ) {
             // TODO: execute ActionPhase
 
