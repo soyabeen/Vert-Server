@@ -1,12 +1,11 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.*;
+import ch.uzh.ifi.seal.soprafs16.utils.CardConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +44,18 @@ public class GameService {
     @Autowired
     private PlayerRepository playerRepo;
 
+    @Autowired
+    private CardDeckRepository deckRepo;
+
+    @Autowired
+    private LootRepository lootRepo;
+
+    @Autowired
+    private CardRepository cardRepo;
+
     private GameConfigurator gameConf;
+
+    private CardConfigurator cardConf;
 
     public GameService() {
         gameConf = new GameConfigurator();
@@ -127,7 +136,12 @@ public class GameService {
         logger.debug("game with loots and cars" + game.toString());
         logger.debug("input val ok.");
 
+
+        // Build decks for players in game
+        players.forEach(this::buildPlayerDeck);
+
         pendingGame.setStatus(GameStatus.PLANNINGPHASE);
+
         gameRepo.save(game);
 
         //Choose, initialize and save rounds for the new game
@@ -153,8 +167,42 @@ public class GameService {
             players.get(i).setLevel(Positionable.Level.BOTTOM);
         }
     }
+
+    private void buildPlayerDeck(Player player) {
+        List<Card> result = new ArrayList<>();
+        CardConfigurator conf = new CardConfigurator(player.getId());
+        CardDeck deck = conf.buildDeck();
+
+        for (Card c: deck.getDeck()) {
+            result.add(cardRepo.save(c));
+        }
+
+        deck.setDeck(result);
+
+        deck = deckRepo.save(deck);
+
+        player.setDeck(deck);
+
+        drawCards(player);
+
+        logger.error(player.getHand().toString());
+
+        playerRepo.save(player);
+    }
+
+    private void drawCards(Player player) {
+        if (player.getCharacter().equals(Character.DOC)) {
+            player.setHand(player.getDeck().drawCard(7));
+        } else {
+            player.setHand(player.getDeck().drawCard(6));
+        }
+
+        for (Card c: player.getHand()) {
+            c.setOnHand(true);
+        }
+    }
+
     protected Game loadGameFromRepo(long gameIdToLoad) {
         return gameRepo.findOne(gameIdToLoad);
     }
-
 }

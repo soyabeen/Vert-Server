@@ -3,13 +3,14 @@ package ch.uzh.ifi.seal.soprafs16.dto;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by mirkorichter on 24.04.16.
  */
-public class TurnDTO {
+public class TurnDTO implements Serializable {
 
     private CardType type;
 
