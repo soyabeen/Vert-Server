@@ -134,6 +134,7 @@ public class PlayerService {
 
         // give player the start loot
         Loot loot = new Loot(LootType.PURSE_SMALL, gameId, LootType.PURSE_SMALL.value());
+        loot.setOwnerId(player.getId());
         loot = lootRepo.save(loot);
         player.addLoot(loot);
 
