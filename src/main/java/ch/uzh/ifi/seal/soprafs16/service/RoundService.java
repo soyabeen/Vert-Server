@@ -155,10 +155,7 @@ public class RoundService {
 
         InputArgValidator.checkItIsPlayersTurn(player,game);
 
-        Card card = new Card();
-
-        card.setOwner(player.getId());
-        card.setType(turnDTO.getType());
+        Card card = InputArgValidator.checkIfSuchCardOnHand(turnDTO.getType(), player);
 
         Move move = new Move();
 
@@ -182,7 +179,7 @@ public class RoundService {
         // add played card to card stack
         round.addNewlyPlayedCard(playedCard);
 
-        Player player = playerRepo.findOne(playedCard.getOwner());
+        Player player = playerRepo.findOne(playedCard.getOwnerId());
         player.incrementTotalMadeMoves();
         // remove Card from player hand
         removeCardFromHand(player, playedCard);

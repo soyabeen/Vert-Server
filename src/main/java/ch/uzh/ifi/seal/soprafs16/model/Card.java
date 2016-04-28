@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,10 +26,27 @@ public class Card implements Serializable {
     /**
      * Defines owner of this card
      */
+//    @ManyToOne
+//    @JsonBackReference
+//    private Player owner;
+
     @Column
     private Long ownerId;
 
-    public Card() { }
+    @Column
+    private boolean onHand;
+
+    public boolean isOnHand() {
+        return onHand;
+    }
+
+    public void setOnHand(boolean onHand) {
+        this.onHand = onHand;
+    }
+
+    public Card() {
+        onHand = false;
+    }
 
     public Card(CardType type, Long ownerId) {
         this.type = type;
@@ -45,7 +63,7 @@ public class Card implements Serializable {
      *
      * @return ownerId.
      */
-    public Long getOwner() {
+    public Long getOwnerId() {
         return ownerId;
     }
 
@@ -54,7 +72,7 @@ public class Card implements Serializable {
      *
      * @param ownerId player or game
      */
-    public void setOwner(Long ownerId) {
+    public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
 
@@ -83,6 +101,21 @@ public class Card implements Serializable {
         }
 
         Card card = (Card) o;
-        return (card.getOwner() == this.getOwner() && card.getType() == this.getType());
+        return (card.getOwnerId() == this.getOwnerId() && card.getType() == this.getType());
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "type=" + type +
+                '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

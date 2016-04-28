@@ -66,7 +66,6 @@ public class GameQueryControllerTest {
         this.template = new TestRestTemplate();
 
         gameRepo.deleteAll();
-        playerRepo.deleteAll();
     }
 
     @Test

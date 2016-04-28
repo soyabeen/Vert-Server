@@ -2,10 +2,17 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
+import org.eclipse.persistence.annotations.VariableOneToOne;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Defines the state of a playing character.
@@ -26,12 +33,14 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    @Column
+    @OneToOne
+    //@JsonManagedReference
     private CardDeck deck;
 
     @Column
     private Integer totalMadeMoves;
 
+//    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     @OneToMany
     private List<Card> hand;
 
