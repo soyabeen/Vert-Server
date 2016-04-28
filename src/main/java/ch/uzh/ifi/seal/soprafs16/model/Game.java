@@ -61,15 +61,15 @@ public class Game implements Serializable {
     @Override
     public String toString() {
         return "Game{" +
-                "loots=" + loots +
-                ", players=" + players +
-                ", nrOfCars=" + nrOfCars +
-                ", id=" + id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", owner='" + owner + '\'' +
+                ", nrOfCars=" + nrOfCars +
                 ", numberOfPlayers=" + numberOfPlayers +
                 ", status=" + status +
                 ", currentPlayerId=" + currentPlayerId +
+                ", loots=" + loots +
+                ", players=" + players +
                 '}';
     }
 

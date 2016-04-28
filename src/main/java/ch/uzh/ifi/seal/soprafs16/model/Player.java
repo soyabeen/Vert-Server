@@ -41,7 +41,7 @@ public class Player extends Meeple {
     private Integer totalMadeMoves;
 
 //    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Card> hand;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -56,7 +56,7 @@ public class Player extends Meeple {
     public Player() {
         this.loots = new ArrayList<>();
         this.hand = new ArrayList<>();
-        this.deck = new CardDeck();
+//        this.deck = new CardDeck();
         totalMadeMoves = 0;
         bullets = MAX_BULLETS;
     }
