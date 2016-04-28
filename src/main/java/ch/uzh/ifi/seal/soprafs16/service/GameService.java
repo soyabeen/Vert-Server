@@ -142,14 +142,15 @@ public class GameService {
 
         pendingGame.setStatus(GameStatus.PLANNINGPHASE);
 
+        //Set start player
+        game.setCurrentPlayerId(logicService.getInitialPlayerId(game))
+        ;
         gameRepo.save(game);
 
         //Choose, initialize and save rounds for the new game
         List<Round> rounds = configurator.generateRoundsForGame(game);
         roundRepo.save(rounds);
 
-        //Set start player
-        logicService.setInitialPlayer(game.getId(), tokenOwner.getId());
 
         setPositionOfPlayers(game, players);
         playerRepo.save(players);
@@ -201,7 +202,7 @@ public class GameService {
         }
     }
 
-    protected Game loadGameFromRepo(long gameIdToLoad) {
+    public Game loadGameFromRepo(long gameIdToLoad) {
         return gameRepo.findOne(gameIdToLoad);
     }
 }
