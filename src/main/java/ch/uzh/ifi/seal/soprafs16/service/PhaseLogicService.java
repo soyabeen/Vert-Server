@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
+import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
@@ -44,11 +45,17 @@ public class PhaseLogicService {
     TurnDTO turnDTO;
 
     // -- Player Order Logic
+
+    /**
+     * This method is only called at the initialization of a game to set the beginning player.
+     * @param gameId
+     * @param playerId Starting Player
+     */
     public void setInitialPlayer(Long gameId, Long playerId) {
         InputArgValidator.checkAvailabeId(gameId, gameRepo, "Given gameId is no valid game for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService");
+                "\'setInitialPlayer()\' in PhaseLogicService");
         InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService");
+                "\'setInitialPlayer()\' in PhaseLogicService");
 
         // initialize needed repositories
         game = gameRepo.findOne(gameId);
@@ -58,9 +65,16 @@ public class PhaseLogicService {
 
         } else throw new InvalidInputException("In PhaseLogic -> setInitialPlayer(): Current Player is " +
                 "already set!");
+
+        // save repositories
+        gameRepo.save(game);
     }
 
-    // Single entry point to Logic
+    /**
+     * This method is the single entry point to the Business Logic.
+     * @param gameId
+     * @param nthround
+     */
     public void advancePlayer(Long gameId, Integer nthround) {
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
 
@@ -73,6 +87,10 @@ public class PhaseLogicService {
             // set new current player
             setCurrentPlayerId(gameId, getNextPlayer());
         }
+
+        // save repositories
+        gameRepo.save(game);
+        roundRepo.save(round);
     }
 
     protected void setCurrentPlayerId(Long gameId, Long playerId) {
@@ -82,7 +100,6 @@ public class PhaseLogicService {
                 "\'setCurrentPlayer()\' in PhaseLogicService");
 
         game.setCurrentPlayerId(playerId);
-        gameRepo.save(game);
     }
 
     /**
@@ -92,7 +109,6 @@ public class PhaseLogicService {
     protected Long getNextPlayer() {
         Long nextPlayerId = -1L;
 
-        // can be replaced by factory pattern!
         switch(round.getTurns().get( round.getCurrentTurnIndex() )) {
             case NORMAL:
                 nextPlayerId = getPlayerForNormalTurn( game.getCurrentPlayerId() );
@@ -111,6 +127,7 @@ public class PhaseLogicService {
                 break;
 
             default:
+                // TODO: what to do if program gets here?
                 break;
         }
 
@@ -120,19 +137,25 @@ public class PhaseLogicService {
     protected Long getPlayerForNormalTurn(Long currentPlayerId) {
         List<Player> players = game.getPlayers();
         currentPlayer = playerRepo.findOne(currentPlayerId);
+        Integer nextPlayerIndex = players.indexOf( currentPlayer ) + 1;
 
-        if( (players.indexOf( currentPlayer ) + 1) == players.size()) {
+        if( nextPlayerIndex == players.size()) {
             //at end of List, next Player will be at Index 0
             return players.get(0).getId();
         } else {
             //if currentPlayer not at the end of the list (1 because of indices starting at 0)
-            return players.get( players.indexOf( currentPlayer ) + 1).getId();
+            return players.get( nextPlayerIndex ).getId();
         }
     }
 
     protected Long getPlayerForDoubleTurn(Long currentPlayerId) {
         throw new NotYetImplementedException("getPlayerForDoubleTurn() is missing");
 
+        // for double turn use already played cards in stack
+        // look at how many cards are in stack
+        // if 1 card is in stack, leave current player
+        // if more than 1 is in stack look at last two cards
+        // if owner of last 2 cards are different leave current Player else change Player according to Normal Turn
 
     }
 
@@ -159,6 +182,7 @@ public class PhaseLogicService {
         // check for end of Turn (only works for Normal Round!)
         if( game.getCurrentPlayerId() == lastPlayerId ) {
             // TODO: execute ActionPhase
+            executeActionPhase();
 
             // check for end of Round
             if( round.getCurrentTurnIndex() == lastTurnIndex ) {
@@ -177,39 +201,55 @@ public class PhaseLogicService {
         return false;
     }
 
-    /**
-     * Method is called first when Action Phase is initiated.
-     * @param game
-     * @param nthround
-     */
-    public void peekAndSetCurrentPlayer(Game game, Integer nthround) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(game.getId(), nthround);
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-
+    protected void executeActionPhase() {
+        // setup / prepare Phase
         cardStack = (LinkedList<Card>) round.getCardStack();
-        //set owner of top card to current player
-        //setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwnerId());
+        Card topCard;
+
+        // peek and set CurrentPlayer
+        while(cardStack.size() != 0) {
+            topCard = cardStack.peekFirst();
+            setCurrentPlayerId(game.getId(), topCard.getOwnerId());
+
+            // give Card to Rule Engine
+            ActionCommand result = receivePossibilities(topCard);
+
+            // evaluate result from Rule Engine
+            evaluateResultRuleEngine(result);
+
+            // remove topCard from Stack
+            cardStack.pollFirst();
+        }
+
+
+        // increment nthRound
+        round.incrementNthRound();
+    }
+
+    /**
+     * Determine whether result from Rule Engine needs a decision from player or if game can be updated directly.
+     * @param result computed result from Rule Engine
+     */
+    protected void evaluateResultRuleEngine(ActionCommand result) {
+        throw new IllegalStateException("Not yet implemented");
+
+        // update Game
+        // or
+        // send result from Rule Engine to Client
     }
 
     /**
      * Start computing possibilities for Player.
-     * @param gameId
-     * @param nthround
+     * @param topCard
      */
-    public void receivePossibilities(Long gameId, Integer nthround) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
-        Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-
-        // retrieve played card
-        cardStack = (LinkedList<Card>) round.getCardStack();
-        Card top = cardStack.peek();
+    protected ActionCommand receivePossibilities(Card topCard) {
+        throw new IllegalStateException("Not yet implemented");
 
         // give played card to rule engine
 
-        // take back result and give it to sendPossibilities()
+        // give back result
+        // return result;
 
-        throw new IllegalStateException("Not yet implemented");
     }
 
     /**

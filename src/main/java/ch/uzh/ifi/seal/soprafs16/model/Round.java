@@ -72,14 +72,6 @@ public class Round implements Serializable {
                 '}';
     }
 
-    public void executeActionPhase() {
-
-        throw new IllegalStateException("Method not yet implemented!");
-
-        // increment nthRound
-        //this.incrementNthRound();
-    }
-
     /**
      * Add a new card to the card stack.
      *

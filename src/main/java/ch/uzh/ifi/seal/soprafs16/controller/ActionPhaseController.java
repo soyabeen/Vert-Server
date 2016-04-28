@@ -40,7 +40,6 @@ public class ActionPhaseController extends GenericController {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
-        phaseLogicService.receivePossibilities(gameId, nthRound);
         return phaseLogicService.sendPossibilities();
     }
 
