@@ -50,18 +50,27 @@ public class PhaseLogicService {
         return nextPlayerId;
     }
 
-    public void setNextPlayer(Long gameId, Integer nthround) {
-        Long foundPlayerId = -1L;
+    public void setNextPlayer(Long gameId, Integer nthround, Long currPlayerId) {
+        Long nextPlayerId = -1L;
 
         InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+        InputArgValidator.checkAvailabeId(currPlayerId, playerRepo, "setNextPlayer() in PhaseLogicService has wrong " +
+                "PlayerId");
 
 
         Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
+        List<Player> players = game.getPlayers();
+        currentPlayer = playerRepo.findOne(currPlayerId);
 
-        foundPlayerId = getNextPlayerId(gameId, nthround);
+        if( (players.indexOf( currentPlayer ) + 1) == players.size()) {
+            //at end of List, next Player will be at Index 0
+            nextPlayerId = players.get(0).getId();
+        } else {
+            //if currentPlayer not at the end of the list (1 because of indices starting at 0)
+            nextPlayerId = players.get( players.indexOf( currentPlayer ) + 1).getId();
+        }
 
-        game.setNextPlayerId(foundPlayerId);
+        game.setNextPlayerId(nextPlayerId);
         gameRepo.save(game);
 
         /*
@@ -81,7 +90,7 @@ public class PhaseLogicService {
         Game game = gameRepo.findOne(gameId);
         game.setCurrentPlayerId(playerId);
         gameRepo.save(game);
-        //setNextPlayer(gameId, nthround);
+        //setNextPlayer(gameId, nthround, playerId);
     }
 
     /**
@@ -147,7 +156,7 @@ public class PhaseLogicService {
 
         cardStack = (LinkedList<Card>) round.getCardStack();
         //set owner of top card to current player
-        setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwner().getId());
+        setCurrentPlayer(game.getId(), nthround, cardStack.peekFirst().getOwnerId());
     }
 
     /**

@@ -26,9 +26,12 @@ public class Card implements Serializable {
     /**
      * Defines owner of this card
      */
-    @ManyToOne
-    @JsonBackReference
-    private Player owner;
+//    @ManyToOne
+//    @JsonBackReference
+//    private Player owner;
+
+    @Column
+    private Long ownerId;
 
     @Column
     private boolean onHand;
@@ -45,9 +48,9 @@ public class Card implements Serializable {
         onHand = false;
     }
 
-    public Card(CardType type, Player owner) {
+    public Card(CardType type, Long ownerId) {
         this.type = type;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
     /**
@@ -58,19 +61,19 @@ public class Card implements Serializable {
     /**
      * Returns owner of this card.
      *
-     * @return owner.
+     * @return ownerId.
      */
-    public Player getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
     /**
      * Sets owner for this card
      *
-     * @param owner player or game
+     * @param ownerId player or game
      */
-    public void setOwner(Player owner) {
-        this.owner = owner;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     /**
@@ -98,7 +101,7 @@ public class Card implements Serializable {
         }
 
         Card card = (Card) o;
-        return (card.getOwner() == this.getOwner() && card.getType() == this.getType());
+        return (card.getOwnerId() == this.getOwnerId() && card.getType() == this.getType());
     }
 
     @Override

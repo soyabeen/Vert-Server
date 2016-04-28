@@ -100,11 +100,11 @@ public class RoundServiceTest {
         player.setToken(UUID.randomUUID().toString());
 
         card1 = new Card();
-        card1.setOwner(player);
+        card1.setOwnerId(player.getId());
         card1.setType(CardType.MOVE);
 
         card2 = new Card();
-        card2.setOwner(player);
+        card2.setOwnerId(player.getId());
         card2.setType(CardType.MOVE);
 
         // player has 4 Move cards
@@ -179,9 +179,9 @@ public class RoundServiceTest {
         move.setPass(false);
         move.setPlayedCard(card1);
 
-        int sizeBefore = move.getPlayedCard().getOwner().getHand().size();
+        int sizeBefore = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
         roundService.makeAMove(1L, 1, move);
-        int sizeAfter = move.getPlayedCard().getOwner().getHand().size();
+        int sizeAfter = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
 
         Assert.assertThat(sizeAfter, is(sizeBefore - 1));
     }

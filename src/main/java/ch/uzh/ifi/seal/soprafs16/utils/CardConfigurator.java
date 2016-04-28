@@ -21,22 +21,22 @@ public class CardConfigurator {
     private static final int NR_OF_ROBBERY_CARDS = 2;
     private static final int NR_OF_MARSHAL_CARDS = 1;
 
-    private Player owner;
+    private Long ownerId;
 
-    public CardConfigurator(Player owner) {
-        this.owner = owner;
+    public CardConfigurator(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public CardDeck buildDeck() {
         List<Card> cards = new ArrayList<>();
 
-        cards.addAll(createCardsForType(owner, CardType.MOVE, NR_OF_MOVE_CARDS));
-        cards.addAll(createCardsForType(owner, CardType.FLOORCHANGE, NR_OF_FLOORCHANGE_CARDS));
-        cards.addAll(createCardsForType(owner, CardType.BULLET, NR_OF_BULLET_CARDS));
-        cards.addAll(createCardsForType(owner, CardType.FIRE, NR_OF_FIRE_CARDS));
-        cards.addAll(createCardsForType(owner, CardType.PUNCH, NR_OF_PUNCH_CARDS));
-        cards.addAll(createCardsForType(owner, CardType.ROBBERY, NR_OF_ROBBERY_CARDS));
-        cards.addAll(createCardsForType(owner, CardType.MARSHAL, NR_OF_MARSHAL_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.MOVE, NR_OF_MOVE_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.FLOORCHANGE, NR_OF_FLOORCHANGE_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.BULLET, NR_OF_BULLET_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.FIRE, NR_OF_FIRE_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.PUNCH, NR_OF_PUNCH_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.ROBBERY, NR_OF_ROBBERY_CARDS));
+        cards.addAll(createCardsForType(ownerId, CardType.MARSHAL, NR_OF_MARSHAL_CARDS));
 
         Collections.shuffle(cards);
         CardDeck deck = new CardDeck(cards);
@@ -44,11 +44,11 @@ public class CardConfigurator {
         return deck;
     }
 
-    private List<Card> createCardsForType(Player owner, CardType type, final int nrOfCards) {
+    private List<Card> createCardsForType(Long ownerId, CardType type, final int nrOfCards) {
         List<Card> cards = new ArrayList<>();
 
         for (int i = 0; i < nrOfCards; i++) {
-            cards.add(new Card(type, owner));
+            cards.add(new Card(type, ownerId));
         }
 
         return cards;
