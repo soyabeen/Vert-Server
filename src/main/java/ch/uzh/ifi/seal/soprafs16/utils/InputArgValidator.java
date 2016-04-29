@@ -155,7 +155,7 @@ public class InputArgValidator {
     public static Card checkIfSuchCardOnHand(CardType type, Player player) {
         List<Card> cardsOnHand = player.getHand();
         for (Card c: cardsOnHand) {
-            if(c.getType().equals(type)) return c;
+            if( !c.getType().equals(CardType.DRAW) && c.getType().equals(type) ) return c;
         }
         throw new InvalidInputException("Player is trying to play card which is not in his hand");
 
