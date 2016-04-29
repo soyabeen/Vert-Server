@@ -2,15 +2,12 @@ package ch.uzh.ifi.seal.soprafs16.engine;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleSet;
-import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This engine overs a simple way to process the action phase.
@@ -19,13 +16,11 @@ import java.util.List;
  * Created by soyabeen on 20.04.16.
  */
 public class GameEngine {
-
-    private static final Logger logger = LoggerFactory.getLogger(GameEngine.class);
-
-    private HashMap<CardType, RuleSet> mappingStore;
+    
+    private Map<CardType, RuleSet> mappingStore;
 
     public GameEngine() {
-        mappingStore = new HashMap<>();
+        mappingStore = new EnumMap<>(CardType.class);
     }
 
     /**
@@ -49,17 +44,6 @@ public class GameEngine {
 
     public List<Positionable> executeAction(ActionCommand commandInfo) throws InvocationTargetException {
         RuleSet rs = getRuleSetForCardType(commandInfo.getCard());
-        List<Positionable> result = rs.execute(commandInfo);
-        for (Positionable pos : result = rs.execute(commandInfo)) {
-            if (pos instanceof Player) {
-                logger.debug(((Player) pos).toString());
-            } else if (pos instanceof Loot) {
-                logger.debug(((Loot) pos).toString());
-            } else {
-                logger.warn("Unknown positionable object (no palyer/loot). It will be returned without saving.");
-            }
-        }
-
-        return result;
+        return rs.execute(commandInfo);
     }
 }

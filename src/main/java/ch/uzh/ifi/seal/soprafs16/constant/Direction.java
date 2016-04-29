@@ -7,13 +7,13 @@ public enum Direction {
     TO_HEAD(-1),
     TO_TAIL(1);
 
-    private final int direction;
+    private final int dirRepAsInt;
 
     Direction(int direction) {
-        this.direction = direction;
+        this.dirRepAsInt = direction;
     }
 
     public int intValue() {
-        return direction;
+        return dirRepAsInt;
     }
 }
