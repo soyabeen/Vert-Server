@@ -155,69 +155,74 @@ public class RoundServiceTest {
         }
     }
 
-//    @Test
-//    public void makeAMoveReturnsTurnId() {
-//        move.setPlayer(player);
-//        move.setPass(false);
-//        move.setPlayedCard(card1);
-//
-//
-//        String result = roundService.makeAMove(1L, 1, move);
-//
-//        Assert.assertThat(result, is("1"));
-//
-//        try {
-//            Integer.parseInt(result);
-//        } catch (Exception x_x) {
-//            Assert.assertFalse(x_x instanceof NumberFormatException);
-//        }
-//    }
-//
-//    @Test
-//    public void makeAMovePlaysCard() {
-//        move.setPlayer(player);
-//        move.setPass(false);
-//        move.setPlayedCard(card1);
-//
-//        int sizeBefore = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
-//        roundService.makeAMove(1L, 1, move);
-//        int sizeAfter = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
-//
-//        Assert.assertThat(sizeAfter, is(sizeBefore - 1));
-//    }
-//
-//    @Test
-//    public void makeAMovePassesTurn() {
-//        move = new Move();
-//        move.setPlayer(player);
-//        move.setGame(game);
-//        move.setId(1L);
-//        move.setPass(true);
-//
-//        int sizeBefore = move.getPlayer().getHand().size();
-//        roundService.makeAMove(1L, 1, move);
-//        int sizeAfter = move.getPlayer().getHand().size();
-//
-//        Assert.assertThat(sizeAfter, is(sizeBefore + 3));
-//
-//
-//        try {
-//            roundService.listTurnsForRound(null, 1);
-//            fail("Illegal gameId, should throw InvalidInputException");
-//        } catch (Exception e) {
-//            Assert.assertTrue(e instanceof InvalidInputException);
-//        }
-//
-//        try {
-//            roundService.listTurnsForRound(1L, null);
-//            fail("Illegal gameId, should throw InvalidInputException");
-//        } catch (Exception e) {
-//            Assert.assertTrue(e instanceof InvalidInputException);
-//        }
-//    }
-//
-//    @Test
-//    public void testGetRoundById() {
-//
-//    }
+    /*
+    @Test
+    public void makeAMoveReturnsTurnId() {
+        move.setPlayer(player);
+        move.setPass(false);
+        move.setPlayedCard(card1);
+
+
+        String result = roundService.makeAMove(1L, 1, move);
+
+        Assert.assertThat(result, is("1"));
+
+        try {
+            Integer.parseInt(result);
+        } catch (Exception x_x) {
+            Assert.assertFalse(x_x instanceof NumberFormatException);
+        }
+    }
+
+
+    @Test
+    public void makeAMovePlaysCard() {
+        move.setPlayer(player);
+        move.setPass(false);
+        move.setPlayedCard(card1);
+
+        int sizeBefore = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
+        roundService.makeAMove(1L, 1, move);
+        int sizeAfter = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
+
+        Assert.assertThat(sizeAfter, is(sizeBefore - 1));
+    }
+
+
+    @Test
+    public void makeAMovePassesTurn() {
+        move = new Move();
+        move.setPlayer(player);
+        move.setGame(game);
+        move.setId(1L);
+        move.setPass(true);
+
+        int sizeBefore = move.getPlayer().getHand().size();
+        roundService.makeAMove(1L, 1, move);
+        int sizeAfter = move.getPlayer().getHand().size();
+
+        Assert.assertThat(sizeAfter, is(sizeBefore + 3));
+
+
+        try {
+            roundService.listTurnsForRound(null, 1);
+            fail("Illegal gameId, should throw InvalidInputException");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidInputException);
+        }
+
+        try {
+            roundService.listTurnsForRound(1L, null);
+            fail("Illegal gameId, should throw InvalidInputException");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidInputException);
+        }
+    }
+
+
+    @Test
+    public void testGetRoundById() {
+
+    }
+    */
 }

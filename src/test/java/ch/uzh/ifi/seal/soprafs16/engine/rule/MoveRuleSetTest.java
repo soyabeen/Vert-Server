@@ -29,9 +29,8 @@ public class MoveRuleSetTest {
         Game game = new Game();
         game.setNrOfCars(3);
 
-        Player player = new Player();
-        player.setCar(1);
-        player.setLevel(Positionable.Level.BOTTOM);
+        Player player = PositionedPlayer.builder()
+                .onLowerLevelAt(1).build();
 
         List<Positionable> result = mrs.simulate(game, player);
         Assert.assertThat(result.size(), is(2));
@@ -50,14 +49,12 @@ public class MoveRuleSetTest {
         Game game = new Game();
         game.setNrOfCars(3);
 
-        Player player = new Player();
-        player.setUsername("original player");
-        player.setCar(2);
-        player.setLevel(Positionable.Level.BOTTOM);
+        Player player = PositionedPlayer.builder()
+                .withUserName("original player")
+                .onLowerLevelAt(2).build();
 
-        Player target = new Player();
-        target.setCar(1);
-        target.setLevel(Positionable.Level.BOTTOM);
+        Player target = PositionedPlayer.builder()
+                .onLowerLevelAt(1).build();
 
         ActionCommand ac = new ActionCommand(CardType.MOVE, game, player, target);
 
@@ -83,10 +80,8 @@ public class MoveRuleSetTest {
         Player target = PositionedPlayer.builder()
                 .onLowerLevelAt(0).build();
 
-
         Player expected = PositionedPlayer.builder()
                 .onUpperLevelAt(0).build();
-
 
         ActionCommand ac = new ActionCommand(CardType.MOVE, game, player, target);
 

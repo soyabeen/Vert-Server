@@ -82,6 +82,8 @@ public class Loot implements Positionable, Serializable {
         return car;
     }
 
+    public void setCar(int car) {this.car = car;}
+
     /**
      * @return Level The level of the car for llot.
      */

@@ -1,13 +1,13 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.Card;
-import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.Round;
+import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.modelmbean.InvalidTargetObjectTypeException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +40,9 @@ public class PhaseLogicService {
 
     @Autowired
     PlayerRepository playerRepo;
+
+    @Autowired
+    LootRepository lootRepo;
 
 
     public Long getInitialPlayerId(Game game) {
@@ -167,7 +172,7 @@ public class PhaseLogicService {
     protected boolean isGameOver(Game game, Integer nthround) {
         // initialize helper variables
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-        Integer lastTurnIndex = round.getTurns().size() - 1;
+        Integer lastTurnIndex = round.getTurns().size() * game.getNumberOfPlayers();
         Integer lastPlayerIndex = game.getPlayers().size() - 1;
         Long lastPlayerId = game.getPlayers().get(lastPlayerIndex).getId();
 
@@ -255,16 +260,114 @@ public class PhaseLogicService {
      *
      * @return object with possible selections for the user
      */
-    public TurnDTO sendPossibilities() {
-        //turnDTO = new TurnDTO();
-        //TODO: fill DTO object with possibilities from current turn
-        //return turnDTO;
-        throw new IllegalStateException("Not yet implemented");
+    public TurnDTO sendPossibilities(Long gameId, Integer nthRound) {
+
+        TurnDTO possibilitites = new TurnDTO();
+
+        GameEngine gameEngine = new GameEngine();
+        Round round = roundRepo.findByGameIdAndNthRound(gameId,nthRound);
+        LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
+        CardType type = stack.peekFirst().getType();
+        Game game = gameRepo.findOne(gameId);
+
+        possibilitites.setType(type);
+
+        ActionCommand actionCommand = new ActionCommand(type, game,
+                playerRepo.findOne(game.getCurrentPlayerId()), null);
+
+        try {
+
+            List<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
+            possibilitites.addPlayersAsList(getPlayersFromPositionableList(positionables) );
+            possibilitites.addLootsAsList(getLootsFromPositionableList(positionables));
+
+        } catch (InvocationTargetException e) {
+            //TODO: Exception handling
+            throw new IllegalStateException("Get possibilities from GameEngine failed");
+        }
+
+        return possibilitites;
+
+
     }
 
-    protected void updateGameState(Game game) {
-        // update Game State with new game object
-        // or update game without asking rule engine
-        throw new IllegalStateException("Not yet implemented");
+    public void executeDTO(Long gameId, Integer nthRound, TurnDTO turnDTO) {
+        GameEngine gameEngine = new GameEngine();
+        Round round = roundRepo.findByGameIdAndNthRound(gameId,nthRound);
+        LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
+        //This removes the first card via poll
+        CardType type = stack.pollFirst().getType();
+        Game game = gameRepo.findOne(gameId);
+
+        List<Player> chosenPossibility = turnDTO.getPlayers();
+        Long id = chosenPossibility.get(0).getId();
+
+        //Is it possible to get more than one player back?
+        Player targetPlayer;
+        if(id != null) {
+            targetPlayer = playerRepo.findOne(id);
+        } else {
+            targetPlayer = playerRepo.findOne(game.getCurrentPlayerId());
+        }
+
+
+        /*TODO: for other cardtypes than move
+        List<Player> players = new ArrayList<>();
+        List<Loot> loots = new ArrayList<>();
+
+        if(targetPlayer != null) {
+            ActionCommand actionCommand = new ActionCommand(type, game,
+                    playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
+            try {
+                ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
+                players = getPlayersFromPositionableList(positionables);
+                loots = getLootsFromPositionableList(positionables);
+            } catch (InvocationTargetException e) {
+                //TODO: Exception handling
+                throw new IllegalStateException("Get possibilities from GameEngine failed");
+            }
+        } else {
+            //TODO: Error handling
+        }*/
+        targetPlayer.setCar(chosenPossibility.get(0).getCar());
+        playerRepo.save(targetPlayer);
+
+        advancePlayer(gameId, nthRound);
+
+
     }
+
+
+    private List<Player> getPlayersFromPositionableList(List<Positionable> positionables) {
+
+        List<Player> players = new ArrayList<>();
+
+        for(Positionable pos : positionables) {
+            if (pos instanceof Player) {
+                players.add((Player) pos);
+            } else if (pos instanceof Loot) {
+            } else {
+                throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
+            }
+        }
+        return players;
+    }
+
+    private List<Loot> getLootsFromPositionableList(List<Positionable> positionables) {
+
+        List<Loot> loots = new ArrayList<>();
+
+        for(Positionable pos : positionables) {
+            if (pos instanceof Loot) {
+                loots.add((Loot) pos);
+            } else if (pos instanceof Player) {
+            } else {
+                throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
+            }
+        }
+
+        return loots;
+    }
+
+
 }
