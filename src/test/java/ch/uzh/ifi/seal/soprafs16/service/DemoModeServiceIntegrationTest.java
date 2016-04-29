@@ -1,8 +1,11 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,17 +40,40 @@ public class DemoModeServiceIntegrationTest {
     @Autowired
     private RoundService roundService;
 
+    private Player p1;
+
+    private Player p2;
+
     @Test
     public void createDemoGameWithService() {
+
+        // init demo game
         Game demo = demoModeService.initDemoGame();
         logger.debug(demo.toString());
 
         Assert.assertThat(demo.getStatus(), is(GameStatus.PLANNINGPHASE));
-        Assert.assertTrue("Game name starts with demo." , demo.getName().startsWith("Demo-"));
+        Assert.assertTrue("Game name starts with demo.", demo.getName().startsWith("Demo-"));
         Assert.assertTrue("Game owner is Demo-1-. player", demo.getOwner().startsWith("DemoPlayer-1-"));
         for (Player p : demo.getPlayers()) {
-            Assert.assertThat("Player "+p.getUsername()+" must have a loot.", p.getLoots().size(), is(1));
+            if (p.getUsername().startsWith("DemoPlayer-1-")) {
+                p1 = p;
+            } else {
+                p2 = p;
+            }
+            Assert.assertThat("Player " + p.getUsername() + " must have a loot.", p.getLoots().size(), is(1));
         }
+
+        // player 1, plays a move card
+        TurnDTO dto = new TurnDTO();
+        dto.setType(p1.getHand().get(0).getType());
+        Move m1move = roundService.getMoveFromDTO(demo.getId(), p1.getToken(), dto);
+        String res = roundService.makeAMove(demo.getId(), 1, m1move);
+
+        Game gAfter1Card = gameService.loadGameFromRepo(demo.getId());
+        logger.debug(gAfter1Card.toString());
+//        Assert.assertEquals("Nr of moves played after 1.", "1", res);
+        Assert.assertEquals("CurrPlayer nr 2 - after one played card.", p2.getId(), gAfter1Card.getCurrentPlayerId());
+
     }
 
 }

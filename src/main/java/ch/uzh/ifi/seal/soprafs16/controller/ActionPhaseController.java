@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by mirkorichter on 24.04.16.
  */
+@RestController
 public class ActionPhaseController extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(ActionPhaseController.class);
@@ -30,28 +31,30 @@ public class ActionPhaseController extends GenericController {
     @Autowired
     private GameRepository gameRepo;
 
-    private final String CONTEXT = "/games/{gameId}/rounds/{nthRound}/turns";
+    private final String CONTEXT = "/games/{gameId}/rounds/{nthRound}/turns/actions";
 
-    @RequestMapping(value = CONTEXT + "/{nthTurn}", method = RequestMethod.POST)
+    @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public TurnDTO getPossibilities(@PathVariable Long gameId, @PathVariable Integer nthRound,
-                                @PathVariable Integer nthTurn, @RequestParam("token") String userToken) {
+                                    @RequestParam("token") String userToken) {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
-        phaseLogicService.receivePossibilities(gameId, nthRound);
-        return phaseLogicService.sendPossibilities();
+        return phaseLogicService.sendPossibilities(gameId, nthRound);
     }
 
-    @RequestMapping(value = CONTEXT + "/{nthTurn}", method = RequestMethod.PUT)
+    @RequestMapping(value = CONTEXT, method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void chosenPossibility(@PathVariable Long gameId, @PathVariable Integer nthRound,
-                                    @PathVariable Integer nthTurn, @RequestBody TurnDTO turnDTO) {
+                                  @RequestParam("token") String userToken,
+                                  @RequestBody TurnDTO turnDTO) {
 
-        //TODO: Check if DTO is valid
-        //TODO: Use DTO to update game
-        throw  new IllegalStateException("Not yet implemented");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
+        Game game = gameRepo.findOne(gameId);
+        InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
+        //TODO: Check if DTO is valid if necessary
+        phaseLogicService.executeDTO(gameId, nthRound, turnDTO);
     }
 
 

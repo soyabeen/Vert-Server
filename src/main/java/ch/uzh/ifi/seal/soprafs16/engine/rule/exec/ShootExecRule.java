@@ -37,7 +37,7 @@ public class ShootExecRule implements ExecutionRule {
         result.add(actor);
 
         Player target = command.getTargetPlayer();
-        target.getsShotBy(actor);
+        target.getsShot();
         result.add(target);
 
         return result;

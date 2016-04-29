@@ -102,52 +102,5 @@ public class PhaseLogicServiceTest {
         when(playerRepo.findOne(2L)).thenReturn(expectedPlayer2);
     }
 
-//    @Test
-//    public void testSetStartPlayer() {
-//        // Test for start player at beginning of game
-//        phaseLogic.setStartPlayer(game, nthRound, expectedPlayer1.getId());
-//        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
-//
-//        // Test for start player after finish of 1st round
-//        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer2.getId());
-//        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer2.getId());
-//
-//        // Test for start player after finish of 2nd round
-//        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer1.getId());
-//        Assert.assertEquals(round.getStartPlayerId(), expectedPlayer1.getId());
-//    }
 
-    @Test
-    public void testSetCurrentPlayer() {
-        phaseLogic.setCurrentPlayer(game.getId(), nthRound, expectedPlayer2.getId());
-
-        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer2.getId());
-    }
-
-    @Test
-    public void testSetNextPlayer() {
-        // Test with first player
-        game.setCurrentPlayerId(expectedPlayer1.getId());
-        phaseLogic.setNextPlayer(game.getId(), nthRound);
-        Assert.assertEquals(game.getNextPlayerId(), expectedPlayer2.getId());
-
-        // Test with second player
-        game.setCurrentPlayerId(expectedPlayer2.getId());
-        phaseLogic.setNextPlayer(game.getId(), nthRound);
-        Assert.assertEquals(game.getNextPlayerId(), expectedPlayer1.getId());
-    }
-
-    @Test
-    public void testGetNextPlayerId() {
-        // Test with first player
-        game.setCurrentPlayerId(expectedPlayer1.getId());
-        Long result = phaseLogic.getNextPlayerId(game.getId(), nthRound);
-        Assert.assertEquals(result, expectedPlayer2.getId());
-
-        // Test with second player
-        game.setCurrentPlayerId(expectedPlayer2.getId());
-        result = phaseLogic.getNextPlayerId(game.getId(), nthRound);
-        Assert.assertEquals(result, expectedPlayer1.getId());
-
-    }
 }
