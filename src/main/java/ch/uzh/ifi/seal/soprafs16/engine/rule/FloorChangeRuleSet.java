@@ -17,8 +17,6 @@ import java.util.List;
  */
 public class FloorChangeRuleSet extends RuleSet {
 
-    private static final Logger logger = LoggerFactory.getLogger(FloorChangeRuleSet.class);
-
     @Override
     public List<Positionable> simulate(Game game, Player player) {
         FloorChangeSimRule floorChange = new FloorChangeSimRule();

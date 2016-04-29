@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class ShootRuleSet extends RuleSet {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShootRuleSet.class);
-
     @Override
     public List<Positionable> simulate(Game game, Player player) {
         ShootPlayerSimRule shoot = new ShootPlayerSimRule(game);
@@ -30,7 +28,6 @@ public class ShootRuleSet extends RuleSet {
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
-        List<Positionable> result = new ArrayList<>();
         ShootExecRule shoot = new ShootExecRule();
         return shoot.execute(command);
     }
