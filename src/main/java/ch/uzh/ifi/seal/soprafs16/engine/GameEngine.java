@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by soyabeen on 20.04.16.
  */
 public class GameEngine {
-    
+
     private Map<CardType, RuleSet> mappingStore;
 
     public GameEngine() {

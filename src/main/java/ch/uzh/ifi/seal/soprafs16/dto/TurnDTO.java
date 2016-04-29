@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.dto;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
