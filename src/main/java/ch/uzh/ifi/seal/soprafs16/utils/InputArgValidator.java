@@ -59,8 +59,8 @@ public class InputArgValidator {
      * is found and fails otherwise.
      *
      * @param playerName The username to check.
-     * @param repo     The Spring CRUDRepository for users.
-     * @param argName  Name of the argument shown in the error message.
+     * @param repo       The Spring CRUDRepository for users.
+     * @param argName    Name of the argument shown in the error message.
      * @throws InvalidInputException to indicate the checks negative result.
      */
     public static void checkUserNameNotUsed(String playerName, PlayerRepository repo, String argName) {
@@ -111,13 +111,13 @@ public class InputArgValidator {
     /**
      * Check if a request to get possibilities for a turn is made from the player, who's turn it actually is.
      *
-     * @param player    Made the request for a turn.
-     * @param game      Game the request was made in.
+     * @param player Made the request for a turn.
+     * @param game   Game the request was made in.
      * @throws InvalidInputException to indicate the checks negative result.
      */
     public static void checkItIsPlayersTurn(Player player, Game game) {
 
-        if(game.getCurrentPlayerId() != player.getId()) {
+        if (game.getCurrentPlayerId() != player.getId()) {
             throw new InvalidInputException(MESSAGE_START + " It is not the player's turn");
         }
 
@@ -147,17 +147,24 @@ public class InputArgValidator {
     /**
      * Check if player plays card from hand
      *
-     * @param type      CardType for card to play
-     * @param player    Player wants to play card
-     * @return          found Card on hand
-     * @throws          InvalidInputException
+     * @param type   CardType for card to play
+     * @param player Player wants to play card
+     * @return found Card on hand
+     * @throws InvalidInputException
      */
     public static Card checkIfSuchCardOnHand(CardType type, Player player) {
-        List<Card> cardsOnHand = player.getHand();
-        for (Card c: cardsOnHand) {
-            if( c.getType().equals(CardType.DRAW) || c.getType().equals(type) ) return c;
-        }
-        throw new InvalidInputException("Player is trying to play card which is not in his hand");
 
+        if (CardType.DRAW.equals(type)) {
+            return new Card(CardType.DRAW, player.getId());
+        } else {
+            List<Card> cardsOnHand = player.getHand();
+            for (Card c : cardsOnHand) {
+                if (c.getType().equals(type)) {
+                    return c;
+                }
+            }
+        }
+        throw new InvalidInputException("Player " + player.getUsername() + " is trying to play the card "
+                + type + " which is not in his hand");
     }
 }
