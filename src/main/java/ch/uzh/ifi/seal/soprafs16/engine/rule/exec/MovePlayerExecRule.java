@@ -36,7 +36,7 @@ public class MovePlayerExecRule implements ExecutionRule {
     }
 
     private boolean isInAllowedRange(Player current, Player target) {
-        boolean res = false;
+        boolean res;
         int distance = Math.abs(current.getCar() - target.getCar());
         if (current.getLevel() == Positionable.Level.TOP) {
             res = distance <= Distance.DISTANCE_TO_MOVE_ON_TOP;
