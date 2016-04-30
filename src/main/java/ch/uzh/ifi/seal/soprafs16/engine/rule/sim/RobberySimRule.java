@@ -19,18 +19,13 @@ public class RobberySimRule implements SimulationRule {
     }
 
     private boolean isOnSameFloor(Positionable actor, Positionable loot) {
-        if(actor.getCar() == loot.getCar()) {
-            if(actor.getLevel() == loot.getLevel()) {
-                return true;
-            }
-        }
-        return false;
+        return actor.getCar() == loot.getCar() && actor.getLevel() == loot.getLevel();
     }
 
     private List<Positionable> findLootsOnFloorOfPlayer(Positionable actor, List<Loot> loots) {
         List<Positionable> lootsOnSameFloor = new ArrayList<>();
-        for(Loot loot : loots) {
-            if(isOnSameFloor(actor, loot)) {
+        for (Loot loot : loots) {
+            if (isOnSameFloor(actor, loot)) {
                 lootsOnSameFloor.add(loot);
             }
         }
