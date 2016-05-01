@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.service.RoundService;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,15 @@ public class RoundCommandController extends GenericController {
 
     @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public String makeAMove(@PathVariable Long gameId, @PathVariable Integer nthRound, @RequestParam String token,
-                            @RequestBody TurnDTO turnDTO) {
+    public String makeMove(@PathVariable Long gameId, @PathVariable Integer nthRound, @RequestParam String token,
+                           @RequestBody TurnDTO turnDTO) {
         Move move = roundService.getMoveFromDTO(gameId, token, turnDTO);
         return roundService.makeAMove(gameId, nthRound, move);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    public TurnDTO executeMove(@PathVariable Long gameId, @PathVariable Integer nthRound, @RequestParam String token,
+                            @RequestBody TurnDTO turnDTO) {
+        throw new NotYetImplementedException("Method is missing");
     }
 }
