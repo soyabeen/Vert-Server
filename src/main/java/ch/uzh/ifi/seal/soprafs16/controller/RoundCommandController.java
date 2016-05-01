@@ -21,7 +21,6 @@ public class RoundCommandController extends GenericController {
     @Autowired
     private RoundService roundService;
 
-
     private final String CONTEXT = "/games/{gameId}/rounds";
 
     @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
