@@ -43,12 +43,4 @@ public class RoundQueryController extends GenericController {
         return roundService.listTurnsForRound(gameId, nthRound);
     }
 
-    @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
-    public String makeAMove(@PathVariable Long gameId, @PathVariable Integer nthRound, @RequestParam String token,
-                            @RequestBody TurnDTO turnDTO) {
-        Move move = roundService.getMoveFromDTO(gameId, token, turnDTO);
-        return roundService.makeAMove(gameId, nthRound, move);
-    }
-
 }
