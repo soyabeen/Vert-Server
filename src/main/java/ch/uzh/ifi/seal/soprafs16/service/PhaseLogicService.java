@@ -62,22 +62,11 @@ public class PhaseLogicService {
 
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
-        //round = roundRepo.findByGameIdAndNthRound(gameId, nthround);
-//        List players = game.getPlayers();
 
-        if (isTurnOver(game, nthround)) {
-            game.setStatus(GameStatus.ACTIONPHASE);
-
-        } else if(isRoundOver(game,nthround)) {
-            executeActionPhase(game, nthround);
-            // TODO: execute Round End Event
-
-        } else if(isGameOver(game, nthround)) {
-            game.setStatus(GameStatus.FINISHED);
-            // TODO: end game
+        checkGameChangeState(game, nthround);
+        if(game.getStatus() == GameStatus.PLANNINGPHASE) {
+            game.setCurrentPlayerId(getNextPlayer(game, nthround));
         }
-
-        game.setCurrentPlayerId(getNextPlayer(game));
 
         // save repositories
         gameRepo.save(game);
@@ -99,12 +88,12 @@ public class PhaseLogicService {
      *
      * @return Player ID for the following Player
      */
-    protected Long getNextPlayer(Game game) {
+    protected Long getNextPlayer(Game game, Integer nthround) {
         Long nextPlayerId = -1L;
 
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), game.getRoundId());
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
-        switch (round.getTurns().get(round.getCurrentTurnIndex())) {
+        switch ( round.getTurns().get(round.getCurrentTurnIndex()) ) {
             case NORMAL:
             case HIDDEN:
                 nextPlayerId = getPlayerForNormalTurn(game);
@@ -183,9 +172,39 @@ public class PhaseLogicService {
         }
     }
 
-    protected boolean isTurnOver(Game game, Integer nthround) {
-        // initialize helper variables
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
+    protected void checkGameChangeState(Game game, Integer nthround) {
+        // Order in which the game should be checked:
+        // if Turn is over execute Action Phase
+        // if Action Phase is over check if Round is over else start new turn
+        // if Round is over execute Round End Event and check if game is over else start new Round
+        // if game is over collect all information and end game
+
+
+        if (isTurnOver(game)) {
+            logger.debug("Game " + game.getId() + ": State changed, Turn is over");
+            game.setStatus(GameStatus.ACTIONPHASE);
+
+        }
+
+        if(isRoundOver(game,nthround)) {
+            logger.debug("Game " + game.getId() + ": State changed, Round is over");
+            // TODO: execute Round End Event
+            // TODO: start new round
+            game.setStatus(GameStatus.PLANNINGPHASE);
+        }
+
+        if(isGameOver(nthround)) {
+            logger.debug("Game " + game.getId() + ": State changed, Game is over");
+            game.setStatus(GameStatus.FINISHED);
+            // TODO: end game
+
+        }
+
+        // still in turn, proceed normally
+        return;
+    }
+
+    protected boolean isTurnOver(Game game) {
         Integer lastPlayerIndex = game.getPlayers().size() - 1;
         Long lastPlayerId = game.getPlayers().get(lastPlayerIndex).getId();
 
@@ -201,7 +220,6 @@ public class PhaseLogicService {
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
         Integer lastTurnIndex = round.getTurns().size() - 1;
 
-        // check for end of Round
         if (round.getCurrentTurnIndex() == lastTurnIndex) {
             return true;
         }
@@ -209,8 +227,7 @@ public class PhaseLogicService {
         return false;
     }
 
-    protected boolean isGameOver(Game game, Integer nthround) {
-        // check for end of Game
+    protected boolean isGameOver(Integer nthround) {
         //fixme: MAX_ROUNDS_FOR_GAME == 4 plus 1 Station Round = 5 Rounds total
         if (nthround > RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
             return true;
@@ -219,6 +236,11 @@ public class PhaseLogicService {
         return false;
     }
 
+    /**
+     * Called from Client Request
+     * @param game
+     * @param nthround
+     */
     protected void executeActionPhase(Game game, Integer nthround) {
         // setup / prepare Phase
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
