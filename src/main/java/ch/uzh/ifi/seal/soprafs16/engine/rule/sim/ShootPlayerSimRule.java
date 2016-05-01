@@ -17,12 +17,10 @@ public class ShootPlayerSimRule implements SimulationRule {
 
     private static final Logger logger = LoggerFactory.getLogger(ShootPlayerSimRule.class);
 
-    //    private ActionCommand commandInfo;
     private Game game;
     private TargetFinder finder;
 
     public ShootPlayerSimRule(Game game) {
-//        this.commandInfo = commandInfo;
         this.game = game;
         finder = new TargetFinder();
     }

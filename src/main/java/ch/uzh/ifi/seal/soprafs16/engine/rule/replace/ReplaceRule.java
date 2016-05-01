@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.replace;
 
-import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.ExecutionRule;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.util.List;

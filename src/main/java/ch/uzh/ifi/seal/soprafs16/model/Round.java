@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import org.hibernate.annotations.Sort;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,6 +32,7 @@ public class Round implements Serializable {
     private Integer nthRound;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("id")
     private List<Card> cardStack;
 
     @ElementCollection(targetClass = Turn.class, fetch = FetchType.EAGER)

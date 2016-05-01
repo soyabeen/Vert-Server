@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.ExecutionRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.MovePlayerExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerBottomSimRule;

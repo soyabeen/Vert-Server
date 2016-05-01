@@ -16,12 +16,7 @@ public class MarshalRepRule implements ReplaceRule {
 
     private boolean isOnSameFloorAsMarshal(Positionable actor) {
         // TODO: use real marshal position
-        if (actor.getCar() == 0) {
-            if (actor.getLevel() == Positionable.Level.BOTTOM) {
-                return true;
-            }
-        }
-        return false;
+        return actor.getCar() == 0 && actor.getLevel() == Positionable.Level.BOTTOM;
     }
 
     @Override

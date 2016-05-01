@@ -31,8 +31,8 @@ public class RobberyExecRule implements ExecutionRule {
         try {
             res = getExistingFreeLoot(lootId, loots) != null;
         } catch (IllegalArgumentException e) {
+            logger.info("Unknown loot id " + lootId, e);
             res = false;
-            logger.info(e.getMessage());
         }
         return res;
     }

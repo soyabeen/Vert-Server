@@ -283,7 +283,7 @@ public class PhaseLogicService {
 
         } catch (InvocationTargetException e) {
             //TODO: Exception handling
-            throw new IllegalStateException("Get possibilities from GameEngine failed");
+            throw new IllegalStateException("Get possibilities from GameEngine failed", e);
         }
 
         return possibilitites;

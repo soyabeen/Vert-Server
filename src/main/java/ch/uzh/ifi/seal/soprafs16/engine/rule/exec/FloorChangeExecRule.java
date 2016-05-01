@@ -15,8 +15,6 @@ import java.util.List;
  */
 public class FloorChangeExecRule implements ExecutionRule {
 
-    private static final Logger logger = LoggerFactory.getLogger(FloorChangeExecRule.class);
-
     @Override
     public boolean evaluate(ActionCommand command) {
         // Floor chane always possible.
