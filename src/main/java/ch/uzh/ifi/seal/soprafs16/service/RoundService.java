@@ -122,8 +122,6 @@ public class RoundService {
 
         if( !move.isPass() ) {
             // Player played a card
-
-            // add played card
             playACard(round, move.getPlayedCard());
 
         } else {
@@ -134,12 +132,6 @@ public class RoundService {
 
         // Advance current Player to the next Player
         logicService.advancePlayer(gameId, nthRound);
-        //game.setCurrentPlayerId(game.getNextPlayerId());//logger.debug("This is new currentPlayerId " + game.getCurrentPlayerId());
-
-        // save game
-        //gameRepo.save(game);
-        // save Move
-        //moveRepo.save(move);
 
         // return turnId for player (where turnId is nth-move of player)
         return String.valueOf(currentPlayer.getTotalMadeMoves());
@@ -198,7 +190,6 @@ public class RoundService {
             currentPlayer.setHand(playerHand);
             playerRepo.save(currentPlayer);
         }
-            //TODO: throw new InvalidInputException("Player has no card on hand.");
     }
 
     /**
