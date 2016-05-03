@@ -58,7 +58,9 @@ public class CardDeck implements Serializable {
         Collections.shuffle(currentDeck);
 
         for(int i = 0; i < numOfCards; i++) {
-            drawnCards.add(currentDeck.get(random.get(i)));
+            Card tmp = currentDeck.get(random.get(i));
+            drawnCards.add(tmp);
+            setCardToOnHand(tmp);
         }
         return drawnCards;
     }
@@ -81,5 +83,40 @@ public class CardDeck implements Serializable {
 
     public void setDeck(List<Card> deck) {
         this.deck = deck;
+    }
+
+    public List<Card> getCardsOnHand() {
+        List<Card> onHand = new ArrayList<>();
+        for(Card c: deck) {
+            if(c.isOnHand()) onHand.add(c);
+        }
+        return onHand;
+
+    }
+
+    public void setCardToOnHand(Card card) {
+        int i = 0;
+        while( !deck.get(i).isOnHand() && deck.get(i).getType().equals(card.getType())) {
+            ++i;
+        }
+        deck.get(i).setOnHand(true);
+    }
+
+    public void setNewHand(List<Card> newHand) {
+
+        for(Card c: deck) {
+            c.setOnHand(false);
+        }
+        for(Card c: newHand) {
+            setCardToOnHand(c);
+        }
+    }
+
+    public void removeCardFromHand(Card card) {
+        int i = 0;
+        while( deck.get(i).isOnHand() && deck.get(i).getType().equals(card.getType())) {
+            ++i;
+        }
+        deck.get(i).setOnHand(false);
     }
 }

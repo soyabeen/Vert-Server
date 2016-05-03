@@ -11,6 +11,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +41,6 @@ public class Player extends Meeple {
     @Column
     private Integer totalMadeMoves;
 
-//    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Card> hand;
-
     @OneToMany(fetch = FetchType.EAGER)
     private List<Loot> loots;
 
@@ -55,8 +52,6 @@ public class Player extends Meeple {
      */
     public Player() {
         this.loots = new ArrayList<>();
-        this.hand = new ArrayList<>();
-//        this.deck = new CardDeck();
         totalMadeMoves = 0;
         bullets = MAX_BULLETS;
     }
@@ -194,24 +189,25 @@ public class Player extends Meeple {
      * @return Cards which the player is holding.
      */
     public List<Card> getHand() {
-        return hand;
+        return deck.getCardsOnHand();
     }
 
     /**
      * Sets the new cards the player is holding.
      *
-     * @param hand Updated collection of cards the player is going to hold.
+     * @param hand Updated flag of cards in deck the player is going to hold.
      */
     public void setHand(List<Card> hand) {
-        this.hand = hand;
+        deck.setNewHand(hand);
     }
 
     /**
      * Adds 3 Cards from card deck to players hand.
      */
-    public void take3Cards() {
-        this.hand.addAll(this.deck.drawCard(3));
+    public void take3Cards() { this.deck.drawCard(3);
     }
+
+    public void removeCardFromHand(Card card) { deck.removeCardFromHand(card);}
 
     /**
      * Gets the amount of rounds a player made a move.
@@ -236,4 +232,5 @@ public class Player extends Meeple {
     public void setDeck(CardDeck deck) {
         this.deck = deck;
     }
+
 }
