@@ -153,7 +153,7 @@ public class InputArgValidator {
      * @throws          InvalidInputException
      */
     public static Card checkIfSuchCardOnHand(CardType type, Player player) {
-        List<Card> cardsOnHand = player.getHand();
+        List<Card> cardsOnHand = player.getCardsOnHand();
         for (Card c: cardsOnHand) {
             if(c.getType().equals(type)) return c;
         }

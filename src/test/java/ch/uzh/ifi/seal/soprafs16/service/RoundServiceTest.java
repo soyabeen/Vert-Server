@@ -114,7 +114,7 @@ public class RoundServiceTest {
         hand.add(card2);
         hand.add(card2);
 
-        player.setHand(hand);
+        player.setCardsOnHand(hand);
 
         move = new Move();
         move.setGame(game);

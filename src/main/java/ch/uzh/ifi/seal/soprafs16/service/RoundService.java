@@ -152,6 +152,7 @@ public class RoundService {
         Player player = playerRepo.findByToken(userToken);
         Game game = gameRepo.findOne(gameId);
 
+        logger.error("players id " + player.getId() + " games id " + game.getId());
         InputArgValidator.checkItIsPlayersTurn(player,game);
 
         Card card = InputArgValidator.checkIfSuchCardOnHand(turnDTO.getType(), player);
@@ -188,14 +189,14 @@ public class RoundService {
     }
 
     protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
-        List<Card> playerHand = currentPlayer.getHand();
+        List<Card> playerHand = currentPlayer.getCardsOnHand();
 
         if(playerHand.size() != 0) {
             // go through hand and remove same card type
             playerHand.remove(playedCard);
 
             // save new hand
-            currentPlayer.setHand(playerHand);
+            currentPlayer.setCardsOnHand(playerHand);
             playerRepo.save(currentPlayer);
         }
             //TODO: throw new InvalidInputException("Player has no card on hand.");

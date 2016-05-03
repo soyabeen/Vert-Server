@@ -10,17 +10,14 @@ import java.util.List;
  * Defines a card deck for a player.
  * Created by mirkorichter on 22.03.16.
  */
-@Entity
 public class CardDeck implements Serializable {
 
-    @Id
-    @GeneratedValue
+
     private Long id;
 
     /**
      * List of cards in this deck.
      */
-    @OneToMany
     private List<Card> deck;
 
     public CardDeck() {
@@ -47,20 +44,14 @@ public class CardDeck implements Serializable {
     public List<Card> drawCard(int numOfCards) {
         List<Card> currentDeck = getCardsInDeck();
         List<Card> drawnCards = new ArrayList<>();
-        List<Integer> random = new ArrayList<>();
 
         numOfCards = (numOfCards > currentDeck.size()) ? currentDeck.size() : numOfCards;
-
-        for(int i = 0; i < currentDeck.size(); i++) {
-            random.add(i);
-        }
 
         Collections.shuffle(currentDeck);
 
         for(int i = 0; i < numOfCards; i++) {
-            Card tmp = currentDeck.get(random.get(i));
+            Card tmp = currentDeck.get(i);
             drawnCards.add(tmp);
-            setCardToOnHand(tmp);
         }
         return drawnCards;
     }
@@ -96,10 +87,14 @@ public class CardDeck implements Serializable {
 
     public void setCardToOnHand(Card card) {
         int i = 0;
-        while( !deck.get(i).isOnHand() && deck.get(i).getType().equals(card.getType())) {
+        boolean notFinished =true;
+        while(notFinished) {
+            if(deck.get(i).getType().equals(card.getType()) && !deck.get(i).isOnHand()) {
+                deck.get(i).setOnHand(true);
+                notFinished = false;
+            }
             ++i;
         }
-        deck.get(i).setOnHand(true);
     }
 
     public void setNewHand(List<Card> newHand) {
@@ -114,7 +109,7 @@ public class CardDeck implements Serializable {
 
     public void removeCardFromHand(Card card) {
         int i = 0;
-        while( deck.get(i).isOnHand() && deck.get(i).getType().equals(card.getType())) {
+        while(!(deck.get(i).getType().equals(card.getType()) && deck.get(i).isOnHand())) {
             ++i;
         }
         deck.get(i).setOnHand(false);

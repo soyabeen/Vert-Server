@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
@@ -188,7 +189,8 @@ public class Player extends Meeple {
      *
      * @return Cards which the player is holding.
      */
-    public List<Card> getHand() {
+    @JsonIgnore
+    public List<Card> getCardsOnHand() {
         return deck.getCardsOnHand();
     }
 
@@ -197,7 +199,8 @@ public class Player extends Meeple {
      *
      * @param hand Updated flag of cards in deck the player is going to hold.
      */
-    public void setHand(List<Card> hand) {
+    @JsonIgnore
+    public void setCardsOnHand(List<Card> hand) {
         deck.setNewHand(hand);
     }
 
