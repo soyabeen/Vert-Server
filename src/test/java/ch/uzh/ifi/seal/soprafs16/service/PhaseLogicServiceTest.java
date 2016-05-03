@@ -62,15 +62,9 @@ public class PhaseLogicServiceTest {
         // List of turns needs to be generated
         turns = Arrays.asList(
                 Turn.REVERSE,
+                Turn.HIDDEN,
                 Turn.NORMAL,
-                Turn.NORMAL,
-                Turn.HIDDEN);
-
-        nthRound = 1;
-        game = new Game();
-        game.setId(1L);
-        game.setStatus(GameStatus.PLANNINGPHASE);
-        round = new Round(game.getId(), nthRound, turns, RoundEndEvent.REBELLION);
+                Turn.DOUBLE_TURNS);
 
         loot = new Loot(LootType.JEWEL, 1L, 1000, 0, Positionable.Level.BOTTOM);
         starterDeck = new ArrayList<>();
@@ -79,8 +73,14 @@ public class PhaseLogicServiceTest {
         starterDeck.add(card2);
         starterDeck.add(card2);
         starterDeck.add(card2);
-
         playerDeck = new CardDeck(starterDeck);
+
+        nthRound = 1;
+
+        game = new Game();
+        game.setId(1L);
+        game.setStatus(GameStatus.PLANNINGPHASE);
+        round = new Round(game.getId(), nthRound, turns, RoundEndEvent.REBELLION);
 
         // TODO: use player builder?
         expectedPlayer1 = new Player(loot, playerDeck);
@@ -95,34 +95,29 @@ public class PhaseLogicServiceTest {
         expectedPlayer2.setToken(UUID.randomUUID().toString());
         game.addPlayer(expectedPlayer2);
 
-        when(gameRepo.findOne(1L)).thenReturn(game);
-        when(gameRepo.save(any(Game.class))).thenReturn(game);
-        when(roundRepo.findByGameIdAndNthRound(game.getId(), nthRound)).thenReturn(round);
-        when(playerRepo.findOne(1L)).thenReturn(expectedPlayer1);
-        when(playerRepo.findOne(2L)).thenReturn(expectedPlayer2);
-    }
-
-    @Test
-    public void testNormalTurn() {
-        
-    }
-    
-    @Test
-    public void testHiddenTurn() {
-        
-    }
-    
-    @Test
-    public void testReverseTurn() {
         expectedPlayer3 = new Player(loot, playerDeck);
         expectedPlayer3.setId(3L);
         expectedPlayer3.setCharacter(Character.BELLE);
         expectedPlayer3.setToken(UUID.randomUUID().toString());
         game.addPlayer(expectedPlayer3);
 
+        when(gameRepo.findOne(1L)).thenReturn(game);
+        when(gameRepo.save(any(Game.class))).thenReturn(game);
+        when(roundRepo.findByGameIdAndNthRound(game.getId(), nthRound)).thenReturn(round);
+        when(playerRepo.findOne(1L)).thenReturn(expectedPlayer1);
+        when(playerRepo.findOne(2L)).thenReturn(expectedPlayer2);
+        when(playerRepo.findOne(3L)).thenReturn(expectedPlayer3);
+    }
+
+    @Test
+    public void testReverseTurn() {
+        /*** Test Setup ***/
+
+
+        /*** Test Logic ***/
         //first player in test will be player 2
         game.setCurrentPlayerId(expectedPlayer2.getId());
-        // TODO: round needs to be a reverse round (is momentarily in Test Setup)
+        // TODO: round needs to be a reverse round (round is momentarily defined in Test Setup)
 
         phaseLogic.advancePlayer(game.getId(), round.getNthRound());
         Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer1.getId());
@@ -132,6 +127,54 @@ public class PhaseLogicServiceTest {
 
 
     }
+
+    @Test
+    public void testHiddenTurn() {
+        /*** Test Setup ***/
+        turns = Arrays.asList(
+                Turn.HIDDEN,
+                Turn.REVERSE,
+                Turn.NORMAL,
+                Turn.DOUBLE_TURNS);
+
+        round.setTurns(turns);
+
+        /*** Test Logic ***/
+        //first player in test will be player 2
+        game.setCurrentPlayerId(expectedPlayer2.getId());
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer3.getId());
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer1.getId());
+
+
+    }
+
+    @Test
+    public void testNormalTurn() {
+        /*** Test Setup ***/
+        turns = Arrays.asList(
+                Turn.NORMAL,
+                Turn.HIDDEN,
+                Turn.REVERSE,
+                Turn.DOUBLE_TURNS);
+
+        round.setTurns(turns);
+
+        /*** Test Logic ***/
+        //first player in test will be player 2
+        game.setCurrentPlayerId(expectedPlayer2.getId());
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer3.getId());
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer1.getId());
+    }
+
+
     
     @Test
     public void testDoubleTurn() {

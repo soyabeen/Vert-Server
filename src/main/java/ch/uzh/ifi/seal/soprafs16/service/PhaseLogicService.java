@@ -63,7 +63,7 @@ public class PhaseLogicService {
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
 
-        checkGameChangeState(game, nthround);
+        //checkGameChangeState(game, nthround);
         if(game.getStatus() == GameStatus.PLANNINGPHASE) {
             game.setCurrentPlayerId(getNextPlayer(game, nthround));
         }
@@ -209,9 +209,9 @@ public class PhaseLogicService {
         Long lastPlayerId = game.getPlayers().get(lastPlayerIndex).getId();
 
         // check for end of Turn (only works for Normal Round!)
-        if (game.getCurrentPlayerId() == lastPlayerId) {
+       /* if (game.getCurrentPlayerId() == lastPlayerId) {
             return true;
-        }
+        }*/
 
         return false;
     }
