@@ -163,7 +163,7 @@ public class RoundServiceTest {
         move.setPlayedCard(card1);
 
 
-        String result = roundService.makeAMove(1L, 1, move);
+        String result = roundService.makeMove(1L, 1, move);
 
         Assert.assertThat(result, is("1"));
 
@@ -182,7 +182,7 @@ public class RoundServiceTest {
         move.setPlayedCard(card1);
 
         int sizeBefore = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
-        roundService.makeAMove(1L, 1, move);
+        roundService.makeMove(1L, 1, move);
         int sizeAfter = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
 
         Assert.assertThat(sizeAfter, is(sizeBefore - 1));
@@ -198,7 +198,7 @@ public class RoundServiceTest {
         move.setPass(true);
 
         int sizeBefore = move.getPlayer().getHand().size();
-        roundService.makeAMove(1L, 1, move);
+        roundService.makeMove(1L, 1, move);
         int sizeAfter = move.getPlayer().getHand().size();
 
         Assert.assertThat(sizeAfter, is(sizeBefore + 3));

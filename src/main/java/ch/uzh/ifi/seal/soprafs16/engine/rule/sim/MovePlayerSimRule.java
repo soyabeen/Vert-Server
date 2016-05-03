@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Direction;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleUtils;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
@@ -18,9 +19,6 @@ public class MovePlayerSimRule implements SimulationRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerSimRule.class);
 
-    private static final int DIRECTION_TO_HEAD = -1;
-    private static final int DIRECTION_TO_TAIL = 1;
-
     private int trainLength;
     private int distanceToMove;
     private Positionable.Level level;
@@ -29,24 +27,6 @@ public class MovePlayerSimRule implements SimulationRule {
         this.trainLength = trainLength;
         this.distanceToMove = distanceToMove;
         this.level = level;
-    }
-
-    private boolean isOnSameLevel(Player player, Positionable.Level level) {
-        boolean res = level == player.getLevel();
-        if (!res) {
-            logger.debug("Player {} ({},{}) has a different level type than {}.",
-                    player, player.getCar(), player.getLevel(), level);
-        }
-        return res;
-    }
-
-    private boolean isPlacedOnTrain(Player player, int train) {
-        boolean res = 0 <= player.getCar() && player.getCar() < train;
-        if (!res) {
-            logger.debug("Player {} ({},{}) is not positioned on the train with length {}.",
-                    player, player.getCar(), player.getLevel(), train);
-        }
-        return res;
     }
 
     /**
@@ -60,8 +40,8 @@ public class MovePlayerSimRule implements SimulationRule {
             return false;
         }
         Player targetPlayer = (Player) player;
-        return isOnSameLevel(targetPlayer, level)
-                && isPlacedOnTrain(targetPlayer, trainLength);
+        return RuleUtils.isOnSameLevel(targetPlayer, level)
+                && RuleUtils.isPlacedOnTrain(targetPlayer, trainLength);
     }
 
 

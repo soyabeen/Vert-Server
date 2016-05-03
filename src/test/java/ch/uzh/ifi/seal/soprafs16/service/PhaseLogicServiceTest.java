@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
-import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import ch.uzh.ifi.seal.soprafs16.constant.*;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
@@ -49,7 +47,7 @@ public class PhaseLogicServiceTest {
     @Mock
     private Card card1, card2;
 
-    private Player expectedPlayer1, expectedPlayer2;
+    private Player expectedPlayer1, expectedPlayer2, expectedPlayer3;
     private Integer nthRound;
     private Game game;
     private Loot loot;
@@ -63,7 +61,7 @@ public class PhaseLogicServiceTest {
 
         // List of turns needs to be generated
         turns = Arrays.asList(
-                Turn.DOUBLE_TURNS,
+                Turn.REVERSE,
                 Turn.NORMAL,
                 Turn.NORMAL,
                 Turn.HIDDEN);
@@ -71,6 +69,7 @@ public class PhaseLogicServiceTest {
         nthRound = 1;
         game = new Game();
         game.setId(1L);
+        game.setStatus(GameStatus.PLANNINGPHASE);
         round = new Round(game.getId(), nthRound, turns, RoundEndEvent.REBELLION);
 
         loot = new Loot(LootType.JEWEL, 1L, 1000, 0, Positionable.Level.BOTTOM);
@@ -83,6 +82,7 @@ public class PhaseLogicServiceTest {
 
         playerDeck = new CardDeck(starterDeck);
 
+        // TODO: use player builder?
         expectedPlayer1 = new Player(loot, playerDeck);
         expectedPlayer1.setId(1L);
         expectedPlayer1.setCharacter(Character.GHOST);
@@ -102,5 +102,39 @@ public class PhaseLogicServiceTest {
         when(playerRepo.findOne(2L)).thenReturn(expectedPlayer2);
     }
 
+    @Test
+    public void testNormalTurn() {
+        
+    }
+    
+    @Test
+    public void testHiddenTurn() {
+        
+    }
+    
+    @Test
+    public void testReverseTurn() {
+        expectedPlayer3 = new Player(loot, playerDeck);
+        expectedPlayer3.setId(3L);
+        expectedPlayer3.setCharacter(Character.BELLE);
+        expectedPlayer3.setToken(UUID.randomUUID().toString());
+        game.addPlayer(expectedPlayer3);
 
+        //first player in test will be player 2
+        game.setCurrentPlayerId(expectedPlayer2.getId());
+        // TODO: round needs to be a reverse round (is momentarily in Test Setup)
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer1.getId());
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer3.getId());
+
+
+    }
+    
+    @Test
+    public void testDoubleTurn() {
+        
+    }
 }

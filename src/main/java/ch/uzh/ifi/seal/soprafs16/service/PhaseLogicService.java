@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
@@ -18,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.modelmbean.InvalidTargetObjectTypeException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -62,18 +62,14 @@ public class PhaseLogicService {
 
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
-        //round = roundRepo.findByGameIdAndNthRound(gameId, nthround);
-//        List players = game.getPlayers();
 
-        if (!isGameOver(game, nthround)) {
-            // set new current player
-//            setCurrentPlayerId(gameId, getNextPlayer());
-            game.setCurrentPlayerId(getNextPlayer(game));
+        checkGameChangeState(game, nthround);
+        if(game.getStatus() == GameStatus.PLANNINGPHASE) {
+            game.setCurrentPlayerId(getNextPlayer(game, nthround));
         }
 
         // save repositories
         gameRepo.save(game);
-        //roundRepo.save(round);
     }
 
     protected void setCurrentPlayerId(Long gameId, Long playerId) {
@@ -92,12 +88,12 @@ public class PhaseLogicService {
      *
      * @return Player ID for the following Player
      */
-    protected Long getNextPlayer(Game game) {
+    protected Long getNextPlayer(Game game, Integer nthround) {
         Long nextPlayerId = -1L;
 
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), game.getRoundId());
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
-        switch (round.getTurns().get(round.getCurrentTurnIndex())) {
+        switch ( round.getTurns().get(round.getCurrentTurnIndex()) ) {
             case NORMAL:
             case HIDDEN:
                 nextPlayerId = getPlayerForNormalTurn(game);
@@ -119,6 +115,12 @@ public class PhaseLogicService {
         return nextPlayerId;
     }
 
+    /**
+     * Method used to access player Ids in List of players in Game.
+     * List of players in Game can't be accessed directly.
+     * @param players
+     * @return
+     */
     protected List<Long> getListOfPlayerIds(List<Player> players) {
         ArrayList<Long> playerIds = new ArrayList<>();
         for (Player p : players) {
@@ -158,6 +160,7 @@ public class PhaseLogicService {
     protected Long getPlayerForReverseTurn(Game game) {
         List<Player> players = game.getPlayers();
         Player currentPlayer = playerRepo.findOne(game.getCurrentPlayerId());
+        // to access players of game use getListOfPlayersIds(...)
         Integer listEnd = players.size() - 1;
 
         if ((players.indexOf(currentPlayer) - 1) < 0) {
@@ -169,35 +172,76 @@ public class PhaseLogicService {
         }
     }
 
-    protected boolean isGameOver(Game game, Integer nthround) {
-        // initialize helper variables
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-        Integer lastTurnIndex = round.getTurns().size() * game.getNumberOfPlayers();
+    protected void checkGameChangeState(Game game, Integer nthround) {
+        // Order in which the game should be checked:
+        // if Turn is over execute Action Phase
+        // if Action Phase is over check if Round is over else start new turn
+        // if Round is over execute Round End Event and check if game is over else start new Round
+        // if game is over collect all information and end game
+
+
+        if (isTurnOver(game)) {
+            logger.debug("Game " + game.getId() + ": State changed, Turn is over");
+            game.setStatus(GameStatus.ACTIONPHASE);
+
+        }
+
+        if(isRoundOver(game,nthround)) {
+            logger.debug("Game " + game.getId() + ": State changed, Round is over");
+            // TODO: execute Round End Event
+            // TODO: start new round
+            game.setStatus(GameStatus.PLANNINGPHASE);
+        }
+
+        if(isGameOver(nthround)) {
+            logger.debug("Game " + game.getId() + ": State changed, Game is over");
+            game.setStatus(GameStatus.FINISHED);
+            // TODO: end game
+
+        }
+
+        // still in turn, proceed normally
+        return;
+    }
+
+    protected boolean isTurnOver(Game game) {
         Integer lastPlayerIndex = game.getPlayers().size() - 1;
         Long lastPlayerId = game.getPlayers().get(lastPlayerIndex).getId();
 
         // check for end of Turn (only works for Normal Round!)
         if (game.getCurrentPlayerId() == lastPlayerId) {
-            // TODO: execute ActionPhase
-            //executeActionPhase();
-
-            // check for end of Round
-            if (round.getCurrentTurnIndex() == lastTurnIndex) {
-                // TODO: execute Round End Event
-                // TODO: increment nthRound
-
-                // check for end of Game
-                if (nthround > RoundConfigurator.MAX_ROUNDS_FOR_GAME) {
-                    // TODO: end game
-                    return true;
-                }
-
-            }
+            return true;
         }
 
         return false;
     }
 
+    protected boolean isRoundOver(Game game, Integer nthround) {
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
+        Integer lastTurnIndex = round.getTurns().size() - 1;
+
+        if (round.getCurrentTurnIndex() == lastTurnIndex) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean isGameOver(Integer nthround) {
+        //fixme: MAX_ROUNDS_FOR_GAME == 4 plus 1 Station Round = 5 Rounds total
+        if (nthround > RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Called from Client Request
+     * @param game
+     * @param nthround
+     */
     protected void executeActionPhase(Game game, Integer nthround) {
         // setup / prepare Phase
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
@@ -205,14 +249,20 @@ public class PhaseLogicService {
         Card topCard;
 
         // peek and set CurrentPlayer
-        while (cardStack.size() != 0) {
+
+        // Program progress is driven ON REQUEST
+        if(!cardStack.isEmpty()) {
+            // setup of action phase
+
             topCard = cardStack.peekFirst();
             setCurrentPlayerId(game.getId(), topCard.getOwnerId());
 
             // give Card to Rule Engine
             ActionCommand result = receivePossibilities(topCard);
 
-            // evaluate result from Rule Engine
+
+            //ON REQUEST return something for client
+            // fixme: evaluate result from Rule Engine
             evaluateResultRuleEngine(result);
 
             // remove topCard from Stack

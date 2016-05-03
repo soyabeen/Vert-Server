@@ -3,8 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 import ch.uzh.ifi.seal.soprafs16.constant.Distance;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
-import java.util.List;
-
 /**
  * Created by soyabeen on 20.04.16.
  */
