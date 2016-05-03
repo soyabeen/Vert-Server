@@ -1,9 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
+import ch.uzh.ifi.seal.soprafs16.dto.GameWithLastPlayedCardDTO;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
-
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
@@ -27,7 +27,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -121,26 +120,29 @@ public class GameQueryControllerTest {
         Long gameId = game3.getId();
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString() + "/" + gameId);
-        ResponseEntity<Game> response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Game.class);
-        Game result = response.getBody();
+        ResponseEntity<GameWithLastPlayedCardDTO> response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), GameWithLastPlayedCardDTO.class);
+        GameWithLastPlayedCardDTO result = response.getBody();
 
         Assert.assertThat(game3.getId(), is(result.getId()));
         Assert.assertThat(game3.getName(), is(result.getName()));
         Assert.assertThat(game3.getOwner(), is(result.getOwner()));
 
+
         // invalid query
         uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString() + "/-1");
-        response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Game.class);
-        result = response.getBody();
+        ResponseEntity<ch.uzh.ifi.seal.soprafs16.helper.ErrorResource> errorResponse = template.getForEntity(uriBuilder.build().encode().toUri().toString(), ch.uzh.ifi.seal.soprafs16.helper.ErrorResource.class);
+        ch.uzh.ifi.seal.soprafs16.helper.ErrorResource res = errorResponse.getBody();
 
-        Assert.assertNull(result);
+        Assert.assertThat("Status is 412.", res.getStatus(), is(412));
+        Assert.assertThat("Error is 'Precondition Failed'.", res.getError(), is("Precondition Failed"));
+        Assert.assertThat("Message is 'Invalid input argument'.", res.getMessage(), is("Invalid input argument"));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void getPlayerTest() {
         // test valid query
-        Player player =  playerBuilder.getRandomPlayer();
+        Player player = playerBuilder.getRandomPlayer();
         Game game4 = gameBuilder.init("listGamesTest4", "listGamesTest4").addUser(player).build();
         Long gameId = game4.getId();
         Long userId = player.getId();
@@ -161,6 +163,8 @@ public class GameQueryControllerTest {
         uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString() + "/" + gameId + "/player/-1");
         response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), Player.class);
         result = response.getBody();
-        Assert.assertNull(result.getId() );
+        Assert.assertNull(result.getId());
     }
+
+
 }

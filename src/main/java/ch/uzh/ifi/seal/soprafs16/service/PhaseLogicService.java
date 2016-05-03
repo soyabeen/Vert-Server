@@ -58,7 +58,8 @@ public class PhaseLogicService {
      * @param nthround
      */
     public void advancePlayer(Long gameId, Integer nthround) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+        InputArgValidator.checkIfPositiveNumber(gameId, "gameId");
+        InputArgValidator.checkIfPositiveNumber(nthround.longValue(), "nthRound");
 
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
@@ -236,6 +237,7 @@ public class PhaseLogicService {
         return false;
     }
 
+
     /**
      * Called from Client Request
      * @param game
@@ -248,14 +250,17 @@ public class PhaseLogicService {
         Card topCard;
 
         // peek and set CurrentPlayer
+
         // Program progress is driven ON REQUEST
         if(!cardStack.isEmpty()) {
             // setup of action phase
+
             topCard = cardStack.peekFirst();
             setCurrentPlayerId(game.getId(), topCard.getOwnerId());
 
             // give Card to Rule Engine
             ActionCommand result = receivePossibilities(topCard);
+
 
             //ON REQUEST return something for client
             // fixme: evaluate result from Rule Engine
