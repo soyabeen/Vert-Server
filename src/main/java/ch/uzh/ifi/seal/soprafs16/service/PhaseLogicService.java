@@ -99,9 +99,6 @@ public class PhaseLogicService {
 
         switch (round.getTurns().get(round.getCurrentTurnIndex())) {
             case NORMAL:
-                nextPlayerId = getPlayerForNormalTurn(game);
-                break;
-
             case HIDDEN:
                 nextPlayerId = getPlayerForNormalTurn(game);
                 break;
@@ -123,20 +120,20 @@ public class PhaseLogicService {
     }
 
     protected List<Long> getListOfPlayerIds(List<Player> players) {
-        ArrayList<Long> ids = new ArrayList<>();
+        ArrayList<Long> playerIds = new ArrayList<>();
         for (Player p : players) {
-            ids.add(p.getId());
+            playerIds.add(p.getId());
         }
-        return ids;
+        return playerIds;
     }
 
     protected Long getPlayerForNormalTurn(Game game) {
         List<Player> players = game.getPlayers();
-        List<Long> ids = getListOfPlayerIds(players);
+        List<Long> playerIds = getListOfPlayerIds(players);
 
         Player currentPlayer = playerRepo.findOne(game.getCurrentPlayerId());
 
-        int nextPlayerIndex = ids.indexOf(currentPlayer.getId()) + 1;
+        int nextPlayerIndex = playerIds.indexOf(currentPlayer.getId()) + 1;
 
         if (nextPlayerIndex == players.size()) {
             //at end of List, next Player will be at Index 0
@@ -201,30 +198,34 @@ public class PhaseLogicService {
         return false;
     }
 
-//    protected void executeActionPhase() {
-//        // setup / prepare Phase
-//        cardStack = (LinkedList<Card>) round.getCardStack();
-//        Card topCard;
-//
-//        // peek and set CurrentPlayer
-//        while (cardStack.size() != 0) {
-//            topCard = cardStack.peekFirst();
-//            setCurrentPlayerId(game.getId(), topCard.getOwnerId());
-//
-//            // give Card to Rule Engine
-//            ActionCommand result = receivePossibilities(topCard);
-//
-//            // evaluate result from Rule Engine
-//            evaluateResultRuleEngine(result);
-//
-//            // remove topCard from Stack
-//            cardStack.pollFirst();
-//        }
-//
-//
-//        // increment nthRound
-//        round.incrementNthRound();
-//    }
+    protected void executeActionPhase(Game game, Integer nthround) {
+        // setup / prepare Phase
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
+        LinkedList<Card> cardStack = (LinkedList<Card>) round.getCardStack();
+        Card topCard;
+
+        // peek and set CurrentPlayer
+        while (cardStack.size() != 0) {
+            topCard = cardStack.peekFirst();
+            setCurrentPlayerId(game.getId(), topCard.getOwnerId());
+
+            // give Card to Rule Engine
+            ActionCommand result = receivePossibilities(topCard);
+
+            // evaluate result from Rule Engine
+            evaluateResultRuleEngine(result);
+
+            // remove topCard from Stack
+            cardStack.pollFirst();
+        }
+
+
+        // increment nthRound
+        round.incrementNthRound();
+
+        //save repos
+        roundRepo.save(round);
+    }
 
     /**
      * Determine whether result from Rule Engine needs a decision from player or if game can be updated directly.
