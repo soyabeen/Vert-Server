@@ -216,8 +216,10 @@ public class GameService {
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameId");
         if (game.getRoundId() > 0) {
             Round r = roundService.getRoundById(game.getId(), game.getRoundId());
-            List<Card> cards = r.getCardStack();
-            return cards == null || cards.isEmpty() ? opt : Optional.of(cards.get(cards.size() - 1));
+            if(r !=null ) {
+                List<Card> cards = r.getCardStack();
+                return cards == null || cards.isEmpty() ? opt : Optional.of(cards.get(cards.size() - 1));
+            }
         }
         return opt;
     }
