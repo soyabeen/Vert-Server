@@ -124,27 +124,6 @@ public class InputArgValidator {
     }
 
     /**
-     * Check the input arguments gameId and nthRound. Both must be: <br/>
-     * - not null
-     * - not 0
-     * - positive numbers
-     *
-     * @param gameId
-     * @param nthRound
-     * @throws InvalidInputException
-     */
-    public static void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
-
-        if (gameId == null || gameId <= 0) {
-            throw new InvalidInputException("Invalid arg. gameId <" + gameId + ">, must be a positive number.");
-        }
-        if (nthRound == null || nthRound <= 0) {
-            throw new InvalidInputException("Invalid arg. ntRound <" + nthRound + ">, must be a positive number.");
-        }
-
-    }
-
-    /**
      * Check if player plays card from hand
      *
      * @param type   CardType for card to play

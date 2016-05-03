@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +35,9 @@ public class GameService {
 
     @Autowired
     private PhaseLogicService logicService;
+
+    @Autowired
+    private RoundService roundService;
 
     @Autowired
     private GameRepository gameRepo;
@@ -108,7 +112,7 @@ public class GameService {
     }
 
     public void startGame(Long gameId, String userToken, RoundConfigurator configurator) {
-        logger.debug("Start game {} for {}", gameId, userToken );
+        logger.debug("Start game {} for {}", gameId, userToken);
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game pendingGame = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
@@ -173,7 +177,7 @@ public class GameService {
         CardConfigurator conf = new CardConfigurator(player.getId());
         CardDeck deck = conf.buildDeck();
 
-        for (Card c: deck.getDeck()) {
+        for (Card c : deck.getDeck()) {
             result.add(cardRepo.save(c));
         }
 
@@ -197,12 +201,24 @@ public class GameService {
             player.setHand(player.getDeck().drawCard(6));
         }
 
-        for (Card c: player.getHand()) {
+        for (Card c : player.getHand()) {
             c.setOnHand(true);
         }
     }
 
     public Game loadGameFromRepo(long gameIdToLoad) {
-        return gameRepo.findOne(gameIdToLoad);
+        return (Game) InputArgValidator.checkAvailabeId(gameIdToLoad, gameRepo, "gameId");
+    }
+
+
+    public Optional<Card> getLastPlayedCardForGame(Long gameId) {
+        Optional<Card> opt = Optional.empty();
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameId");
+        if (game.getRoundId() > 0) {
+            Round r = roundService.getRoundById(game.getId(), game.getRoundId());
+            List<Card> cards = r.getCardStack();
+            return cards == null || cards.isEmpty() ? opt : Optional.of(cards.get(cards.size() - 1));
+        }
+        return opt;
     }
 }

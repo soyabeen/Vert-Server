@@ -58,7 +58,8 @@ public class PhaseLogicService {
      * @param nthround
      */
     public void advancePlayer(Long gameId, Integer nthround) {
-        InputArgValidator.checkInputArgsGameIdAndNthRound(gameId, nthround);
+        InputArgValidator.checkIfPositiveNumber(gameId, "gameId");
+        InputArgValidator.checkIfPositiveNumber(nthround.longValue(), "nthRound");
 
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
