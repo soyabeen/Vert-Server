@@ -56,6 +56,16 @@ public class InputArgValidator {
         }
     }
 
+    public static void checkIfIdGreaterZero(Long arg, String argName) {
+        if (arg == null || arg.longValue() <= 0) {
+            throw new InvalidInputException(MESSAGE_START + argName + " no valid id (must be > 0).");
+        }
+    }
+
+    public static void checkIfIdGreaterZero(Integer arg, String argName) {
+        checkIfIdGreaterZero(arg.longValue(), argName);
+    }
+
     /**
      * Check in the given user repository for occurrances of the given user name. The check passes if no occurrance
      * is found and fails otherwise.

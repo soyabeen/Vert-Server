@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
-import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
@@ -41,26 +40,6 @@ public class RoundService {
     @Autowired
     private PhaseLogicService logicService;
 
-    /**
-     * Check the input arguments gameId and nthRound. Both must be: <br/>
-     * - not null
-     * - not 0
-     * - positive numbers
-     *
-     * @param gameId
-     * @param nthRound
-     * @throws InvalidInputException
-     */
-    private void checkInputArgsGameIdAndNthRound(Long gameId, Integer nthRound) {
-
-        if (gameId == null || gameId <= 0) {
-            throw new InvalidInputException("Invalid arg. gameId <" + gameId + ">, must be a positive number.");
-        }
-        if (nthRound == null || nthRound <= 0) {
-            throw new InvalidInputException("Invalid arg. ntRound <" + nthRound + ">, must be a positive number.");
-        }
-
-    }
 
     /**
      * Retrieves a round chosen by its belonging to a game and its position.
@@ -72,13 +51,9 @@ public class RoundService {
     public Round getRoundById(Long gameId, Integer nthRound) {
         logger.debug("getRoundById with gameId: {} nthRound: {}", gameId, nthRound);
 
-        // throws InvalidInputException if not valid
-        checkInputArgsGameIdAndNthRound(gameId, nthRound);
-
-        Game game = gameRepo.findOne(gameId);
-        if (game == null || game.getId() == null) {
-            throw new InvalidInputException("Invalid arg. gameId  <" + gameId + ">, could not find a matching game.");
-        }
+        InputArgValidator.checkIfIdGreaterZero(gameId, "gameid");
+        InputArgValidator.checkIfIdGreaterZero(nthRound, "ntRound");
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
         return roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
     }
@@ -100,17 +75,17 @@ public class RoundService {
      * Executes chosen action of Player.
      *
      * @param gameId Identifier of game
-     * @param move Action chosen by player
+     * @param move   Action chosen by player
      * @return turnId Nth-turn of player
      */
     public String makeAMove(Long gameId, Integer nthRound, Move move) {
         // holds playerId to lookup player in repo
         Long tmpId;
 
-        // throws InvalidInputException if not valid
-        checkInputArgsGameIdAndNthRound(gameId, nthRound);
+        InputArgValidator.checkIfIdGreaterZero(gameId, "gameid");
+        InputArgValidator.checkIfIdGreaterZero(nthRound, "ntRound");
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
-        Game game = gameRepo.findOne(gameId);
         move.setGame(game);
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
 
@@ -121,7 +96,7 @@ public class RoundService {
         currentPlayer = playerRepo.findOne(tmpId);
 
 
-        if( !move.isPass() ) {
+        if (!move.isPass()) {
             // Player played a card
             playACard(round, move.getPlayedCard());
 
@@ -146,7 +121,7 @@ public class RoundService {
         Game game = gameRepo.findOne(gameId);
 
         logger.error("players id " + player.getId() + " games id " + game.getId());
-        InputArgValidator.checkItIsPlayersTurn(player,game);
+        InputArgValidator.checkItIsPlayersTurn(player, game);
 
         Card card = InputArgValidator.checkIfSuchCardOnHand(turnDTO.getType(), player);
 
@@ -156,7 +131,7 @@ public class RoundService {
         move.setPlayer(player);
         move.setPlayedCard(card);
 
-        if(card.getType().equals(CardType.DRAW)) move.setPass(true);
+        if (card.getType().equals(CardType.DRAW)) move.setPass(true);
 
         return move;
 
@@ -164,6 +139,7 @@ public class RoundService {
 
     /**
      * Saves played card in card stack.
+     *
      * @param playedCard
      * @param round
      * @return round
@@ -186,7 +162,7 @@ public class RoundService {
 
     protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
 
-        if(currentPlayer.getHand().size() != 0) {
+        if (currentPlayer.getHand().size() != 0) {
             currentPlayer.removeCardFromHand(playedCard);
             // save new hand
             playerRepo.save(currentPlayer);
@@ -195,38 +171,37 @@ public class RoundService {
 
     /**
      * Passes the turn and adds 3 cards into players hand
+     *
      * @param currentPlayer
      */
     protected void passAndTake3(Round round, Player currentPlayer) {
-        round.addNewlyPlayedCard(new Card(CardType.DRAW,currentPlayer.getId()));
+        round.addNewlyPlayedCard(new Card(CardType.DRAW, currentPlayer.getId()));
         currentPlayer.take3Cards();
         currentPlayer.incrementTotalMadeMoves();
         playerRepo.save(currentPlayer);
         roundRepo.save(round);
     }
 
-    private Card setFaceDown(List<Turn> turns, int stackSize, Long gameId, Card playedCard){
+    private Card setFaceDown(List<Turn> turns, int stackSize, Long gameId, Card playedCard) {
         //no hidden turn in this round
-        if(!turns.contains(Turn.HIDDEN)) return playedCard;
+        if (!turns.contains(Turn.HIDDEN)) return playedCard;
         //find what turn number is hidden
         int i = 0;
         List<Integer> turnNumberHidden = new ArrayList<>();
-        for(Turn t: turns) {
+        for (Turn t : turns) {
             if (t.equals(Turn.HIDDEN)) turnNumberHidden.add(i++);
             else if (t.equals(Turn.DOUBLE_TURNS)) i += 2;
             else ++i;
         }
         //is this turn hidden
         int nrOfPlayers = gameRepo.findOne(gameId).getPlayers().size();
-        if(turnNumberHidden.contains(stackSize / nrOfPlayers)) {
+        if (turnNumberHidden.contains(stackSize / nrOfPlayers)) {
             playedCard.setFaceDown(true);
             return playedCard;
         } else
             return playedCard;
 
 
-
     }
-
 
 }
