@@ -47,6 +47,7 @@ public class Round implements Serializable {
     private RoundEndEvent end;
 
     protected Round() {
+        this.cardStack = new LinkedList<Card>();
     }
 
     /**

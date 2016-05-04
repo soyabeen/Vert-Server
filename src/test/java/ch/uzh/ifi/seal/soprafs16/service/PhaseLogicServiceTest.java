@@ -176,6 +176,31 @@ public class PhaseLogicServiceTest {
     
     @Test
     public void testDoubleTurn() {
+
+        turns = Arrays.asList(
+                Turn.DOUBLE_TURNS,
+                Turn.NORMAL,
+                Turn.HIDDEN,
+                Turn.REVERSE);
+
+        round.setTurns(turns);
+
+
+        //first player in test will be player 2
+        game.setCurrentPlayerId(expectedPlayer2.getId());
+
+        //intialize card deck in round with one card
+        round.addNewlyPlayedCard(new Card(CardType.MOVE, expectedPlayer2.getId()));
+        Round r = roundRepo.save(round);
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer3.getId());
+
+        round.addNewlyPlayedCard(new Card(CardType.MOVE, expectedPlayer2.getId()));
+        roundRepo.save(round);
+
+        phaseLogic.advancePlayer(game.getId(), round.getNthRound());
+        Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer3.getId());
         
     }
 }

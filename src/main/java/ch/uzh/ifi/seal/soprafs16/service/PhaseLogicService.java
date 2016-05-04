@@ -101,7 +101,7 @@ public class PhaseLogicService {
                 break;
 
             case DOUBLE_TURNS:
-                nextPlayerId = getPlayerForDoubleTurn(game);
+                nextPlayerId = getPlayerForDoubleTurn(game, round);
                 break;
 
             case REVERSE:
@@ -147,14 +147,21 @@ public class PhaseLogicService {
         }
     }
 
-    protected Long getPlayerForDoubleTurn(Game game) {
-        throw new NotYetImplementedException("getPlayerForDoubleTurn() is missing");
-
+    protected Long getPlayerForDoubleTurn(Game game, Round round) {
         // for double turn use already played cards in stack
         // look at how many cards are in stack
         // if 1 card is in stack, leave current player
         // if more than 1 is in stack look at last two cards
         // if owner of last 2 cards are different leave current Player else change Player according to Normal Turn
+
+        List<Player> players = game.getPlayers();
+        Player currentPlayer = playerRepo.findOne(game.getCurrentPlayerId());
+        LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
+
+        if(stack.peekLast().getOwnerId().equals(currentPlayer.getId()))
+            return getPlayerForNormalTurn(game);
+        else
+            return currentPlayer.getId();
 
     }
 
