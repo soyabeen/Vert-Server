@@ -57,8 +57,8 @@ public class CharacterQueryControllerIntegrationTest {
         this.base = new URL("http://localhost:" + port + "/");
         this.template = new TestRestTemplate();
 
-        gameRepo.deleteAll();
         playerRepo.deleteAll();
+        gameRepo.deleteAll();
     }
 
     @Test
