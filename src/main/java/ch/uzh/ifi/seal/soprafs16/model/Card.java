@@ -118,4 +118,12 @@ public class Card implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public boolean isFaceDown() {
+        return isFaceDown;
+    }
+
+    public void setFaceDown(boolean faceDown) {
+        isFaceDown = faceDown;
+    }
 }
