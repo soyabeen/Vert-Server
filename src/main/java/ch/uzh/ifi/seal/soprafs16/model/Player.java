@@ -12,6 +12,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,9 +36,11 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    @OneToOne
-    //@JsonManagedReference
-    private CardDeck deck;
+    //@OneToOne
+    //private CardDeck deck;
+
+    @OneToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    private List<Card> deck;
 
     @Column
     private Integer totalMadeMoves;
@@ -70,9 +73,9 @@ public class Player extends Meeple {
         loots.add(loot);
     }
 
-    public Player(Loot loot, CardDeck playerDeck) {
+    public Player(Loot loot, List<Card> deck) {
         this(loot);
-        this.deck = playerDeck;
+        this.deck = deck;
     }
 
     /**
@@ -91,7 +94,7 @@ public class Player extends Meeple {
      * Player gets shot, add a bullet card to deck.
      */
     public void getsShot() {
-        deck.addCard(new Card(CardType.BULLET, this.getId()));
+        deck.add(new Card(CardType.BULLET, this.getId()));
     }
 
     public String getUsername() {
@@ -185,34 +188,6 @@ public class Player extends Meeple {
     }
 
     /**
-     * Gets the players cards in hand.
-     *
-     * @return Cards which the player is holding.
-     */
-    @JsonIgnore
-    public List<Card> getCardsOnHand() {
-        return deck.getCardsOnHand();
-    }
-
-    /**
-     * Sets the new cards the player is holding.
-     *
-     * @param hand Updated flag of cards in deck the player is going to hold.
-     */
-    @JsonIgnore
-    public void setCardsOnHand(List<Card> hand) {
-        deck.setNewHand(hand);
-    }
-
-    /**
-     * Adds 3 Cards from card deck to players hand.
-     */
-    public void take3Cards() { this.deck.drawCard(3);
-    }
-
-    public void removeCardFromHand(Card card) { deck.removeCardFromHand(card);}
-
-    /**
      * Gets the amount of rounds a player made a move.
      *
      * @return totalMadeMoves
@@ -228,12 +203,75 @@ public class Player extends Meeple {
         this.totalMadeMoves++;
     }
 
-    public CardDeck getDeck() {
+    public List<Card> getDeck() {
         return deck;
     }
 
-    public void setDeck(CardDeck deck) {
+    public void setDeck(List<Card> deck) {
         this.deck = deck;
     }
+
+    /**
+     * Gets the players cards in hand.
+     *
+     * @return Cards which the player is holding.
+     */
+    @JsonIgnore
+    public List<Card> getCardsOnHand() {
+        List<Card> onHand = new ArrayList<>();
+        for(Card c: deck) {
+            if(c.isOnHand()) onHand.add(c);
+        }
+        return onHand;
+    }
+
+    /**
+     * Adds 3 or rest Cards from card deck to players hand.
+     */
+    public void take3Cards() { this.drawCard(3);
+    }
+
+    public void removeCardFromHand(Card card) {
+        int i = 0;
+        while(!(deck.get(i).getType().equals(card.getType()) && deck.get(i).isOnHand())) {
+            ++i;
+        }
+        deck.get(i).setOnHand(false);
+    }
+
+    /**
+     * Draws card to start each round
+     */
+    public void drawHandForStart(){
+        for(Card c: deck) c.setOnHand(false);
+        if(this.character.equals(Character.DOC)) drawCard(7);
+        else drawCard(6);
+    }
+
+    /**
+     * Draws n many cards form deck randomly.
+     * @param numOfCards defines how many cards to draw.
+     * @return returns ArrayList of cards on hand of player.
+     */
+    private void drawCard(int numOfCards) {
+        List<Card> currentDeck = getCardsInDeck();
+
+        numOfCards = (numOfCards > currentDeck.size()) ? currentDeck.size() : numOfCards;
+
+        Collections.shuffle(currentDeck);
+
+        for(int i = 0; i < numOfCards; i++) {
+            currentDeck.get(i).setOnHand(true);
+        }
+    }
+
+    private List<Card> getCardsInDeck() {
+        List<Card> currentDeck = new ArrayList<>();
+        for (Card c: deck) {
+            if(!c.isOnHand()) currentDeck.add(c);
+        }
+        return currentDeck;
+    }
+
 
 }

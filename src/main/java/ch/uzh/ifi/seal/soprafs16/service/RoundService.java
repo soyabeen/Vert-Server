@@ -128,7 +128,7 @@ public class RoundService {
 
         } else {
             // Player passed
-            passAndTake3(currentPlayer);
+            passAndTake3(round, currentPlayer);
 
         }
 
@@ -189,14 +189,10 @@ public class RoundService {
     }
 
     protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
-        List<Card> playerHand = currentPlayer.getCardsOnHand();
 
-        if(playerHand.size() != 0) {
-            // go through hand and remove same card type
-            playerHand.remove(playedCard);
-
+        if(currentPlayer.getCardsOnHand().size() != 0) {
+            currentPlayer.removeCardFromHand(playedCard);
             // save new hand
-            currentPlayer.setCardsOnHand(playerHand);
             playerRepo.save(currentPlayer);
         }
             //TODO: throw new InvalidInputException("Player has no card on hand.");
@@ -206,10 +202,12 @@ public class RoundService {
      * Passes the turn and adds 3 cards into players hand
      * @param currentPlayer
      */
-    protected void passAndTake3(Player currentPlayer) {
+    protected void passAndTake3(Round round, Player currentPlayer) {
+        round.addNewlyPlayedCard(new Card(CardType.DRAW,currentPlayer.getId()));
         currentPlayer.take3Cards();
         currentPlayer.incrementTotalMadeMoves();
         playerRepo.save(currentPlayer);
+        roundRepo.save(round);
     }
 
 

@@ -1,14 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
-import ch.uzh.ifi.seal.soprafs16.model.CardDeck;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import org.hamcrest.core.IsNot;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,7 +76,7 @@ public class MoveRuleSetTest {
         Player player = PositionedPlayer.builder()
                 .withUserName("original player")
                 .onLowerLevelAt(1).build();
-        player.setDeck(new CardDeck());
+        player.setDeck(new ArrayList<Card>());
 
         Player target = PositionedPlayer.builder()
                 .onLowerLevelAt(0).build();

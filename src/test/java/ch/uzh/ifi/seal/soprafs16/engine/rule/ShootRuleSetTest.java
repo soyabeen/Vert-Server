@@ -4,7 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
-import ch.uzh.ifi.seal.soprafs16.model.CardDeck;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -101,7 +102,7 @@ public class ShootRuleSetTest {
         Player target = PositionedPlayer.builder()
                 .withUserName("target-2b")
                 .onLowerLevelAt(2).build();
-        target.setDeck(new CardDeck());
+        target.setDeck(new ArrayList<Card>());
 
 
         Game game = new Game();

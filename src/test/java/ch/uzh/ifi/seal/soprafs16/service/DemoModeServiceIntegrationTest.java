@@ -61,17 +61,17 @@ public class DemoModeServiceIntegrationTest {
             } else {
                 p2 = p;
             }
-            for (Card c:p.getDeck().getDeck()) {
+            for (Card c:p.getDeck()) {
                 logger.debug(Boolean.toString(c.isOnHand()));
             }
             Assert.assertThat("Player " + p.getUsername() + " must have a loot.", p.getLoots().size(), is(1));
             logger.debug(p.toString());
         }
 
-        for (Card c:p1.getDeck().getDeck()) {
+        for (Card c:p1.getDeck()) {
             logger.debug(Boolean.toString(c.isOnHand()));
         }
-        for (Card c:p2.getDeck().getDeck()) {
+        for (Card c:p2.getDeck()) {
             logger.debug(Boolean.toString(c.isOnHand()));
         }
 

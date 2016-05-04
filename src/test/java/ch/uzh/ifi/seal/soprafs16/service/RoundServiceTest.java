@@ -60,7 +60,6 @@ public class RoundServiceTest {
     private Game game;
     //private User user1;
     private Loot loot;
-    private CardDeck playerDeck;
     private List<Card> starterDeck;
     private Move move, movePass;
     private Integer nthRound;
@@ -93,9 +92,7 @@ public class RoundServiceTest {
         starterDeck.add(card2);
         starterDeck.add(card2);
 
-        playerDeck = new CardDeck(starterDeck);
-
-        player = new Player(loot, playerDeck);
+        player = new Player(loot, starterDeck);
         player.setCharacter(Character.GHOST);
         player.setToken(UUID.randomUUID().toString());
 
@@ -114,7 +111,7 @@ public class RoundServiceTest {
         hand.add(card2);
         hand.add(card2);
 
-        player.setCardsOnHand(hand);
+        player.setDeck(hand);
 
         move = new Move();
         move.setGame(game);

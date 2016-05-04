@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.dto;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 
 import java.io.Serializable;
@@ -17,6 +18,8 @@ public class TurnDTO implements Serializable {
     //Future Meeple destinations
     private List<Player> players;
 
+    private List<Loot> loots;
+
     private boolean punchRight;
 
     private int lootID;
@@ -24,6 +27,7 @@ public class TurnDTO implements Serializable {
 
     public TurnDTO() {
         players = new ArrayList<Player>();
+        loots = new ArrayList<>();
     }
 
     public List<Player> getPlayers() {
@@ -58,4 +62,8 @@ public class TurnDTO implements Serializable {
     public void setLootID(int lootID) {
         this.lootID = lootID;
     }
+
+    public void addPlayersAsList(List<Player> players) {this.players = players;}
+
+    public void addLootsAsList(List<Loot> loot) {loots =loot;}
 }
