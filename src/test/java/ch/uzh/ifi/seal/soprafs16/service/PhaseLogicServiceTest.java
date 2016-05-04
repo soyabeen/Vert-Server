@@ -51,7 +51,6 @@ public class PhaseLogicServiceTest {
     private Integer nthRound;
     private Game game;
     private Loot loot;
-    private CardDeck playerDeck;
     private List<Card> starterDeck;
     List<Turn> turns;
 
@@ -73,7 +72,6 @@ public class PhaseLogicServiceTest {
         starterDeck.add(card2);
         starterDeck.add(card2);
         starterDeck.add(card2);
-        playerDeck = new CardDeck(starterDeck);
 
         nthRound = 1;
 
@@ -83,19 +81,19 @@ public class PhaseLogicServiceTest {
         round = new Round(game.getId(), nthRound, turns, RoundEndEvent.REBELLION);
 
         // TODO: use player builder?
-        expectedPlayer1 = new Player(loot, playerDeck);
+        expectedPlayer1 = new Player(loot, starterDeck);
         expectedPlayer1.setId(1L);
         expectedPlayer1.setCharacter(Character.GHOST);
         expectedPlayer1.setToken(UUID.randomUUID().toString());
         game.addPlayer(expectedPlayer1);
 
-        expectedPlayer2 = new Player(loot, playerDeck);
+        expectedPlayer2 = new Player(loot, starterDeck);
         expectedPlayer2.setId(2L);
         expectedPlayer2.setCharacter(Character.DJANGO);
         expectedPlayer2.setToken(UUID.randomUUID().toString());
         game.addPlayer(expectedPlayer2);
 
-        expectedPlayer3 = new Player(loot, playerDeck);
+        expectedPlayer3 = new Player(loot, starterDeck);
         expectedPlayer3.setId(3L);
         expectedPlayer3.setCharacter(Character.BELLE);
         expectedPlayer3.setToken(UUID.randomUUID().toString());

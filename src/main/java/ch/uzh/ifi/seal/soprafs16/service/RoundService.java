@@ -126,7 +126,7 @@ public class RoundService {
 
         } else {
             // Player passed
-            passAndTake3(currentPlayer);
+            passAndTake3(round, currentPlayer);
 
         }
 
@@ -144,6 +144,7 @@ public class RoundService {
         Player player = playerRepo.findByToken(userToken);
         Game game = gameRepo.findOne(gameId);
 
+        logger.error("players id " + player.getId() + " games id " + game.getId());
         InputArgValidator.checkItIsPlayersTurn(player,game);
 
         Card card = InputArgValidator.checkIfSuchCardOnHand(turnDTO.getType(), player);
@@ -180,14 +181,10 @@ public class RoundService {
     }
 
     protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
-        List<Card> playerHand = currentPlayer.getHand();
 
-        if(playerHand.size() != 0) {
-            // go through hand and remove same card type
-            playerHand.remove(playedCard);
-
+        if(currentPlayer.getCardsOnHand().size() != 0) {
+            currentPlayer.removeCardFromHand(playedCard);
             // save new hand
-            currentPlayer.setHand(playerHand);
             playerRepo.save(currentPlayer);
         }
     }
@@ -196,10 +193,12 @@ public class RoundService {
      * Passes the turn and adds 3 cards into players hand
      * @param currentPlayer
      */
-    protected void passAndTake3(Player currentPlayer) {
+    protected void passAndTake3(Round round, Player currentPlayer) {
+        round.addNewlyPlayedCard(new Card(CardType.DRAW,currentPlayer.getId()));
         currentPlayer.take3Cards();
         currentPlayer.incrementTotalMadeMoves();
         playerRepo.save(currentPlayer);
+        roundRepo.save(round);
     }
 
 

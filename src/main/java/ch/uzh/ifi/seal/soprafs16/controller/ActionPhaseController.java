@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs16.service.ActionPhaseService;
 import ch.uzh.ifi.seal.soprafs16.service.PhaseLogicService;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class ActionPhaseController extends GenericController {
     private static final Logger logger = LoggerFactory.getLogger(ActionPhaseController.class);
 
     @Autowired
-    private PhaseLogicService phaseLogicService;
+    private ActionPhaseService actionService;
 
     @Autowired
     private PlayerRepository playerRepo;
@@ -41,7 +42,7 @@ public class ActionPhaseController extends GenericController {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
-        return phaseLogicService.sendPossibilities(gameId, nthRound);
+        return actionService.sendPossibilities(gameId, nthRound);
     }
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.PUT)
@@ -54,7 +55,7 @@ public class ActionPhaseController extends GenericController {
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
         //TODO: Check if DTO is valid if necessary
-        phaseLogicService.executeDTO(gameId, nthRound, turnDTO);
+        actionService.executeDTO(gameId, nthRound, turnDTO);
     }
 
 

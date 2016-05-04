@@ -136,7 +136,7 @@ public class InputArgValidator {
         if (CardType.DRAW.equals(type)) {
             return new Card(CardType.DRAW, player.getId());
         } else {
-            List<Card> cardsOnHand = player.getHand();
+            List<Card> cardsOnHand = player.getCardsOnHand();
             for (Card c : cardsOnHand) {
                 if (c.getType().equals(type)) {
                     return c;

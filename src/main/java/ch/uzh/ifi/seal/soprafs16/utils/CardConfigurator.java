@@ -2,8 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
-import ch.uzh.ifi.seal.soprafs16.model.CardDeck;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +25,7 @@ public class CardConfigurator {
         this.ownerId = ownerId;
     }
 
-    public CardDeck buildDeck() {
+    public List<Card> buildDeck() {
         List<Card> cards = new ArrayList<>();
 
         cards.addAll(createCardsForType(ownerId, CardType.MOVE, NR_OF_MOVE_CARDS));
@@ -39,9 +37,8 @@ public class CardConfigurator {
         cards.addAll(createCardsForType(ownerId, CardType.MARSHAL, NR_OF_MARSHAL_CARDS));
 
         Collections.shuffle(cards);
-        CardDeck deck = new CardDeck(cards);
 
-        return deck;
+        return cards;
     }
 
     private List<Card> createCardsForType(Long ownerId, CardType type, final int nrOfCards) {

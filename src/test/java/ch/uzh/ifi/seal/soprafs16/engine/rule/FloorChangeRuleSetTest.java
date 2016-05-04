@@ -3,7 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
-import ch.uzh.ifi.seal.soprafs16.model.CardDeck;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
@@ -66,7 +66,7 @@ public class FloorChangeRuleSetTest {
         Player player = PositionedPlayer.builder()
                 .withUserName("actor")
                 .onUpperLevelAt(0).build();
-        player.setDeck(new CardDeck());
+        player.setDeck(new ArrayList<Card>());
 
         ActionCommand command = new ActionCommand(CardType.FLOORCHANGE, game, player, null);
 

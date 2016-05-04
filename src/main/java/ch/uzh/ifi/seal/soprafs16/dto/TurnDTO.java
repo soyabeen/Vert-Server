@@ -78,4 +78,5 @@ public class TurnDTO implements Serializable {
     public void addLootsAsList(List<Loot> loot) {
         loots =loot;
     }
+
 }

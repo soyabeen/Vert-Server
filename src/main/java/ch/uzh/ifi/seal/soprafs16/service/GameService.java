@@ -49,9 +49,6 @@ public class GameService {
     private PlayerRepository playerRepo;
 
     @Autowired
-    private CardDeckRepository deckRepo;
-
-    @Autowired
     private LootRepository lootRepo;
 
     @Autowired
@@ -173,37 +170,18 @@ public class GameService {
     }
 
     private void buildPlayerDeck(Player player) {
-        List<Card> result = new ArrayList<>();
         CardConfigurator conf = new CardConfigurator(player.getId());
-        CardDeck deck = conf.buildDeck();
-
-        for (Card c : deck.getDeck()) {
-            result.add(cardRepo.save(c));
-        }
-
-        deck.setDeck(result);
-
-        deck = deckRepo.save(deck);
+        List<Card> deck = conf.buildDeck();
 
         player.setDeck(deck);
 
         drawCards(player);
 
-        logger.error(player.getHand().toString());
-
-        playerRepo.save(player);
+        Player p = playerRepo.save(player);
     }
 
     private void drawCards(Player player) {
-        if (player.getCharacter().equals(Character.DOC)) {
-            player.setHand(player.getDeck().drawCard(7));
-        } else {
-            player.setHand(player.getDeck().drawCard(6));
-        }
-
-        for (Card c : player.getHand()) {
-            c.setOnHand(true);
-        }
+        player.drawHandForStart();
     }
 
     public Game loadGameFromRepo(long gameIdToLoad) {

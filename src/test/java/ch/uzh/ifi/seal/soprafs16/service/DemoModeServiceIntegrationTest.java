@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Move;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -60,12 +61,24 @@ public class DemoModeServiceIntegrationTest {
             } else {
                 p2 = p;
             }
+            for (Card c:p.getDeck()) {
+                logger.debug(Boolean.toString(c.isOnHand()));
+            }
             Assert.assertThat("Player " + p.getUsername() + " must have a loot.", p.getLoots().size(), is(1));
+            logger.debug(p.toString());
         }
 
+        for (Card c:p1.getDeck()) {
+            logger.debug(Boolean.toString(c.isOnHand()));
+        }
+        for (Card c:p2.getDeck()) {
+            logger.debug(Boolean.toString(c.isOnHand()));
+        }
+
+        logger.debug(p1.getCardsOnHand().toString());
         // player 1, plays a move card
         TurnDTO dto = new TurnDTO();
-        dto.setType(p1.getHand().get(0).getType());
+        dto.setType(p1.getCardsOnHand().get(0).getType());
         Move m1move = roundService.getMoveFromDTO(demo.getId(), p1.getToken(), dto);
         String res = roundService.makeAMove(demo.getId(), 1, m1move);
 
