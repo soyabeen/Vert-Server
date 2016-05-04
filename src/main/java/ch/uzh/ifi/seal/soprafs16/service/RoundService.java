@@ -5,7 +5,6 @@ import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
@@ -33,9 +32,6 @@ public class RoundService {
 
     @Autowired
     private PlayerRepository playerRepo;
-
-    @Autowired
-    private MoveRepository moveRepo;
 
     @Autowired
     private PhaseLogicService logicService;
