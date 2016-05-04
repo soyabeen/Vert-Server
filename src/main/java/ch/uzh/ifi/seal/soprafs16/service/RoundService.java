@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -168,6 +169,9 @@ public class RoundService {
      * @return round
      */
     protected Round playACard(Round round, Card playedCard) {
+        // is it a hidden turn
+        playedCard = setFaceDown(round.getTurns(), round.getCardStack().size(), round.getGameId(), playedCard);
+
         // add played card to card stack
         round.addNewlyPlayedCard(playedCard);
 
@@ -199,6 +203,29 @@ public class RoundService {
         currentPlayer.incrementTotalMadeMoves();
         playerRepo.save(currentPlayer);
         roundRepo.save(round);
+    }
+
+    private Card setFaceDown(List<Turn> turns, int stackSize, Long gameId, Card playedCard){
+        //no hidden turn in this round
+        if(!turns.contains(Turn.HIDDEN)) return playedCard;
+        //find what turn number is hidden
+        int i = 0;
+        List<Integer> turnNumberHidden = new ArrayList<>();
+        for(Turn t: turns) {
+            if (t.equals(Turn.HIDDEN)) turnNumberHidden.add(i);
+            else if (t.equals(Turn.DOUBLE_TURNS)) i += 2;
+            else ++i;
+        }
+        //is this turn hidden
+        int nrOfPlayers = gameRepo.findOne(gameId).getPlayers().size();
+        if(turnNumberHidden.contains(stackSize / nrOfPlayers)) {
+            playedCard.setFaceDown(true);
+            return playedCard;
+        } else
+            return playedCard;
+
+
+
     }
 
 
