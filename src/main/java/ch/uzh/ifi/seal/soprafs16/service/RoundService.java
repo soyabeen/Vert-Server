@@ -212,7 +212,7 @@ public class RoundService {
         int i = 0;
         List<Integer> turnNumberHidden = new ArrayList<>();
         for(Turn t: turns) {
-            if (t.equals(Turn.HIDDEN)) turnNumberHidden.add(i);
+            if (t.equals(Turn.HIDDEN)) turnNumberHidden.add(i++);
             else if (t.equals(Turn.DOUBLE_TURNS)) i += 2;
             else ++i;
         }

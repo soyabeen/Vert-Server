@@ -33,12 +33,28 @@ public class RoundConfiguratorTest {
             temp_round = r.getNthRound();
             if (memory.contains(temp_round)) {
                 Assert.fail("Round with current position(nthRound) " + temp_round + " is used already!");
-            }else{
+            } else {
                 memory.add(temp_round);
             }
         }
         Assert.assertTrue("No round configuration/position(nthRound) is used multiple times.", true);
     }
 
+    @Test
+    public void holdsImageTypeDistinguisher() {
+        RoundConfigurator configurator = new RoundConfigurator();
+        List<Round> rounds = configurator.generateRoundsForGame(new Game());
+
+        // handle station card and remove it from list
+        Round station = rounds.remove(rounds.size() - 1);
+        Assert.assertNotNull("Station card type not null.", station.getImgType());
+        Assert.assertTrue("Station card type 1, 2 or 3.", "1".equals(station.getImgType())
+                || "2".equals(station.getImgType())
+                || "3".equals(station.getImgType()));
+
+        for (Round r : rounds) {
+            Assert.assertFalse("Round card type not empty.", r.getImgType().isEmpty());
+        }
+    }
 
 }

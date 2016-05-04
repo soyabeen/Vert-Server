@@ -80,7 +80,7 @@ public class RoundServiceTest {
                 Turn.NORMAL,
                 Turn.HIDDEN);
         nthRound = 1;
-        round = new Round(game.getId(), nthRound, turns,RoundEndEvent.REBELLION);
+        round = new Round(game.getId(), nthRound, turns,RoundEndEvent.REBELLION, "");
 
 
 

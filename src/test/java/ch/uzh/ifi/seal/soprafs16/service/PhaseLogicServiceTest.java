@@ -78,7 +78,7 @@ public class PhaseLogicServiceTest {
         game = new Game();
         game.setId(1L);
         game.setStatus(GameStatus.PLANNINGPHASE);
-        round = new Round(game.getId(), nthRound, turns, RoundEndEvent.REBELLION);
+        round = new Round(game.getId(), nthRound, turns, RoundEndEvent.REBELLION, "");
 
         // TODO: use player builder?
         expectedPlayer1 = new Player(loot, starterDeck);
