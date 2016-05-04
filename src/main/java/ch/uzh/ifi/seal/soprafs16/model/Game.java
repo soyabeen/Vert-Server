@@ -52,10 +52,13 @@ public class Game implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Loot> loots;
 
+    @Column
+    private int turnId;
 
     public Game() {
         this.players = new ArrayList<>();
         this.loots = new ArrayList<>();
+        turnId = 1;
     }
 
     @Override
@@ -158,4 +161,8 @@ public class Game implements Serializable {
     public int getRoundId() {return roundId;}
 
     public void setRoundId(int roundId) {this.roundId = roundId;}
+
+    public int getTurnId() {return turnId;}
+
+    public void setTurnId(int turnId) {this.turnId = turnId;}
 }

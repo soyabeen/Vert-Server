@@ -19,6 +19,7 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     private int numberOfPlayers;
     private Long currentPlayerId;
     private int roundId;
+    private int turnId;
     private int nrOfCars;
     private GameStatus status;
     private Card lastPlayedCard;
@@ -34,6 +35,7 @@ public class GameWithLastPlayedCardDTO implements Serializable {
                 ", numberOfPlayers=" + numberOfPlayers +
                 ", currentPlayerId=" + currentPlayerId +
                 ", roundId=" + roundId +
+                ", turnId=" + turnId +
                 ", nrOfCars=" + nrOfCars +
                 ", status=" + status +
                 ", lastPlayedCard=" + lastPlayedCard +
@@ -129,4 +131,8 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     public void setLoots(List<Loot> loots) {
         this.loots = loots;
     }
+
+    public int getTurnId() {return turnId;}
+
+    public void setTurnId(int turnId) {this.turnId = turnId;}
 }

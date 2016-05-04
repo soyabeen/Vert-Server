@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
@@ -69,6 +70,8 @@ public class PhaseLogicService {
             game.setCurrentPlayerId(getNextPlayer(game, nthround));
         }
 
+        changeState(game, nthround);
+
         // save repositories
         gameRepo.save(game);
     }
@@ -94,13 +97,14 @@ public class PhaseLogicService {
 
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
-        switch ( round.getTurns().get(round.getCurrentTurnIndex()) ) {
+        switch ( round.getTurns().get(game.getTurnId()-1) ) {
             case NORMAL:
             case HIDDEN:
                 nextPlayerId = getPlayerForNormalTurn(game);
                 break;
 
             case DOUBLE_TURNS:
+                logger.error("HERE");
                 nextPlayerId = getPlayerForDoubleTurn(game, round);
                 break;
 
@@ -154,14 +158,16 @@ public class PhaseLogicService {
         // if more than 1 is in stack look at last two cards
         // if owner of last 2 cards are different leave current Player else change Player according to Normal Turn
 
-        List<Player> players = game.getPlayers();
         Player currentPlayer = playerRepo.findOne(game.getCurrentPlayerId());
-        LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
+        List<Card> stack = round.getCardStack();
 
-        if(stack.peekLast().getOwnerId().equals(currentPlayer.getId()))
-            return getPlayerForNormalTurn(game);
+        if(stack.size() > 1)
+            if(stack.get(stack.size()-2).getOwnerId().equals(currentPlayer.getId()))
+                return getPlayerForNormalTurn(game);
+            else
+                return currentPlayer.getId();
         else
-            return currentPlayer.getId();
+            return getPlayerForNormalTurn(game);
 
     }
 
@@ -180,7 +186,7 @@ public class PhaseLogicService {
         }
     }
 
-    protected void checkGameChangeState(Game game, Integer nthround) {
+    protected void changeState(Game game, Integer nthround) {
         // Order in which the game should be checked:
         // if Turn is over execute Action Phase
         // if Action Phase is over check if Round is over else start new turn
@@ -188,17 +194,15 @@ public class PhaseLogicService {
         // if game is over collect all information and end game
 
 
-        if (isTurnOver(game)) {
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(),nthround);
+        if (isTurnOver(game, round)) {
             logger.debug("Game " + game.getId() + ": State changed, Turn is over");
-            game.setStatus(GameStatus.ACTIONPHASE);
-
+            game.setTurnId(game.getTurnId() + 1);
         }
 
-        if(isRoundOver(game,nthround)) {
+        if(isRoundOver(game,round)) {
             logger.debug("Game " + game.getId() + ": State changed, Round is over");
-            // TODO: execute Round End Event
-            // TODO: start new round
-            game.setStatus(GameStatus.PLANNINGPHASE);
+            game.setStatus(GameStatus.ACTIONPHASE);
         }
 
         if(isGameOver(nthround)) {
@@ -212,31 +216,30 @@ public class PhaseLogicService {
         return;
     }
 
-    protected boolean isTurnOver(Game game) {
-        Integer lastPlayerIndex = game.getPlayers().size() - 1;
-        Long lastPlayerId = game.getPlayers().get(lastPlayerIndex).getId();
-
-        // check for end of Turn (only works for Normal Round!)
-       /* if (game.getCurrentPlayerId() == lastPlayerId) {
-            return true;
-        }*/
-
+    protected boolean isTurnOver(Game game, Round round) {
+        List<Turn> turns = round.getTurns();
+        int stackSize = round.getCardStack().size();
+        int nrOfPlayers = game.getPlayers().size();
+        int changeTurn = 0;
+        for(int i = 0; i < game.getTurnId(); ++i) {
+            if(turns.get(i).equals(Turn.DOUBLE_TURNS))
+                changeTurn += 2 * nrOfPlayers;
+            else changeTurn += nrOfPlayers;
+        }
+        if(stackSize == changeTurn) return true;
         return false;
     }
 
-    protected boolean isRoundOver(Game game, Integer nthround) {
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-        Integer lastTurnIndex = round.getTurns().size() - 1;
-
-        if (round.getCurrentTurnIndex() == lastTurnIndex) {
+    protected boolean isRoundOver(Game game, Round round) {
+        Integer lastTurnIndex = round.getTurns().size() + 1;
+        if (game.getTurnId() == lastTurnIndex) {
             return true;
         }
-
         return false;
     }
 
     protected boolean isGameOver(Integer nthround) {
-        //fixme: MAX_ROUNDS_FOR_GAME == 4 plus 1 Station Round = 5 Rounds total
+        //MAX_ROUNDS_FOR_GAME == 4 plus 1 Station Round = 5 Rounds total
         if (nthround > RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
             return true;
         }
@@ -310,6 +313,23 @@ public class PhaseLogicService {
 
         // give back result
         // return result;
+
+    }
+
+    /**
+     *
+     * @param game
+     * @param round
+     * @return
+     */
+    private int setTurnId(Game game, Round round) {
+        List<Turn> turns = round.getTurns();
+        int stackSize = round.getCardStack().size();
+        int nrOfPlayers = game.getPlayers().size();
+        int newTurnId = (stackSize / nrOfPlayers);
+        if(!turns.contains(Turn.DOUBLE_TURNS) || turns.indexOf(Turn.DOUBLE_TURNS) + 1 > newTurnId)
+            return newTurnId + 1;
+        else return newTurnId;
 
     }
 
