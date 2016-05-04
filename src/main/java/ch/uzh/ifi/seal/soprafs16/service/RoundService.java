@@ -44,8 +44,8 @@ public class RoundService {
      * @param nthRound
      * @return The round object.
      */
-    public Round getRoundById(Long gameId, Integer nthRound) {
-        logger.debug("getRoundById with gameId: {} nthRound: {}", gameId, nthRound);
+    public Round getRoundByGameIdAndRoundNr(Long gameId, Integer nthRound) {
+        logger.debug("getRoundByGameIdAndRoundNr with gameId: {} nthRound: {}", gameId, nthRound);
 
         InputArgValidator.checkIfIdGreaterZero(gameId, "gameid");
         InputArgValidator.checkIfIdGreaterZero(nthRound, "ntRound");
@@ -63,7 +63,7 @@ public class RoundService {
      */
     public List<Turn> listTurnsForRound(Long gameId, Integer nthRound) {
         logger.debug("listTurnsForRound with gameId: {} nthRound: {}", gameId, nthRound);
-        Round round = getRoundById(gameId, nthRound);
+        Round round = getRoundByGameIdAndRoundNr(gameId, nthRound);
         return round.getTurns();
     }
 
@@ -197,7 +197,11 @@ public class RoundService {
         } else
             return playedCard;
 
+    }
 
+    public Round getCurrentRoundInformation(Long gameid) {
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameid, gameRepo, "gameId");
+        return getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId());
     }
 
 }

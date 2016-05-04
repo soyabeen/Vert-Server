@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
-import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
@@ -193,7 +192,7 @@ public class GameService {
         Optional<Card> opt = Optional.empty();
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameId");
         if (game.getRoundId() > 0) {
-            Round r = roundService.getRoundById(game.getId(), game.getRoundId());
+            Round r = roundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId());
             if(r !=null ) {
                 List<Card> cards = r.getCardStack();
                 return cards == null || cards.isEmpty() ? opt : Optional.of(cards.get(cards.size() - 1));

@@ -27,23 +27,24 @@ public class RoundController extends GenericController {
 
     private final String CONTEXT = "/games/{gameId}/rounds";
 
+    @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Round getCurrentRoundInformation(@PathVariable Long gameId) {
+        logger.debug("GET:{} - Args. gameId <{}>.", CONTEXT, gameId);
+        return roundService.getCurrentRoundInformation(gameId);
+    }
+
     @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public String makeMove(@PathVariable Long gameId, @PathVariable Integer nthRound, @RequestParam String token,
                            @RequestBody TurnDTO turnDTO) {
+
         Move move = roundService.getMoveFromDTO(gameId, token, turnDTO);
         return roundService.makeAMove(gameId, nthRound, move);
     }
 
-    @RequestMapping(value = CONTEXT + "/{nthRound}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public Round getRoundById(@PathVariable Long gameId, @PathVariable Integer nthRound) {
-        return roundService.getRoundById(gameId, nthRound);
-    }
-
     @RequestMapping(value = CONTEXT + "/{nthRound}/turns", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    // TODO: add parameter for filter options
     public List<Turn> listTurnsForRound(@PathVariable Long gameId, @PathVariable Integer nthRound) {
         return roundService.listTurnsForRound(gameId, nthRound);
     }

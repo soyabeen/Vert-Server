@@ -50,7 +50,7 @@ public class LastPlayedCardTest {
         round.addNewlyPlayedCard(new Card(CardType.PUNCH, 2L));
 
         when(mockedGameRepo.findOne(1L)).thenReturn(game);
-        when(mockedRoundService.getRoundById(game.getId(), game.getRoundId())).thenReturn(round);
+        when(mockedRoundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId())).thenReturn(round);
 
         // execute
         Optional<Card> lastPlayed = gameService.getLastPlayedCardForGame(game.getId());
@@ -68,7 +68,7 @@ public class LastPlayedCardTest {
         game.setRoundId(1);
 
         when(mockedGameRepo.findOne(1L)).thenReturn(game);
-        when(mockedRoundService.getRoundById(game.getId(), game.getRoundId())).thenReturn(null);
+        when(mockedRoundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId())).thenReturn(null);
 
         // execute
         Optional<Card> lastPlayed = gameService.getLastPlayedCardForGame(game.getId());

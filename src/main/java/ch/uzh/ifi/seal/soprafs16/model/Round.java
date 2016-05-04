@@ -123,4 +123,12 @@ public class Round implements Serializable {
     public void setCurrentTurnIndex(Integer currentTurnIndex) {
         this.currentTurnIndex = currentTurnIndex;
     }
+
+    public RoundEndEvent getEnd() {
+        return end;
+    }
+
+    public void setEnd(RoundEndEvent end) {
+        this.end = end;
+    }
 }
