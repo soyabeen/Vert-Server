@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
@@ -8,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -145,5 +147,15 @@ public class InputArgValidator {
         }
         throw new InvalidInputException("Player " + player.getUsername() + " is trying to play the card "
                 + type + " which is not in his hand");
+    }
+
+    public static Character checkIfCharacterAvailable(Game game, Character character) {
+        List<Character> usedCharacter = new ArrayList<>();
+        for(Player p: game.getPlayers()) {
+            usedCharacter.add(p.getCharacter());
+        }
+        if(usedCharacter.contains(character))
+            throw new InvalidInputException(MESSAGE_START + " Character is already taken");
+        return character;
     }
 }

@@ -103,6 +103,8 @@ public class PlayerService {
 
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
+        InputArgValidator.checkIfCharacterAvailable(game,character);
+
         if (game != null && game.getPlayers().size() < GameConfigurator.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
 
@@ -131,6 +133,8 @@ public class PlayerService {
     public Player initializeCharacter(Long gameId, Player player, Character character) {
 
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+
+        InputArgValidator.checkIfCharacterAvailable(game,character);
 
         // give player the start loot
         Loot loot = new Loot(LootType.PURSE_SMALL, gameId, LootType.PURSE_SMALL.value());
