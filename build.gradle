@@ -46,6 +46,7 @@ dependencies {
     compile('org.apache.tomcat:tomcat-servlet-api:8.0.20')
     compile('org.mapstruct:mapstruct:1.0.0.Final')
     compile('org.mapstruct:mapstruct-processor:1.0.0.Final')
+    compile('org.mapstruct:mapstruct-jdk8:1.0.0.Final')
 
     testCompile('junit:junit:4.12')
     testCompile('org.springframework.boot:spring-boot-starter-test')

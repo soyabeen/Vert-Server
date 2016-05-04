@@ -2,8 +2,11 @@ package ch.uzh.ifi.seal.soprafs16.dto;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by soyabeen on 02.05.16.
@@ -19,18 +22,23 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     private int nrOfCars;
     private GameStatus status;
     private Card lastPlayedCard;
+    private List<Player> players;
+    private List<Loot> loots;
 
     @Override
     public String toString() {
-        return "GameDTO{" +
+        return "GameWithLastPlayedCardDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", owner='" + owner + '\'' +
-                ", nrOfCars=" + nrOfCars +
                 ", numberOfPlayers=" + numberOfPlayers +
-                ", status=" + status +
                 ", currentPlayerId=" + currentPlayerId +
+                ", roundId=" + roundId +
+                ", nrOfCars=" + nrOfCars +
+                ", status=" + status +
                 ", lastPlayedCard=" + lastPlayedCard +
+                ", players=" + players +
+                ", loots=" + loots +
                 '}';
     }
 
@@ -104,5 +112,21 @@ public class GameWithLastPlayedCardDTO implements Serializable {
 
     public void setLastPlayedCard(Card lastPlayedCard) {
         this.lastPlayedCard = lastPlayedCard;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public List<Loot> getLoots() {
+        return loots;
+    }
+
+    public void setLoots(List<Loot> loots) {
+        this.loots = loots;
     }
 }

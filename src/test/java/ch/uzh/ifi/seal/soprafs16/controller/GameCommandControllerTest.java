@@ -133,9 +133,9 @@ public class GameCommandControllerTest {
             // Has a deck
             Assert.assertNotNull(p.getDeck());
 
-            logger.error("Hand size: " + p.getCardsOnHand().size());
+            logger.error("Hand size: " + p.getHand().size());
             // TODO: Find a way to correctly get hand cards.
-            List<Card> hand = p.getCardsOnHand().stream().filter(Card::isOnHand).collect(Collectors.toList());
+            List<Card> hand = p.getHand().stream().filter(Card::isOnHand).collect(Collectors.toList());
 
             // Has 6 (7) cards in hand
             if (p.getCharacter().equals(Character.DOC)) {

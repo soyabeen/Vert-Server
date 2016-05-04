@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
 import org.eclipse.persistence.annotations.VariableOneToOne;
@@ -55,6 +56,7 @@ public class Player extends Meeple {
         this.loots = new ArrayList<>();
         totalMadeMoves = 0;
         bullets = MAX_BULLETS;
+        deck = new ArrayList<>();
     }
 
     public Player(String username) {
@@ -200,6 +202,7 @@ public class Player extends Meeple {
         this.totalMadeMoves++;
     }
 
+    @JsonIgnore
     public List<Card> getDeck() {
         return deck;
     }
@@ -213,8 +216,8 @@ public class Player extends Meeple {
      *
      * @return Cards which the player is holding.
      */
-    @JsonIgnore
-    public List<Card> getCardsOnHand() {
+    @JsonProperty
+    public List<Card> getHand() {
         List<Card> onHand = new ArrayList<>();
         for(Card c: deck) {
             if(c.isOnHand()) onHand.add(c);

@@ -75,10 +75,10 @@ public class DemoModeServiceIntegrationTest {
             logger.debug(Boolean.toString(c.isOnHand()));
         }
 
-        logger.debug(p1.getCardsOnHand().toString());
+        logger.debug(p1.getHand().toString());
         // player 1, plays a move card
         TurnDTO dto = new TurnDTO();
-        dto.setType(p1.getCardsOnHand().get(0).getType());
+        dto.setType(p1.getHand().get(0).getType());
         Move m1move = roundService.getMoveFromDTO(demo.getId(), p1.getToken(), dto);
         String res = roundService.makeAMove(demo.getId(), 1, m1move);
 

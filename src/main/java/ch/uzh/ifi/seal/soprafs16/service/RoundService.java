@@ -182,7 +182,7 @@ public class RoundService {
 
     protected void removeCardFromHand(Player currentPlayer, Card playedCard) {
 
-        if(currentPlayer.getCardsOnHand().size() != 0) {
+        if(currentPlayer.getHand().size() != 0) {
             currentPlayer.removeCardFromHand(playedCard);
             // save new hand
             playerRepo.save(currentPlayer);
