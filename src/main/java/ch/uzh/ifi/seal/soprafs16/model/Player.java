@@ -36,9 +36,6 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    //@OneToOne
-    //private CardDeck deck;
-
     @OneToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     private List<Card> deck;
 
