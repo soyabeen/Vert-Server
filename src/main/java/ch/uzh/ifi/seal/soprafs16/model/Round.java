@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
-import org.hibernate.annotations.Sort;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,6 +46,9 @@ public class Round implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoundEndEvent end;
 
+    @Column
+    private String imgType;
+
     protected Round() {
         this.cardStack = new LinkedList<Card>();
     }
@@ -58,13 +60,14 @@ public class Round implements Serializable {
      * @param turns    The turns for that round.
      * @param endEvent The end event.
      */
-    public Round(Long gameId, Integer nthRound, List<Turn> turns, RoundEndEvent endEvent) {
+    public Round(Long gameId, Integer nthRound, List<Turn> turns, RoundEndEvent endEvent, String imgType) {
         this.gameId = gameId;
         this.nthRound = nthRound;
         this.turns = turns;
         this.currentTurnIndex = 0;
         this.end = endEvent;
         this.cardStack = new LinkedList<Card>();
+        this.imgType = imgType;
     }
 
     @Override
@@ -100,6 +103,10 @@ public class Round implements Serializable {
     public void setTurns(List<Turn> turns) {
         this.turns = turns;
     }
+
+    public String getImgType() { return imgType; }
+
+    public void setImgType(String imgType) { this.imgType = imgType; }
 
     public Integer getNthRound() {
         return nthRound;

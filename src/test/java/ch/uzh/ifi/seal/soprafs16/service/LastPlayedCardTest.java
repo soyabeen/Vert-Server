@@ -44,7 +44,7 @@ public class LastPlayedCardTest {
         game.setId(1L);
         game.setRoundId(1);
 
-        Round round = new Round(game.getId(), game.getRoundId(), null, null);
+        Round round = new Round(game.getId(), game.getRoundId(), null, null, "");
         round.addNewlyPlayedCard(new Card(CardType.FIRE, 2L));
         round.addNewlyPlayedCard(new Card(CardType.DRAW, 3L));
         round.addNewlyPlayedCard(new Card(CardType.PUNCH, 2L));
