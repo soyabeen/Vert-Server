@@ -182,16 +182,16 @@ public class RoundService {
         //no hidden turn in this round
         if (!turns.contains(Turn.HIDDEN)) return playedCard;
         //find what turn number is hidden
-        int i = 0;
+        int i = 1;
         List<Integer> turnNumberHidden = new ArrayList<>();
         for (Turn t : turns) {
             if (t.equals(Turn.HIDDEN)) turnNumberHidden.add(i++);
             else if (t.equals(Turn.DOUBLE_TURNS)) i += 2;
             else ++i;
         }
-        //is this turn hidden
-        int nrOfPlayers = gameRepo.findOne(gameId).getPlayers().size();
-        if (turnNumberHidden.contains(stackSize / nrOfPlayers)) {
+        //is this turn hidden?
+        int turnId = gameRepo.findOne(gameId).getTurnId();
+        if(turnNumberHidden.contains(turnId)) {
             playedCard.setFaceDown(true);
             return playedCard;
         } else
