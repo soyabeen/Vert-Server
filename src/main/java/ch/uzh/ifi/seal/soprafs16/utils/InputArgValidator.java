@@ -129,7 +129,7 @@ public class InputArgValidator {
      */
     public static void checkItIsPlayersTurn(Player player, Game game) {
 
-        if (game.getCurrentPlayerId() != player.getId()) {
+        if (!game.getCurrentPlayerId().equals(player.getId())) {
             throw new InvalidInputException(MESSAGE_START + " It is not the player's turn");
         }
 
