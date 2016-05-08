@@ -28,6 +28,9 @@ public abstract class RuleSet {
         cardMapping.put(CardType.FIRE, ShootRuleSet.class);
         cardMapping.put(CardType.FLOORCHANGE, FloorChangeRuleSet.class);
         cardMapping.put(CardType.ROBBERY, RobberyRuleSet.class);
+        cardMapping.put(CardType.MARSHAL, MarshalRuleSet.class);
+        cardMapping.put(CardType.DRAW, DrawRuleSet.class);
+
         return cardMapping;
     }
 
