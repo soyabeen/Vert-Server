@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
+import ch.uzh.ifi.seal.soprafs16.model.Meeple;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ public class RuleUtils {
         // since this is a utility class
     }
 
-    public static boolean isOnSameLevel(Player player, Positionable.Level level) {
+    public static boolean isOnSameLevel(Meeple player, Positionable.Level level) {
         boolean res = level == player.getLevel();
         if (!res) {
             logger.debug("Player {} ({},{}) has a different level than {}.",
@@ -25,7 +26,7 @@ public class RuleUtils {
         return res;
     }
 
-    public static boolean isPlacedOnTrain(Player player, int train) {
+    public static boolean isPlacedOnTrain(Meeple player, int train) {
         boolean res = 0 <= player.getCar() && player.getCar() < train;
         if (!res) {
             logger.debug("Simulated player {} ({},{}) is not positioned on the train with length {}.",
