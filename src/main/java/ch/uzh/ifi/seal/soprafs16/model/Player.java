@@ -234,7 +234,8 @@ public class Player extends Meeple {
         //In player attribute
         bullets = p.getBullets();
 
-        deck = p.getDeck();
+        if(!(p.getDeck().size() == deck.size()))
+            deck.addAll(p.getDeck());
 
         loots = p.getLoots();
 

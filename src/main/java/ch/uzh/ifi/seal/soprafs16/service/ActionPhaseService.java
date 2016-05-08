@@ -99,17 +99,16 @@ public class ActionPhaseService {
         Long id = chosenPossibility.get(0).getId();
 
         //Is it possible to get more than one player back?
-        Player targetPlayer;
-        if(id != null) {
-            targetPlayer = playerRepo.findOne(id);
-        } else {
-            targetPlayer = playerRepo.findOne(game.getCurrentPlayerId());
-        }
+        Player targetPlayer = turnDTO.getPlayers().get(0);
 
         List<Player> players;
         List<Loot> loots;
         Marshal marshal;
 
+        //special marshal card
+        if(type.equals(CardType.MARSHAL)) {
+            game.setPositionMarshal(targetPlayer.getCar());
+        }
 
         ActionCommand actionCommand = new ActionCommand(type, game,
                 playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
@@ -220,10 +219,8 @@ public class ActionPhaseService {
      */
     private Player updatePlayer(Long oldPlayerId, Player updatedPlayer) {
         Player player = playerRepo.findOne(oldPlayerId);
-        player = updatedPlayer;
+        player.update(updatedPlayer);
         return playerRepo.save(player);
-
-
     }
 
     /**
@@ -234,10 +231,8 @@ public class ActionPhaseService {
      */
     private Loot updateLoot(Long oldLootId, Loot updatedLoot) {
         Loot loot = lootRepo.findOne(oldLootId);
-        //TODO: test this, is this possible
         loot = updatedLoot;
         return lootRepo.save(loot);
-
     }
 
 
