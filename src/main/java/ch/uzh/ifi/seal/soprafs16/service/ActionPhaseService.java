@@ -43,6 +43,7 @@ public class ActionPhaseService {
     @Autowired
     private LootRepository lootRepo;
 
+    @Autowired
     private PhaseLogicService logicService;
 
     ActionPhaseService() {logicService = new PhaseLogicService();}
@@ -162,6 +163,11 @@ public class ActionPhaseService {
     }
 
 
+    /**
+     * Extracts Marshal from an positionable list
+     * @param positionables List of players and loots
+     * @return marshal in list
+     */
     private Marshal getMarshalFromPositionableList(List<Positionable> positionables) {
 
         Marshal m = new Marshal();
