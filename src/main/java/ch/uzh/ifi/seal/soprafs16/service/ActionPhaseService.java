@@ -10,9 +10,11 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import org.jboss.logging.annotations.Pos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -70,6 +72,7 @@ public class ActionPhaseService {
             List<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
             possibilitites.addPlayersAsList(getPlayersFromPositionableList(positionables) );
             possibilitites.addLootsAsList(getLootsFromPositionableList(positionables));
+            possibilitites.setPositionMarshal(getMarshalFromPositionableList(positionables).getCar());
 
         } catch (InvocationTargetException e) {
             //TODO: Exception handling
@@ -103,17 +106,17 @@ public class ActionPhaseService {
 
         List<Player> players;
         List<Loot> loots;
+        Marshal marshal;
 
 
         ActionCommand actionCommand = new ActionCommand(type, game,
                 playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
         try {
-            ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
-            //Updated players from GameEngine
-            players = getPlayersFromPositionableList(positionables);
+            ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
 
-            //Updated Loots from GameEngine
+            players = getPlayersFromPositionableList(positionables);
             loots = getLootsFromPositionableList(positionables);
+            marshal = getMarshalFromPositionableList(positionables);
 
         } catch (InvocationTargetException e) {
             //TODO: Exception handling
@@ -125,6 +128,8 @@ public class ActionPhaseService {
             updatePlayer((p.getId() == null) ? playerRepo.findOne(game.getCurrentPlayerId()).getId(): p.getId(), p);
         }
         for(Loot l : loots) { updateLoot(l.getId(), l); }
+
+        marshal.update(marshal);
 
 
         //Usage of logic service
@@ -146,11 +151,33 @@ public class ActionPhaseService {
             if (pos instanceof Player) {
                 players.add((Player) pos);
             } else if (pos instanceof Loot) {
+                continue;
+            } else if (pos instanceof Marshal) {
+                continue;
             } else {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
         }
         return players;
+    }
+
+
+    private Marshal getMarshalFromPositionableList(List<Positionable> positionables) {
+
+        Marshal m = new Marshal();
+
+        for(Positionable pos : positionables) {
+            if (pos instanceof Marshal) {
+                m = (Marshal) pos;
+            } else if (pos instanceof Loot) {
+                continue;
+            } else if (pos instanceof Player) {
+                continue;
+            } else {
+                throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
+            }
+        }
+        return m;
     }
 
 
@@ -167,6 +194,9 @@ public class ActionPhaseService {
             if (pos instanceof Loot) {
                 loots.add((Loot) pos);
             } else if (pos instanceof Player) {
+                continue;
+            } else if (pos instanceof Marshal) {
+                continue;
             } else {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
@@ -184,7 +214,6 @@ public class ActionPhaseService {
      */
     private Player updatePlayer(Long oldPlayerId, Player updatedPlayer) {
         Player player = playerRepo.findOne(oldPlayerId);
-        //TODO: test this, is this possible
         player = updatedPlayer;
         return playerRepo.save(player);
 

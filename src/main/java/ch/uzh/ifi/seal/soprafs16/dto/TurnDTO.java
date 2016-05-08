@@ -24,6 +24,8 @@ public class TurnDTO implements Serializable {
 
     private int lootID;
 
+    private int positionMarshal;
+
 
     public TurnDTO() {
         loots = new ArrayList<>();
@@ -79,4 +81,7 @@ public class TurnDTO implements Serializable {
         loots =loot;
     }
 
+    public int getPositionMarshal() { return positionMarshal; }
+
+    public void setPositionMarshal(int positionMarshal) { this.positionMarshal = positionMarshal; }
 }

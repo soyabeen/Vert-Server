@@ -225,6 +225,20 @@ public class Player extends Meeple {
         return onHand;
     }
 
+    public void update(Player p) {
+        //position
+        this.setCar(p.getCar());
+
+        this.setLevel(p.getLevel());
+
+        //In player attribute
+        bullets = p.getBullets();
+
+        deck = p.getDeck();
+
+        loots = p.getLoots();
+
+    }
     /**
      * Adds 3 or rest Cards from card deck to players hand.
      */
@@ -272,6 +286,4 @@ public class Player extends Meeple {
         }
         return currentDeck;
     }
-
-
 }

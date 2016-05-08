@@ -44,6 +44,9 @@ public class Game implements Serializable {
     @Column
     private int roundId;
 
+    @Column
+    private int positionMarshal;
+
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
@@ -165,4 +168,8 @@ public class Game implements Serializable {
     public int getTurnId() {return turnId;}
 
     public void setTurnId(int turnId) {this.turnId = turnId;}
+
+    public int getPositionMarshal() {return positionMarshal;}
+
+    public void setPositionMarshal(int positionMarshal) {this.positionMarshal = positionMarshal;}
 }
