@@ -39,7 +39,7 @@ public class RoundConfigurator {
         logger.debug("Added {} RoundConfigurations for 2-4 players.", roundConfigs.size());
 
         stationConfigs = new ArrayList<>();
-        stationConfigs.add(new RoundConfiguration(1, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.MARSHALS_REVENGE, "1"));
+        stationConfigs.add(new RoundConfiguration(1, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.PICKPOCKETING, "1"));
         stationConfigs.add(new RoundConfiguration(2, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.MARSHALS_REVENGE, "2"));
         stationConfigs.add(new RoundConfiguration(3, new Turn[]{Turn.NORMAL, Turn.NORMAL, Turn.HIDDEN, Turn.NORMAL}, RoundEndEvent.HOSTAGE, "3"));
         logger.debug("Added {} RoundConfigurations for train station cards.", roundConfigs.size());

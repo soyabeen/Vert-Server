@@ -53,15 +53,15 @@ public class ActionPhaseService {
      *
      * @return object with possible selections for the user
      */
-    public TurnDTO sendPossibilities(Long gameId, Integer nthRound) {
+    public TurnDTO sendPossibilities(Long gameId) {
 
         TurnDTO possibilitites = new TurnDTO();
 
         GameEngine gameEngine = new GameEngine();
-        Round round = roundRepo.findByGameIdAndNthRound(gameId,nthRound);
+        Game game = gameRepo.findOne(gameId);
+        Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
         LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
         CardType type = stack.peekFirst().getType();
-        Game game = gameRepo.findOne(gameId);
 
         possibilitites.setType(type);
 
@@ -85,35 +85,39 @@ public class ActionPhaseService {
 
     }
 
-    public void executeDTO(Long gameId, Integer nthRound, TurnDTO turnDTO) {
+    public void executeDTO(Long gameId, TurnDTO turnDTO) {
         GameEngine gameEngine = new GameEngine();
-        Round round = roundRepo.findByGameIdAndNthRound(gameId,nthRound);
+        Game game = gameRepo.findOne(gameId);
+        Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
         LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
         //This removes the first card via poll
         CardType type = stack.pollFirst().getType();
-        Game game = gameRepo.findOne(gameId);
+
 
 
         List<Player> chosenPossibility = turnDTO.getPlayers();
         Long id = chosenPossibility.get(0).getId();
 
         //Is it possible to get more than one player back?
-        Player targetPlayer;
-        if(id != null) {
-            targetPlayer = playerRepo.findOne(id);
-        } else {
-            targetPlayer = playerRepo.findOne(game.getCurrentPlayerId());
-        }
+        Player targetPlayer = turnDTO.getPlayers().get(0);
 
         List<Player> players;
         List<Loot> loots;
         Marshal marshal;
 
+        //special marshal card
+        if(type.equals(CardType.MARSHAL)) {
+            game.setPositionMarshal(targetPlayer.getCar());
+        }
 
         ActionCommand actionCommand = new ActionCommand(type, game,
                 playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
         try {
             ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
+
+            for(Positionable p: positionables) {
+                logger.debug(p.toString());
+            }
 
             players = getPlayersFromPositionableList(positionables);
             loots = getLootsFromPositionableList(positionables);
@@ -137,7 +141,7 @@ public class ActionPhaseService {
         gameRepo.save(game);
 
         //Usage of logic service
-        logicService.advancePlayer(gameId, nthRound);
+        logicService.advancePlayer(gameId, game.getRoundId());
 
 
     }
@@ -221,10 +225,8 @@ public class ActionPhaseService {
      */
     private Player updatePlayer(Long oldPlayerId, Player updatedPlayer) {
         Player player = playerRepo.findOne(oldPlayerId);
-        player = updatedPlayer;
+        player.update(updatedPlayer);
         return playerRepo.save(player);
-
-
     }
 
     /**
@@ -235,10 +237,8 @@ public class ActionPhaseService {
      */
     private Loot updateLoot(Long oldLootId, Loot updatedLoot) {
         Loot loot = lootRepo.findOne(oldLootId);
-        //TODO: test this, is this possible
         loot = updatedLoot;
         return lootRepo.save(loot);
-
     }
 
 
