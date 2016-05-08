@@ -43,6 +43,7 @@ public class ActionPhaseService {
     @Autowired
     private LootRepository lootRepo;
 
+    @Autowired
     private PhaseLogicService logicService;
 
     ActionPhaseService() {logicService = new PhaseLogicService();}
