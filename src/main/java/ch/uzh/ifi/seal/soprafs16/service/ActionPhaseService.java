@@ -116,6 +116,10 @@ public class ActionPhaseService {
         try {
             ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
 
+            for(Positionable p: positionables) {
+                logger.debug(p.toString());
+            }
+
             players = getPlayersFromPositionableList(positionables);
             loots = getLootsFromPositionableList(positionables);
             marshal = getMarshalFromPositionableList(positionables);
