@@ -32,7 +32,7 @@ public class ActionPhaseController extends GenericController {
     @Autowired
     private GameRepository gameRepo;
 
-    private final String CONTEXT = "/games/{gameId}/rounds/{nthRound}/turns/actions";
+    private final String CONTEXT = "/games/{gameId}/actions";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -42,7 +42,7 @@ public class ActionPhaseController extends GenericController {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
-        return actionService.sendPossibilities(gameId, nthRound);
+        return actionService.sendPossibilities(gameId);
     }
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.PUT)
@@ -55,7 +55,7 @@ public class ActionPhaseController extends GenericController {
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
         //TODO: Check if DTO is valid if necessary
-        actionService.executeDTO(gameId, nthRound, turnDTO);
+        actionService.executeDTO(gameId, turnDTO);
     }
 
 

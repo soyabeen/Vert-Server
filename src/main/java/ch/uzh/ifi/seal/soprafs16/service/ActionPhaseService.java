@@ -50,15 +50,15 @@ public class ActionPhaseService {
      *
      * @return object with possible selections for the user
      */
-    public TurnDTO sendPossibilities(Long gameId, Integer nthRound) {
+    public TurnDTO sendPossibilities(Long gameId) {
 
         TurnDTO possibilitites = new TurnDTO();
 
         GameEngine gameEngine = new GameEngine();
-        Round round = roundRepo.findByGameIdAndNthRound(gameId,nthRound);
+        Game game = gameRepo.findOne(gameId);
+        Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
         LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
         CardType type = stack.peekFirst().getType();
-        Game game = gameRepo.findOne(gameId);
 
         possibilitites.setType(type);
 
@@ -81,13 +81,14 @@ public class ActionPhaseService {
 
     }
 
-    public void executeDTO(Long gameId, Integer nthRound, TurnDTO turnDTO) {
+    public void executeDTO(Long gameId, TurnDTO turnDTO) {
         GameEngine gameEngine = new GameEngine();
-        Round round = roundRepo.findByGameIdAndNthRound(gameId,nthRound);
+        Game game = gameRepo.findOne(gameId);
+        Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
         LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
         //This removes the first card via poll
         CardType type = stack.pollFirst().getType();
-        Game game = gameRepo.findOne(gameId);
+
 
 
         List<Player> chosenPossibility = turnDTO.getPlayers();
@@ -128,7 +129,7 @@ public class ActionPhaseService {
 
 
         //Usage of logic service
-        logicService.advancePlayer(gameId, nthRound);
+        logicService.advancePlayer(gameId, game.getRoundId());
 
 
     }
