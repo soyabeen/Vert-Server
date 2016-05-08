@@ -24,7 +24,7 @@ public class FloorChangeRuleSet extends RuleSet {
     @Override
     public List<Positionable> execute(ActionCommand command) {
         FloorChangeExecRule floorChange = new FloorChangeExecRule();
-        MarshalRepRule marshal = new MarshalRepRule();
+        MarshalRepRule marshal = new MarshalRepRule(command.getGame());
         return marshal.replace(floorChange.execute(command));
     }
 }
