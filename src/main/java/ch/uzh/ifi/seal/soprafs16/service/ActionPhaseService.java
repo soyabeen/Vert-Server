@@ -73,7 +73,8 @@ public class ActionPhaseService {
             List<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
             possibilitites.addPlayersAsList(getPlayersFromPositionableList(positionables) );
             possibilitites.addLootsAsList(getLootsFromPositionableList(positionables));
-            possibilitites.setPositionMarshal(getMarshalFromPositionableList(positionables).getCar());
+            if(null != getMarshalFromPositionableList(positionables))
+                possibilitites.setPositionMarshal(getMarshalFromPositionableList(positionables).getCar());
 
         } catch (InvocationTargetException e) {
             //TODO: Exception handling
