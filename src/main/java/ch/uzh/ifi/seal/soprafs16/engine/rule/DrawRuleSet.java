@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Rule doesn't do anything, since Card was a draw.
  * Created by devuser on 08.05.2016.
  */
 public class DrawRuleSet extends RuleSet {
+
     @Override
     public List<Positionable> simulate(Game game, Player player) {
         return new ArrayList<>();
