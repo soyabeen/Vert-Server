@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Marshal;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
@@ -29,6 +28,7 @@ public abstract class RuleSet {
         cardMapping.put(CardType.FLOORCHANGE, FloorChangeRuleSet.class);
         cardMapping.put(CardType.ROBBERY, RobberyRuleSet.class);
         cardMapping.put(CardType.MARSHAL, MarshalRuleSet.class);
+        cardMapping.put(CardType.PUNCH, PunchRuleSet.class);
         cardMapping.put(CardType.DRAW, DrawRuleSet.class);
 
         return cardMapping;
