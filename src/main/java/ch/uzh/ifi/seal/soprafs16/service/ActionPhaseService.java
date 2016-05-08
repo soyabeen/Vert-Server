@@ -130,8 +130,11 @@ public class ActionPhaseService {
         }
         for(Loot l : loots) { updateLoot(l.getId(), l); }
 
-        marshal.update(marshal);
+        if(null != marshal) {
+            game.setPositionMarshal(marshal.getCar());
+        }
 
+        gameRepo.save(game);
 
         //Usage of logic service
         logicService.advancePlayer(gameId, nthRound);
@@ -170,11 +173,9 @@ public class ActionPhaseService {
      */
     private Marshal getMarshalFromPositionableList(List<Positionable> positionables) {
 
-        Marshal m = new Marshal();
-
         for(Positionable pos : positionables) {
             if (pos instanceof Marshal) {
-                m = (Marshal) pos;
+                return (Marshal) pos;
             } else if (pos instanceof Loot) {
                 continue;
             } else if (pos instanceof Player) {
@@ -183,7 +184,7 @@ public class ActionPhaseService {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
         }
-        return m;
+        return null;
     }
 
 
