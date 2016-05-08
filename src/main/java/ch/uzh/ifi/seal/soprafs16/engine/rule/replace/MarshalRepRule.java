@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.replace;
 
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleUtils;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
@@ -14,9 +15,14 @@ import java.util.List;
  */
 public class MarshalRepRule implements ReplaceRule {
 
+    private int marshalPosition;
+
+    public MarshalRepRule(Game game) {
+        this.marshalPosition = game.getPositionMarshal();
+    }
+
     private boolean isOnSameFloorAsMarshal(Positionable actor) {
-        // TODO: use real marshal position
-        return actor.getCar() == 0 && actor.getLevel() == Positionable.Level.BOTTOM;
+        return actor.getCar() == this.marshalPosition && actor.getLevel() == Positionable.Level.BOTTOM;
     }
 
     @Override

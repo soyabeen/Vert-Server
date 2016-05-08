@@ -47,13 +47,14 @@ public class MarshalRuleSet extends RuleSet {
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
         MoveMarshalExecRule move = new MoveMarshalExecRule();
+        MarshalRepRule marshal = new MarshalRepRule(command.getGame());
 
         logger.debug("eval: " + move.evaluate(command));
 
-        // check if the marshal position is valid
         if(move.evaluate(command)) {
             result.addAll( move.execute(command) );
         }
+        result.addAll( marshal.replace( new ArrayList<>( command.getGame().getPlayers() ) ));
         logger.debug("res: " + result.size());
         return result;
     }

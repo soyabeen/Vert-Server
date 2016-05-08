@@ -41,7 +41,7 @@ public class MoveRuleSet extends RuleSet {
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
         MovePlayerExecRule move = new MovePlayerExecRule();
-        MarshalRepRule marshal = new MarshalRepRule();
+        MarshalRepRule marshal = new MarshalRepRule(command.getGame());
 
         logger.debug("eval: " + move.evaluate(command));
         if(move.evaluate(command)) {
