@@ -28,7 +28,7 @@ public abstract class RuleSet {
         cardMapping.put(CardType.FLOORCHANGE, FloorChangeRuleSet.class);
         cardMapping.put(CardType.ROBBERY, RobberyRuleSet.class);
         cardMapping.put(CardType.MARSHAL, MarshalRuleSet.class);
-        cardMapping.put(CardType.PUNCH, PunchRuleSet.class);
+        //cardMapping.put(CardType.PUNCH, PunchRuleSet.class);
         cardMapping.put(CardType.DRAW, DrawRuleSet.class);
 
         return cardMapping;
