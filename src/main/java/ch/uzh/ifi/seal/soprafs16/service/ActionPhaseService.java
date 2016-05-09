@@ -10,11 +10,9 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
-import org.jboss.logging.annotations.Pos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -77,8 +75,9 @@ public class ActionPhaseService {
                 possibilitites.setPositionMarshal(getMarshalFromPositionableList(positionables).getCar());
 
         } catch (InvocationTargetException e) {
-            //TODO: Exception handling
-            throw new IllegalStateException("Get possibilities from GameEngine failed");
+            Throwable cause = e.getCause();
+            logger.error("Get possibilities from GameEngine failed because of " + cause);
+            throw new IllegalStateException("Get possibilities from GameEngine failed - IllegalState");
         }
 
         return possibilitites;
@@ -93,11 +92,6 @@ public class ActionPhaseService {
         LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
         //This removes the first card via poll
         CardType type = stack.pollFirst().getType();
-
-
-
-        List<Player> chosenPossibility = turnDTO.getPlayers();
-        Long id = chosenPossibility.get(0).getId();
 
         //Is it possible to get more than one player back?
         Player targetPlayer = turnDTO.getPlayers().get(0);
@@ -125,15 +119,18 @@ public class ActionPhaseService {
             marshal = getMarshalFromPositionableList(positionables);
 
         } catch (InvocationTargetException e) {
-            //TODO: Exception handling
-            throw new IllegalStateException("Get update from GameEngine failed");
+            Throwable cause = e.getCause();
+            logger.error("Get update from GameEngine failed because of " + cause);
+            throw new IllegalStateException("Get update from GameEngine failed - IllegalState");
         }
 
         //update players and loots
         for(Player p: players) {
             updatePlayer((p.getId() == null) ? playerRepo.findOne(game.getCurrentPlayerId()).getId(): p.getId(), p);
         }
-        for(Loot l : loots) { updateLoot(l.getId(), l); }
+        for(Loot l : loots) {
+            updateLoot(l.getId(), l);
+        }
 
         if(null != marshal) {
             game.setPositionMarshal(marshal.getCar());
@@ -160,9 +157,7 @@ public class ActionPhaseService {
             if (pos instanceof Player) {
                 players.add((Player) pos);
             } else if (pos instanceof Loot) {
-                continue;
             } else if (pos instanceof Marshal) {
-                continue;
             } else {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
@@ -182,9 +177,7 @@ public class ActionPhaseService {
             if (pos instanceof Marshal) {
                 return (Marshal) pos;
             } else if (pos instanceof Loot) {
-                continue;
             } else if (pos instanceof Player) {
-                continue;
             } else {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
@@ -206,9 +199,7 @@ public class ActionPhaseService {
             if (pos instanceof Loot) {
                 loots.add((Loot) pos);
             } else if (pos instanceof Player) {
-                continue;
             } else if (pos instanceof Marshal) {
-                continue;
             } else {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
@@ -238,7 +229,7 @@ public class ActionPhaseService {
      */
     private Loot updateLoot(Long oldLootId, Loot updatedLoot) {
         Loot loot = lootRepo.findOne(oldLootId);
-        loot = updatedLoot;
+        loot.update(updatedLoot);
         return lootRepo.save(loot);
     }
 

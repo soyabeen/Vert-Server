@@ -69,6 +69,12 @@ public class Loot implements Positionable, Serializable {
         this.value = value;
     }
 
+    public void update(Loot loot) {
+        this.ownerId = loot.getOwnerId();
+        this.car = loot.getCar();
+        this.level = loot.getLevel();
+    }
+
     @Override
     public String toString() {
         return "Loot (id:" + id + ", type:" + type + ", value:" + value + ", car:" + car + ", level:" + level + ")";
