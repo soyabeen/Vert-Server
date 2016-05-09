@@ -70,6 +70,10 @@ public class Round implements Serializable {
         this.imgType = imgType;
     }
 
+    public Card pollFirst() {
+        return cardStack.remove(0);
+    }
+
     @Override
     public String toString() {
         return "Round{" +

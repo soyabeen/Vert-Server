@@ -89,24 +89,30 @@ public class ActionPhaseService {
         GameEngine gameEngine = new GameEngine();
         Game game = gameRepo.findOne(gameId);
         Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
-        LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
-        //This removes the first card via poll
-        CardType type = stack.pollFirst().getType();
+        CardType type = round.pollFirst().getType();
+        roundRepo.save(round);
 
-        //Is it possible to get more than one player back?
-        Player targetPlayer = turnDTO.getPlayers().get(0);
+        ActionCommand actionCommand;
+
+        //special marshal card
+        if(type.equals(CardType.MARSHAL)) {
+            game.setPositionMarshal(turnDTO.getPlayers().get(0).getCar());
+        }
+
+        if(type.equals(CardType.ROBBERY)) {
+            Long lootId = turnDTO.getLootID();
+            actionCommand = new ActionCommand(type, game,
+                    playerRepo.findOne(game.getCurrentPlayerId()), null);
+            actionCommand.setTargetLoot(lootRepo.findOne(lootId));
+        } else {
+            actionCommand = new ActionCommand(type, game,
+                    playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
+        }
 
         List<Player> players;
         List<Loot> loots;
         Marshal marshal;
 
-        //special marshal card
-        if(type.equals(CardType.MARSHAL)) {
-            game.setPositionMarshal(targetPlayer.getCar());
-        }
-
-        ActionCommand actionCommand = new ActionCommand(type, game,
-                playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
         try {
             ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
 
