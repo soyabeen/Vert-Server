@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
@@ -10,6 +11,7 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,57 +89,60 @@ public class ActionPhaseService {
     public void executeDTO(Long gameId, TurnDTO turnDTO) {
         GameEngine gameEngine = new GameEngine();
         Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
+        Round round = roundRepo.findByGameIdAndNthRound(gameId, game.getRoundId());
         CardType type = round.getCardStack().get(round.getPointerOnDeck()).getType();
 
-        ActionCommand actionCommand;
+        if (!type.equals(CardType.DRAW)) {
 
-        //special marshal card
-        if(type.equals(CardType.MARSHAL)) {
-            game.setPositionMarshal(turnDTO.getPlayers().get(0).getCar());
-        }
+            ActionCommand actionCommand;
 
-        if(type.equals(CardType.ROBBERY)) {
-            Long lootId = turnDTO.getLootID();
-            actionCommand = new ActionCommand(type, game,
-                    playerRepo.findOne(game.getCurrentPlayerId()), null);
-            actionCommand.setTargetLoot(lootRepo.findOne(lootId));
-        } else {
-            actionCommand = new ActionCommand(type, game,
-                    playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
-        }
-
-        List<Player> players;
-        List<Loot> loots;
-        Marshal marshal;
-
-        try {
-            ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
-
-            for(Positionable p: positionables) {
-                logger.debug(p.toString());
+            //special marshal card
+            if (type.equals(CardType.MARSHAL)) {
+                game.setPositionMarshal(turnDTO.getPlayers().get(0).getCar());
             }
 
-            players = getPlayersFromPositionableList(positionables);
-            loots = getLootsFromPositionableList(positionables);
-            marshal = getMarshalFromPositionableList(positionables);
+            if (type.equals(CardType.ROBBERY)) {
+                Long lootId = turnDTO.getLootID();
+                actionCommand = new ActionCommand(type, game,
+                        playerRepo.findOne(game.getCurrentPlayerId()), null);
+                actionCommand.setTargetLoot(lootRepo.findOne(lootId));
+            } else {
+                actionCommand = new ActionCommand(type, game,
+                        playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
+            }
 
-        } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
-            logger.error("Get update from GameEngine failed because of " + cause);
-            throw new IllegalStateException("Get update from GameEngine failed - IllegalState");
-        }
+            List<Player> players;
+            List<Loot> loots;
+            Marshal marshal;
 
-        //update players and loots
-        for(Player p: players) {
-            updatePlayer((p.getId() == null) ? playerRepo.findOne(game.getCurrentPlayerId()).getId(): p.getId(), p);
-        }
-        for(Loot l : loots) {
-            updateLoot(l.getId(), l);
-        }
+            try {
+                ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
 
-        if(null != marshal) {
-            game.setPositionMarshal(marshal.getCar());
+                for (Positionable p : positionables) {
+                    logger.debug(p.toString());
+                }
+
+                players = getPlayersFromPositionableList(positionables);
+                loots = getLootsFromPositionableList(positionables);
+                marshal = getMarshalFromPositionableList(positionables);
+
+            } catch (InvocationTargetException e) {
+                Throwable cause = e.getCause();
+                logger.error("Get update from GameEngine failed because of " + cause);
+                throw new IllegalStateException("Get update from GameEngine failed - IllegalState");
+            }
+
+            //update players and loots
+            for (Player p : players) {
+                updatePlayer((p.getId() == null) ? playerRepo.findOne(game.getCurrentPlayerId()).getId() : p.getId(), p);
+            }
+            for (Loot l : loots) {
+                updateLoot(l.getId(), l);
+            }
+
+            if (null != marshal) {
+                game.setPositionMarshal(marshal.getCar());
+            }
         }
 
         setNextPlayerAndChangeState(game, round);
@@ -251,10 +256,15 @@ public class ActionPhaseService {
         if(round.getPointerOnDeck() < round.getCardStack().size()) {
             game.setCurrentPlayerId(round.getCardStack().
                     get(round.getPointerOnDeck()).getOwnerId());
+        } else if (game.getRoundId() < RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
+            //TODO: add round end event measures
+            game.incrementRound();
+            game.setStatus(GameStatus.PLANNINGPHASE);
+            game.setTurnId(1);
+        } else if (round.getPointerOnDeck() == round.getCardStack().size() && game.getRoundId() == RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
+            //TODO: determine revolverheld? update money?
+            game.setStatus(GameStatus.FINISHED);
         }
-
-        //TODO: Implement transitions
     }
-
 
 }
