@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.*;
@@ -179,8 +180,11 @@ public class RoundService {
     }
 
     private Card setFaceDown(List<Turn> turns, int stackSize, Long gameId, Card playedCard) {
-        //no hidden turn in this round
-        if (!turns.contains(Turn.HIDDEN)) return playedCard;
+        int turnId = gameRepo.findOne(gameId).getTurnId();
+        if (turnId == 1 && playerRepo.findOne(playedCard.getOwnerId()).getCharacter().equals(Character.GHOST)) {
+            playedCard.setFaceDown(true);
+            return playedCard;
+        } else if (!turns.contains(Turn.HIDDEN)) return playedCard;
         //find what turn number is hidden
         int i = 1;
         List<Integer> turnNumberHidden = new ArrayList<>();
@@ -190,7 +194,6 @@ public class RoundService {
             else ++i;
         }
         //is this turn hidden?
-        int turnId = gameRepo.findOne(gameId).getTurnId();
         if(turnNumberHidden.contains(turnId)) {
             playedCard.setFaceDown(true);
             return playedCard;
