@@ -37,7 +37,7 @@ public class MarshalRuleSet extends RuleSet {
 
     @Override
     public List<Positionable> simulate(Game game, Player player) {
-        Marshal marshal = new Marshal( game.getPositionMarshal() );
+        Marshal marshal = new Marshal(game.getPositionMarshal());
 
         return simulate(game, marshal);
     }
@@ -45,15 +45,15 @@ public class MarshalRuleSet extends RuleSet {
     @Override
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
-        MoveMarshalExecRule move = new MoveMarshalExecRule();
+        MoveMarshalExecRule marshalMove = new MoveMarshalExecRule();
         MarshalRepRule marshal = new MarshalRepRule(command.getGame());
 
-        logger.debug("eval: " + move.evaluate(command));
+        logger.debug("eval: " + marshalMove.evaluate(command));
 
-        if(move.evaluate(command)) {
-            result.addAll( move.execute(command) );
+        if (marshalMove.evaluate(command)) {
+            result.addAll(marshalMove.execute(command));
         }
-        result.addAll( marshal.replace( new ArrayList<>( command.getGame().getPlayers() ) ));
+        result.addAll(marshal.replace(new ArrayList<>(command.getGame().getPlayers())));
         logger.debug("res: " + result.size());
         return result;
     }
