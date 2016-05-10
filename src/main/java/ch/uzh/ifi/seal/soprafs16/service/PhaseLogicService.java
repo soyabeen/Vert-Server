@@ -68,9 +68,8 @@ public class PhaseLogicService {
         //checkGameChangeState(game, nthround);
         if(game.getStatus() == GameStatus.PLANNINGPHASE) {
             game.setCurrentPlayerId(getNextPlayer(game, nthround));
+            changeState(game, nthround);
         }
-
-        changeState(game, nthround);
 
         // save repositories
         gameRepo.save(game);
@@ -203,6 +202,7 @@ public class PhaseLogicService {
         if(isRoundOver(game,round)) {
             logger.debug("Game " + game.getId() + ": State changed, Round is over");
             game.setStatus(GameStatus.ACTIONPHASE);
+            round.setPointerOnDeck(0);
         }
 
         if(isGameOver(nthround)) {
@@ -212,6 +212,7 @@ public class PhaseLogicService {
 
         }
 
+        roundRepo.save(round);
         // still in turn, proceed normally
         return;
     }

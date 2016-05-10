@@ -101,7 +101,14 @@ public class Card implements Serializable {
         }
 
         Card card = (Card) o;
-        return (card.getOwnerId() == this.getOwnerId() && card.getType() == this.getType());
+        return (card.getOwnerId().equals(this.getOwnerId()) && card.getType().equals(this.getType()));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
+        return result;
     }
 
     @Override

@@ -58,8 +58,7 @@ public class ActionPhaseService {
         GameEngine gameEngine = new GameEngine();
         Game game = gameRepo.findOne(gameId);
         Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
-        LinkedList<Card> stack = new LinkedList<>(round.getCardStack());
-        CardType type = stack.peekFirst().getType();
+        CardType type = round.getCardStack().get(round.getPointerOnDeck()).getType();
 
         possibilitites.setType(type);
 
@@ -89,8 +88,7 @@ public class ActionPhaseService {
         GameEngine gameEngine = new GameEngine();
         Game game = gameRepo.findOne(gameId);
         Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
-        CardType type = round.pollFirst().getType();
-        roundRepo.save(round);
+        CardType type = round.getCardStack().get(round.getPointerOnDeck()).getType();
 
         ActionCommand actionCommand;
 
@@ -142,10 +140,13 @@ public class ActionPhaseService {
             game.setPositionMarshal(marshal.getCar());
         }
 
+        setNextPlayerAndChangeState(game, round);
+
+        roundRepo.save(round);
         gameRepo.save(game);
 
         //Usage of logic service
-        logicService.advancePlayer(gameId, game.getRoundId());
+        //logicService.advancePlayer(gameId, game.getRoundId());
 
 
     }
@@ -237,6 +238,22 @@ public class ActionPhaseService {
         Loot loot = lootRepo.findOne(oldLootId);
         loot.update(updatedLoot);
         return lootRepo.save(loot);
+    }
+
+    /**
+     * Set next player and
+     * Transition form Action- to PlanningPhase and EndOfGame
+     * @param game
+     * @param round
+     */
+    private void setNextPlayerAndChangeState(Game game, Round round) {
+        round.incrementPointer();
+        if(round.getPointerOnDeck() < round.getCardStack().size()) {
+            game.setCurrentPlayerId(round.getCardStack().
+                    get(round.getPointerOnDeck()).getOwnerId());
+        }
+
+        //TODO: Implement transitions
     }
 
 
