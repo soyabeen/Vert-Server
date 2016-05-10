@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.PunchExecRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.PunchSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
@@ -13,11 +15,12 @@ import java.util.List;
 public class PunchRuleSet extends RuleSet {
     @Override
     public List<Positionable> simulate(Game game, Player player) {
-        return null;
+        return new PunchSimRule(game).simulate(player);
     }
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
-        return null;
+        PunchExecRule punch = new PunchExecRule();
+        return punch.execute(command);
     }
 }
