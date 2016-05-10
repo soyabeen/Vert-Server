@@ -30,8 +30,8 @@ public class Round implements Serializable {
     @Column(nullable = false, name = "POSITION")
     private Integer nthRound;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    //@OrderBy("id")
+    //@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ElementCollection(targetClass = Card.class, fetch = FetchType.EAGER)
     @OrderColumn
     private List<Card> cardStack;
 
