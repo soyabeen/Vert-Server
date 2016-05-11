@@ -177,4 +177,21 @@ public class Loot implements Positionable, Serializable {
         this.ownerId = ownerId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Loot)) {
+            return false;
+        }
+
+        Loot card = (Loot) o;
+        return (card.getOwnerId().equals(this.getOwnerId()) && card.getType().equals(this.getType()));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
+        return result;
+    }
+
 }
