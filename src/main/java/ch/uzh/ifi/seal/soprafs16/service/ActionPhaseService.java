@@ -91,7 +91,7 @@ public class ActionPhaseService {
         Round round = roundRepo.findByGameIdAndNthRound(gameId, game.getRoundId());
         CardType type = round.getCardStack().get(round.getPointerOnDeck()).getType();
 
-        if (!type.equals(CardType.DRAW) || hasNoTarget(turnDTO)) {
+        if (!type.equals(CardType.DRAW) && !hasNoTarget(turnDTO)) {
 
             ActionCommand actionCommand;
 
