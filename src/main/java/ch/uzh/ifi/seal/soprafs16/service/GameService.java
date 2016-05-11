@@ -138,9 +138,11 @@ public class GameService {
         logger.debug("input val ok.");
 
         //Add players loots to game
-        for (Player p: game.getPlayers()) {
-            game.addLoot(p.getLoots().get(0));
-        }
+        /*for (Player p: game.getPlayers()) {
+            for(Loot l: p.getLoots()) {
+                game.addLoot(l);
+            }
+        }*/
 
         // Build decks for players in game
         players.forEach(this::buildPlayerDeck);
