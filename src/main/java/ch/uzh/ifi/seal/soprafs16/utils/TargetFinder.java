@@ -63,7 +63,7 @@ public class TargetFinder {
     }
 
 
-    public List<Player> filterPlayersOnSameCar(Player actor, List<Player> players) {
+    public List<Player> filterPlayersOnSameCar(Positionable actor, List<Player> players) {
         List<Player> result = new ArrayList<>();
         for (Player target : players) {
             if (actor.getCar() != target.getCar()) {
@@ -71,6 +71,10 @@ public class TargetFinder {
             }
         }
         return result;
+    }
+
+    public List<Player> filterPlayersOnSameFloor(Positionable actor, List<Player> players) {
+        return filterPlayersOnSameCar(actor, filterPlayersByLevel(players, actor.getLevel()));
     }
 
     /**

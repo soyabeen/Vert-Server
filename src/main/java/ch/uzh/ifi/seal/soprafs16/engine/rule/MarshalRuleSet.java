@@ -44,17 +44,17 @@ public class MarshalRuleSet extends RuleSet {
         List<Positionable> result = new ArrayList<>();
         MovePlayerExecRule playerMove = new MovePlayerExecRule();
         FindMarshalTargets marshalTargets = new FindMarshalTargets();
-        MarshalRepRule marshal = new MarshalRepRule(command.getGame());
+        MarshalRepRule marshalReplace = new MarshalRepRule(command.getGame());
 
         logger.debug("eval: " + marshalTargets.evaluate(command));
 
         // marshal move
         if (playerMove.evaluate(command)) {
-            result.addAll(marshalTargets.execute(command));
+            result.addAll(playerMove.execute(command));
+            // marshal move consequence
+            result.addAll(marshalReplace.replace( marshalTargets.execute(command) ));
         }
 
-        // marshal move consequence
-        result.addAll(marshal.replace(new ArrayList<>(command.getGame().getPlayers())));
         logger.debug("res: " + result.size());
         return result;
     }
