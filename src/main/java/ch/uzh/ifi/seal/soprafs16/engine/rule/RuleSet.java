@@ -58,7 +58,7 @@ public abstract class RuleSet {
      *
      * @return Possibilities The positionable objects that are possible targets for this card.
      */
-    public abstract List<Positionable> simulate(Game game, Player player);
+    public abstract List<Positionable> simulate(Game game, Positionable player);
 
     public abstract List<Positionable> execute(ActionCommand command);
 

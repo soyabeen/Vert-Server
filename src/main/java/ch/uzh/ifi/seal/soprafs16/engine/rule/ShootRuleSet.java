@@ -16,7 +16,7 @@ import java.util.List;
 public class ShootRuleSet extends RuleSet {
 
     @Override
-    public List<Positionable> simulate(Game game, Player player) {
+    public List<Positionable> simulate(Game game, Positionable player) {
         ShootPlayerSimRule shoot = new ShootPlayerSimRule(game);
         BelleNoTargetFilterRule belle = new BelleNoTargetFilterRule();
 
