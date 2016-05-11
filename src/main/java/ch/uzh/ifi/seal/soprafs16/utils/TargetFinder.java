@@ -5,7 +5,6 @@ import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -63,13 +62,37 @@ public class TargetFinder {
     }
 
 
-    public List<Player> filterPlayersOnSameCar(Positionable actor, List<Player> players) {
+    public List<Player> filterPlayersNotOnSameCar(Positionable actor, List<Player> players) {
         List<Player> result = new ArrayList<>();
         for (Player target : players) {
             if (actor.getCar() != target.getCar()) {
                 result.add(target);
             }
         }
+        return result;
+    }
+
+    public List<Player> filterPlayersOnSameCar(Positionable actor, List<Player> players) {
+        List<Player> tmp = new ArrayList<>();
+        List<Player> result = new ArrayList<>();
+
+        for (Player target : players) {
+            if (actor.getCar() == target.getCar()) {
+                tmp.add(target);
+            }
+        }
+
+        if( actor instanceof Player) {
+            Player player = (Player) actor;
+            for(Player p : tmp) {
+                if(p.getId() != player.getId()) {
+                    result.add(p);
+                }
+            }
+        } else {
+            result = tmp;
+        }
+
         return result;
     }
 
@@ -101,7 +124,7 @@ public class TargetFinder {
     public List<Player> findTargetToShootOnUpperLevel(Player actor, List<Player> players) {
         List<Player> result = new ArrayList<>();
 
-        List<Player> filtered = filterPlayersOnSameCar(actor, players);
+        List<Player> filtered = filterPlayersNotOnSameCar(actor, players);
         List<Player> onSameLevel = filterPlayersByLevel(filtered, Positionable.Level.TOP);
         ArrayList<Player> towardsHead = new ArrayList<>();
         ArrayList<Player> towardsTail = new ArrayList<>();
