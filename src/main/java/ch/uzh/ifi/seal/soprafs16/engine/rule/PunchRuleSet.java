@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class PunchRuleSet extends RuleSet {
     @Override
-    public List<Positionable> simulate(Game game, Player player) {
+    public List<Positionable> simulate(Game game, Positionable player) {
         return new PunchSimRule(game).simulate(player);
     }
 

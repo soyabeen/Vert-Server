@@ -25,7 +25,7 @@ public class FloorChangeExecRule implements ExecutionRule {
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
 
-        Player newState = command.getCurrentPlayer();
+        Positionable newState = command.getCurrentPlayer();
         result.add(RuleUtils.swapLevel(newState));
 
         return result;

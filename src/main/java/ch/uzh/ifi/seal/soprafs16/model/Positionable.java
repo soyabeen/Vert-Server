@@ -19,6 +19,8 @@ public interface Positionable {
      */
     public int getCar();
 
+    public void setCar(int newCar);
+
     /**
      * @return Level The level of the car for the positionable object.
      */

@@ -15,7 +15,7 @@ import java.util.List;
 public class DrawRuleSet extends RuleSet {
 
     @Override
-    public List<Positionable> simulate(Game game, Player player) {
+    public List<Positionable> simulate(Game game, Positionable player) {
         return new ArrayList<>();
     }
 

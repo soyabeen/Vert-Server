@@ -23,7 +23,7 @@ public class MoveRuleSet extends RuleSet {
     private static final Logger logger = LoggerFactory.getLogger(MoveRuleSet.class);
 
     @Override
-    public List<Positionable> simulate(Game game, Player player) {
+    public List<Positionable> simulate(Game game, Positionable player) {
         List<SimulationRule> simRules = new ArrayList<>();
         simRules.add(new MovePlayerBottomSimRule(game.getNrOfCars()));
         simRules.add(new MovePlayerTopSimRule(game.getNrOfCars()));

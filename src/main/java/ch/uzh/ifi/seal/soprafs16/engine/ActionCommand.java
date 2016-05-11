@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.constant.Direction;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 /**
  * Created by soyabeen on 20.04.16.
@@ -14,14 +15,14 @@ public class ActionCommand {
     private CardType card;
     private Game game;
     // from repo
-    private Player currentPlayer;
+    private Positionable currentPlayer;
     // chosen possibility
-    private Player targetPlayer;
+    private Positionable targetPlayer;
     // chosen possiblity
     private Loot targetLoot;
     private Direction direction;
 
-    public ActionCommand(CardType card, Game game, Player currentPlayer, Player targetPlayer) {
+    public ActionCommand(CardType card, Game game, Positionable currentPlayer, Positionable targetPlayer) {
         this.card = card;
         this.game = game;
         this.currentPlayer = currentPlayer;
@@ -36,11 +37,11 @@ public class ActionCommand {
         return game;
     }
 
-    public Player getCurrentPlayer() {
+    public Positionable getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public Player getTargetPlayer() {
+    public Positionable getTargetPlayer() {
         return targetPlayer;
     }
 

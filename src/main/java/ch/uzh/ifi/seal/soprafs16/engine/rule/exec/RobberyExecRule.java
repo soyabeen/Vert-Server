@@ -39,13 +39,14 @@ public class RobberyExecRule implements ExecutionRule {
 
     @Override
     public boolean evaluate(ActionCommand command) {
-        return isExistingFreeLoot(command.getTargetLoot().getId(), command.getGame().getLoots());
+        return command.getCurrentPlayer() instanceof Player
+                && isExistingFreeLoot(command.getTargetLoot().getId(), command.getGame().getLoots());
     }
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
 
-        Player actor = command.getCurrentPlayer();
+        Player actor = (Player) command.getCurrentPlayer();
         Loot lootToPick = getExistingFreeLoot(command.getTargetLoot().getId(), command.getGame().getLoots());
 
         lootToPick.setOwnerId(actor.getId());
