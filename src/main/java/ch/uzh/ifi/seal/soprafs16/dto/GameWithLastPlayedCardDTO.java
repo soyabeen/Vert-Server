@@ -126,12 +126,7 @@ public class GameWithLastPlayedCardDTO implements Serializable {
         this.players = players;
     }
 
-    @JsonIgnore
     public List<Loot> getLoots() {
-        return loots;
-    }
-
-    public List<Loot> getLootsOnTrain() {
         List<Loot> lootsOnTrain = new ArrayList<>();
         for(Loot l: loots) {
             if (l.getOwnerId() == null) {
