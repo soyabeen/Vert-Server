@@ -1,26 +1,23 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
-import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
-import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
-import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-import ch.uzh.ifi.seal.soprafs16.model.*;
+import ch.uzh.ifi.seal.soprafs16.model.Card;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,9 +65,8 @@ public class PhaseLogicService {
         //checkGameChangeState(game, nthround);
         if(game.getStatus() == GameStatus.PLANNINGPHASE) {
             game.setCurrentPlayerId(getNextPlayer(game, nthround));
+            changeState(game, nthround);
         }
-
-        changeState(game, nthround);
 
         // save repositories
         gameRepo.save(game);
@@ -203,6 +199,7 @@ public class PhaseLogicService {
         if(isRoundOver(game,round)) {
             logger.debug("Game " + game.getId() + ": State changed, Round is over");
             game.setStatus(GameStatus.ACTIONPHASE);
+            round.setPointerOnDeck(0);
         }
 
         if(isGameOver(nthround)) {
@@ -212,6 +209,7 @@ public class PhaseLogicService {
 
         }
 
+        roundRepo.save(round);
         // still in turn, proceed normally
         return;
     }

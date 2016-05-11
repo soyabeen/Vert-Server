@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.RoundEndEvent;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,7 +32,6 @@ public class Round implements Serializable {
     private Integer nthRound;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    //@OrderBy("id")
     @OrderColumn
     private List<Card> cardStack;
 
@@ -48,6 +48,9 @@ public class Round implements Serializable {
 
     @Column
     private String imgType;
+
+    @Column
+    private int pointerOnDeck;
 
     protected Round() {
         this.cardStack = new LinkedList<Card>();
@@ -72,6 +75,10 @@ public class Round implements Serializable {
 
     public Card pollFirst() {
         return cardStack.remove(0);
+    }
+
+    public Card peekFirst() {
+        return cardStack.get(0);
     }
 
     @Override
@@ -135,4 +142,11 @@ public class Round implements Serializable {
     public void setEnd(RoundEndEvent end) {
         this.end = end;
     }
+
+    @JsonIgnore
+    public int getPointerOnDeck() {return pointerOnDeck;}
+
+    public void setPointerOnDeck(int pointerOnDeck) {this.pointerOnDeck = pointerOnDeck;}
+
+    public void incrementPointer() {pointerOnDeck++;}
 }

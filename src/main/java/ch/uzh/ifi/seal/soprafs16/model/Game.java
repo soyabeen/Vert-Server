@@ -165,6 +165,8 @@ public class Game implements Serializable {
 
     public void setRoundId(int roundId) {this.roundId = roundId;}
 
+    public void incrementRound() {roundId++;}
+
     public int getTurnId() {return turnId;}
 
     public void setTurnId(int turnId) {this.turnId = turnId;}

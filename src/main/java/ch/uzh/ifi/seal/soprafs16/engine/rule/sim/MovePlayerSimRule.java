@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Direction;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleUtils;
+import ch.uzh.ifi.seal.soprafs16.model.Marshal;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class MovePlayerSimRule implements SimulationRule {
      */
     @Override
     public boolean evaluate(Positionable player) {
-        if (!(player instanceof Player)) {
+        if (!(player instanceof Player || player instanceof Marshal)) {
             return false;
         }
         Player targetPlayer = (Player) player;

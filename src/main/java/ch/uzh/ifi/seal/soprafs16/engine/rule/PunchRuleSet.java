@@ -1,8 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.RobberyExecRule;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.RobberySimRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.PunchExecRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.PunchSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
@@ -10,18 +10,17 @@ import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import java.util.List;
 
 /**
- * Created by soyabeen on 27.04.16.
+ * Created by devuser on 09.05.2016.
  */
-public class RobberyRuleSet extends RuleSet {
-
+public class PunchRuleSet extends RuleSet {
     @Override
     public List<Positionable> simulate(Game game, Positionable player) {
-        return new RobberySimRule(game).simulate(player);
+        return new PunchSimRule(game).simulate(player);
     }
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
-        RobberyExecRule robbery = new RobberyExecRule();
-        return robbery.execute(command);
+        PunchExecRule punch = new PunchExecRule();
+        return punch.execute(command);
     }
 }

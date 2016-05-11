@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.*;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -172,15 +174,24 @@ public class RoundService {
      */
     protected void passAndTake3(Round round, Player currentPlayer) {
         round.addNewlyPlayedCard(new Card(CardType.DRAW, currentPlayer.getId()));
-        currentPlayer.take3Cards();
+
+        //Cards can be not on hand but in deck
+        if(round.getCardStack().size() == 0) {
+            currentPlayer.take3Cards();
+        } else {
+            currentPlayer.take3Cards(drawCards(round, currentPlayer));
+        }
         currentPlayer.incrementTotalMadeMoves();
         playerRepo.save(currentPlayer);
         roundRepo.save(round);
     }
 
     private Card setFaceDown(List<Turn> turns, int stackSize, Long gameId, Card playedCard) {
-        //no hidden turn in this round
-        if (!turns.contains(Turn.HIDDEN)) return playedCard;
+        int turnId = gameRepo.findOne(gameId).getTurnId();
+        if (turnId == 1 && playerRepo.findOne(playedCard.getOwnerId()).getCharacter().equals(Character.GHOST)) {
+            playedCard.setFaceDown(true);
+            return playedCard;
+        } else if (!turns.contains(Turn.HIDDEN)) return playedCard;
         //find what turn number is hidden
         int i = 1;
         List<Integer> turnNumberHidden = new ArrayList<>();
@@ -190,7 +201,6 @@ public class RoundService {
             else ++i;
         }
         //is this turn hidden?
-        int turnId = gameRepo.findOne(gameId).getTurnId();
         if(turnNumberHidden.contains(turnId)) {
             playedCard.setFaceDown(true);
             return playedCard;
@@ -202,6 +212,38 @@ public class RoundService {
     public Round getCurrentRoundInformation(Long gameid) {
         Game game = (Game) InputArgValidator.checkAvailabeId(gameid, gameRepo, "gameId");
         return getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId());
+    }
+
+    private List<Card> drawCards(Round round, Player player) {
+        List<Card> currentlyNotOnHand = player.getCardsInDeck();
+        List<Long> ids = new ArrayList<>();
+
+        for(Card c: currentlyNotOnHand) {
+            logger.error("Before" + c.toString());
+        }
+
+        for (Card c: round.getCardStack()) ids.add(c.getId());
+
+        for (int i = 0; i < currentlyNotOnHand.size(); ++i) {
+            if (ids.contains(currentlyNotOnHand.get(i).getId()))
+                currentlyNotOnHand.remove(i);
+        }
+
+        for(Card c: currentlyNotOnHand) {
+            logger.error("After" + c.toString());
+        }
+
+        int numOfCards = 3;
+        numOfCards = (numOfCards > currentlyNotOnHand.size()) ? currentlyNotOnHand.size() : numOfCards;
+
+        Collections.shuffle(currentlyNotOnHand);
+
+        List<Card> res = new ArrayList<>();
+        for(int i = 0; i < numOfCards; i++) {
+            res.add(currentlyNotOnHand.get(i));
+        }
+
+        return res;
     }
 
 }

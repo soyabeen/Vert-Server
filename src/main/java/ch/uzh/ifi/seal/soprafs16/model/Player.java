@@ -243,7 +243,18 @@ public class Player extends Meeple {
     /**
      * Adds 3 or rest Cards from card deck to players hand.
      */
-    public void take3Cards() { this.drawCard(3);
+    public void take3Cards() { this.drawCard(3);}
+
+    public void take3Cards(List<Card> cards) {
+        List<Card> currentDeck = getCardsInDeck();
+        for (Card c1: cards) {
+            for(Card c2: currentDeck) {
+                if(c1.getId().equals(c2.getId())) {
+                    c2.setOnHand(true);
+                    continue;
+                }
+            }
+        }
     }
 
     public void removeCardFromHand(Card card) {
@@ -280,7 +291,8 @@ public class Player extends Meeple {
         }
     }
 
-    private List<Card> getCardsInDeck() {
+    @JsonIgnore
+    public List<Card> getCardsInDeck() {
         List<Card> currentDeck = new ArrayList<>();
         for (Card c: deck) {
             if(!c.isOnHand()) currentDeck.add(c);

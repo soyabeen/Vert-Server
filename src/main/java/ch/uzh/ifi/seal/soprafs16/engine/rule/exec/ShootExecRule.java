@@ -26,17 +26,19 @@ public class ShootExecRule implements ExecutionRule {
 
     @Override
     public boolean evaluate(ActionCommand command) {
-        return hasBulletLeft(command.getCurrentPlayer());
+        return command.getCurrentPlayer() instanceof Player
+                && command.getTargetPlayer() instanceof Player
+                && hasBulletLeft((Player) command.getCurrentPlayer());
     }
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
-        Player actor = command.getCurrentPlayer();
+        Player actor = (Player) command.getCurrentPlayer();
         actor.shoots();
         result.add(actor);
 
-        Player target = command.getTargetPlayer();
+        Player target = (Player) command.getTargetPlayer();
         target.getsShot();
         result.add(target);
 

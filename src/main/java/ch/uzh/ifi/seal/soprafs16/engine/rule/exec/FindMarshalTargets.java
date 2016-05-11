@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by devuser on 08.05.2016.
  */
-public class MoveMarshalExecRule implements ExecutionRule {
+public class FindMarshalTargets implements ExecutionRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerExecRule.class);
 

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -58,6 +59,8 @@ public class ActionPhaseServiceTest {
     private Game game;
     private Round round1;
     private Round round2;
+    private Round round4;
+    private Round round5;
 
     @Before
     public void init() {
@@ -88,6 +91,23 @@ public class ActionPhaseServiceTest {
         round1 = new Round(game.getId(), game.getRoundId(), null, null, "");
         round2 = new Round(game.getId(), 2, null, null, "");
 
+
+        List<Turn> turns4 = Arrays.asList(
+                Turn.REVERSE,
+                Turn.HIDDEN,
+                Turn.NORMAL,
+                Turn.DOUBLE_TURNS);
+
+        List<Turn> turns5 = Arrays.asList(
+                Turn.REVERSE,
+                Turn.HIDDEN,
+                Turn.NORMAL,
+                Turn.NORMAL);
+
+
+        round4 = new Round(game.getId(), 4, turns4, null, "");
+        round5 = new Round(game.getId(), 5, turns5, null, "");
+
         Loot loot = new Loot(LootType.JEWEL, 1L, 500, 1, Positionable.Level.BOTTOM);
         loot.setId(1L);
         loot.setOwnerId(2L);
@@ -98,6 +118,8 @@ public class ActionPhaseServiceTest {
         when(mockedGameRepo.findOne(1L)).thenReturn(game);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 1)).thenReturn(round1);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 2)).thenReturn(round2);
+        when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 4)).thenReturn(round4);
+        when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 5)).thenReturn(round5);
         when(mockedPlayerRepo.findOne(1L)).thenReturn(player1);
         when(mockedPlayerRepo.findOne(2L)).thenReturn(player2);
         when(mockedLootRepo.findOne(1L)).thenReturn(loot);
@@ -199,6 +221,129 @@ public class ActionPhaseServiceTest {
         Assert.assertTrue("Loot has now OwnerId 1",
                 resLoot.getOwnerId().equals(mockedLootRepo.findOne(1L).getOwnerId()));
 
+    }
+
+    @Test
+    public void executeWithMoreCards() {
+
+        game.setRoundId(2);
+        game.setCurrentPlayerId(2L);
+        round2.addNewlyPlayedCard(new Card(CardType.MOVE, 2L));
+        round2.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round2.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round2.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+
+        Player targetPlayer = getPlayersFromSimulateMove().get(0);
+
+        ActionCommand command = new ActionCommand(CardType.MOVE,game,
+                mockedPlayerRepo.findOne(game.getCurrentPlayerId()),targetPlayer);
+
+        mockedGameEngine = new GameEngine();
+        Player result = new Player();
+
+        try {
+            List<Positionable> positionables = mockedGameEngine.executeAction(command);
+            result = (Player) positionables.get(0);
+
+        }
+        catch (InvocationTargetException e) {
+        }
+
+        List<Player> plist = new ArrayList<>();
+        plist.add(targetPlayer);
+        TurnDTO dto = new TurnDTO(CardType.MOVE,plist);
+
+        actionService.executeDTO(1L,dto);
+
+        Assert.assertTrue("The player 2 moved to car 1", mockedPlayerRepo.findOne(2L).getCar() == result.getCar());
+
+    }
+
+    @Test
+    public void testEndOfActionphase() {
+
+        game.setRoundId(4);
+        game.setCurrentPlayerId(1L);
+        round4.addNewlyPlayedCard(new Card(CardType.MOVE, 1L));
+        round4.addNewlyPlayedCard(new Card(CardType.MOVE, 2L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round4.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        game.setTurnId(5);
+        game.setStatus(GameStatus.ACTIONPHASE);
+
+        Player target1 = getPlayersFromSimulateMove().get(0);
+
+        List<Player> plist = new ArrayList<>();
+        plist.add(target1);
+        TurnDTO dto1 = new TurnDTO(CardType.MOVE,plist);
+        actionService.executeDTO(1L,dto1);
+
+        Player target2 = getPlayersFromSimulateMove().get(0);
+        plist.remove(0);
+        plist.add(target2);
+        TurnDTO dto2 = new TurnDTO(CardType.MOVE,plist);
+        actionService.executeDTO(1L,dto2);
+
+        TurnDTO emptyDTO = new TurnDTO();
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+
+        Assert.assertTrue("Status changed back to planningphase after actionphase", game.getStatus().equals(GameStatus.PLANNINGPHASE));
+        Assert.assertTrue("TurnId was reset to 1 after actionphase", game.getTurnId() == 1);
+        Assert.assertTrue("RoundId incremented after actionphase", game.getRoundId() == 5);
+
+    }
+
+    @Test
+    public void testEndOfActionphaseAtEndOfGame() {
+
+        game.setRoundId(5);
+        game.setCurrentPlayerId(1L);
+        round5.addNewlyPlayedCard(new Card(CardType.MOVE, 1L));
+        round5.addNewlyPlayedCard(new Card(CardType.MOVE, 2L));
+        round5.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round5.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round5.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round5.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round5.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round5.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        game.setTurnId(5);
+        game.setStatus(GameStatus.ACTIONPHASE);
+
+        Player target1 = getPlayersFromSimulateMove().get(0);
+
+        List<Player> plist = new ArrayList<>();
+        plist.add(target1);
+        TurnDTO dto1 = new TurnDTO(CardType.MOVE,plist);
+        actionService.executeDTO(1L,dto1);
+
+        Player target2 = getPlayersFromSimulateMove().get(0);
+        plist.remove(0);
+        plist.add(target2);
+        TurnDTO dto2 = new TurnDTO(CardType.MOVE,plist);
+        actionService.executeDTO(1L,dto2);
+
+        TurnDTO emptyDTO = new TurnDTO();
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+        actionService.executeDTO(1L,emptyDTO);
+
+        Assert.assertTrue("Status changed to finished after actionphase at round 5", game.getStatus().equals(GameStatus.FINISHED));
     }
 
     private List<Player> getPlayersFromSimulateMove() {

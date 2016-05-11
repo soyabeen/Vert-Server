@@ -18,7 +18,7 @@ public class MovePlayerExecRule implements ExecutionRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerExecRule.class);
 
-    private boolean isInAllowedRange(Player current, Player target) {
+    private boolean isInAllowedRange(Positionable current, Positionable target) {
         boolean res;
         int distance = Math.abs(current.getCar() - target.getCar());
         if (current.getLevel() == Positionable.Level.TOP) {
@@ -43,7 +43,7 @@ public class MovePlayerExecRule implements ExecutionRule {
     @Override
     public List<Positionable> execute(ActionCommand command) {
 
-        Player newState = command.getCurrentPlayer();
+        Positionable newState = command.getCurrentPlayer();
         newState.setCar(command.getTargetPlayer().getCar());
 
         List<Positionable> result = new ArrayList<>();

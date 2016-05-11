@@ -16,7 +16,7 @@ import java.util.List;
 public class FloorChangeRuleSet extends RuleSet {
 
     @Override
-    public List<Positionable> simulate(Game game, Player player) {
+    public List<Positionable> simulate(Game game, Positionable player) {
         FloorChangeSimRule floorChange = new FloorChangeSimRule();
         return floorChange.simulate(player);
     }
