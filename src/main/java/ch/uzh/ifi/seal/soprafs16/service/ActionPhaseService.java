@@ -105,6 +105,11 @@ public class ActionPhaseService {
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), null);
                 actionCommand.setTargetLoot(lootRepo.findOne(lootId));
+            } else if (turnDTO.getPlayers().get(0) == null){
+                Player targetPlayer = turnDTO.getPlayers().get(0);
+                targetPlayer.setId(game.getCurrentPlayerId());
+                actionCommand = new ActionCommand(type, game,
+                        playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
             } else {
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
