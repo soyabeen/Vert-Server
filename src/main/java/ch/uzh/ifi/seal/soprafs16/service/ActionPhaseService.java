@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -92,7 +91,7 @@ public class ActionPhaseService {
         Round round = roundRepo.findByGameIdAndNthRound(gameId, game.getRoundId());
         CardType type = round.getCardStack().get(round.getPointerOnDeck()).getType();
 
-        if (!type.equals(CardType.DRAW)) {
+        if (!type.equals(CardType.DRAW) || hasNoTarget(turnDTO)) {
 
             ActionCommand actionCommand;
 
@@ -265,6 +264,15 @@ public class ActionPhaseService {
             //TODO: determine revolverheld? update money?
             game.setStatus(GameStatus.FINISHED);
         }
+    }
+
+    private boolean hasNoTarget(TurnDTO dto) {
+        if ((dto.getType().equals(CardType.FIRE) || dto.getType().equals(CardType.PUNCH))
+        && dto.getPlayers().size() == 0) {
+            return true;
+        }
+        return false;
+
     }
 
 }
