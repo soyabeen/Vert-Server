@@ -112,6 +112,7 @@ public class GameService {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game pendingGame = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+        InputArgValidator.checkIfOwnerHasCharacter(tokenOwner);
 
         // Game must be in pending state
         if (!GameStatus.PENDING.equals(pendingGame.getStatus())) {

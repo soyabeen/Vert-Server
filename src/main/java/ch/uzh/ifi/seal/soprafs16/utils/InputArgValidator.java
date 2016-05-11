@@ -168,4 +168,9 @@ public class InputArgValidator {
             throw new InvalidInputException(MESSAGE_START + " Character is already taken");
         return character;
     }
+
+    public static void checkIfOwnerHasCharacter(Player owner) {
+        if (owner.getCharacter() != null) return;
+        throw  new InvalidInputException(MESSAGE_START + " Owner must choose a character before starting the game");
+    }
 }

@@ -114,7 +114,7 @@ public class GameConfigurator {
         loots.addAll(buildLootsForCarConfiguration(gameId, new CarConfiguration(0, 0, 0, 1), 0));
         // cars
         Collections.shuffle(carConfigs);
-        for (int i = 1; i <= nrOfCars; i++) {
+        for (int i = 1; i < nrOfCars; i++) {
             loots.addAll(buildLootsForCarConfiguration(gameId, carConfigs.get(i), i));
         }
         return loots;
