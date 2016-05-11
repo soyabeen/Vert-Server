@@ -2,10 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -34,7 +31,7 @@ public class Loot implements Positionable, Serializable {
     /**
      * The id of the game to which the loot belongs.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, name = "GAME_ID")
     private Long gameId;
 
     /**
@@ -49,7 +46,7 @@ public class Loot implements Positionable, Serializable {
     @Column
     private int car;
 
-    @Column
+    @Column(name = "OWNER_ID")
     private Long ownerId;
 
     protected Loot() {

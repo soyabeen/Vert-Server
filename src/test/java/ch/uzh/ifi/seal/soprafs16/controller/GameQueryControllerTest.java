@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -59,11 +60,15 @@ public class GameQueryControllerTest {
     @Autowired
     private PlayerBuilder playerBuilder;
 
+    @Autowired
+    private LootRepository lootRepo;
+
     @Before
     public void setUp() throws MalformedURLException {
         this.base = new URL("http://localhost:" + port + "/games");
         this.template = new TestRestTemplate();
 
+        lootRepo.deleteAll();
         gameRepo.deleteAll();
     }
 
