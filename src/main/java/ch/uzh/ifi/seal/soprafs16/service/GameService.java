@@ -144,8 +144,7 @@ public class GameService {
         pendingGame.setStatus(GameStatus.PLANNINGPHASE);
 
         //Set start player
-        game.setCurrentPlayerId(logicService.getInitialPlayerId(game))
-        ;
+        game.setCurrentPlayerId(logicService.getInitialPlayerId(game));
         gameRepo.save(game);
 
         //Choose, initialize and save rounds for the new game
