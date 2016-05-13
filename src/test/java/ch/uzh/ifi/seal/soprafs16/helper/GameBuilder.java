@@ -6,7 +6,6 @@ import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -156,7 +155,7 @@ public class GameBuilder {
      * @return
      */
     public GameBuilder addRandomLoot() {
-        return addLoot(lootBuilder.init().build());
+        return addLoot(lootBuilder.init(game.getId()).build());
     }
 
     public GameBuilder setStatus(GameStatus gameStatus) {
