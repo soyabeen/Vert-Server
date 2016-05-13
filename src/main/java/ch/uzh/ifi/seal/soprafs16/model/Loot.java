@@ -74,7 +74,13 @@ public class Loot implements Positionable, Serializable {
 
     @Override
     public String toString() {
-        return "Loot (id:" + id + ", type:" + type + ", value:" + value + ", car:" + car + ", level:" + level + ")";
+        return "Loot (id:" + id
+                + ", type:" + type
+                + ", gameId:"+ gameId
+                + ", ownerId:"+ ownerId
+                + ", value:" + value
+                + ", car:" + car
+                + ", level:" + level + ")";
     }
 
     /**
@@ -85,7 +91,9 @@ public class Loot implements Positionable, Serializable {
         return car;
     }
 
-    public void setCar(int car) {this.car = car;}
+    public void setCar(int car) {
+        this.car = car;
+    }
 
     /**
      * @return Level The level of the car for llot.
@@ -174,20 +182,27 @@ public class Loot implements Positionable, Serializable {
         this.ownerId = ownerId;
     }
 
+    public Long getGameId() { return gameId; }
+
+    public void setGameId(Long gameId) { this.gameId = gameId; }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Loot)) {
             return false;
         }
 
-        Loot card = (Loot) o;
-        return (card.getOwnerId().equals(this.getOwnerId()) && card.getType().equals(this.getType()));
+        Loot loot = (Loot) o;
+        return (this.equals(loot.getId())
+                && loot.getOwnerId().equals(this.getOwnerId())
+                && loot.getType().equals(this.getType()));
     }
 
     @Override
     public int hashCode() {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
+        result = 4 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
 
