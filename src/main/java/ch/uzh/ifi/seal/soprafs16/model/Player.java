@@ -35,8 +35,7 @@ public class Player extends Meeple {
     @Column
     private Integer totalMadeMoves;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "OWNER_ID" )
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ownerId")
     private List<Loot> loots;
 
     @Transient
