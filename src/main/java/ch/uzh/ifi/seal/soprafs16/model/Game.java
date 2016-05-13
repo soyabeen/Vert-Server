@@ -50,8 +50,8 @@ public class Game implements Serializable {
     @OrderBy("id")
     private List<Player> players;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "GAME_ID" )
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "gameId")
+//   @JoinColumn(name = "GAME_ID" )
     private List<Loot> loots;
 
     @Column
