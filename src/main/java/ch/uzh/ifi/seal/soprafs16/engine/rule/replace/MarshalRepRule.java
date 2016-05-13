@@ -39,7 +39,7 @@ public class MarshalRepRule implements ReplaceRule {
     public List<Positionable> replace(List<Positionable> actors) {
         List<Positionable> replaced = new ArrayList<>();
         for (Positionable pos : actors) {
-            if (isOnSameFloorAsMarshal(pos)) {
+            if (pos instanceof Player && isOnSameFloorAsMarshal(pos)) {
                 Player target = (Player) RuleUtils.swapLevel(pos);
                 target.getsShot();
                 replaced.add(target);

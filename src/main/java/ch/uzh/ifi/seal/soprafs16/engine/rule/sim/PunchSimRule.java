@@ -2,8 +2,10 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
+import ch.uzh.ifi.seal.soprafs16.utils.TargetFinder;
 import org.hibernate.cfg.NotYetImplementedException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,28 +14,20 @@ import java.util.List;
 public class PunchSimRule implements SimulationRule {
     
     private Game game;
+    private TargetFinder targetFinder;
     
     public PunchSimRule(Game game) {
         this.game = game;
-    }
-
-    private boolean isOnSameFloor(Positionable attacker, Positionable victim) {
-        return attacker.getCar() == victim.getCar() && attacker.getLevel() == victim.getLevel();
-    }
-
-    private List<Positionable> findTargets(Positionable attacker) {
-        // use TargetFinder.java from utils
-        // check if victim is cheyenne
-        throw new NotYetImplementedException("Implement findTargets() in PunchSimRule");
+        this.targetFinder = new TargetFinder();
     }
 
     @Override
     public boolean evaluate(Positionable actor) {
-        return !(findTargets(actor).isEmpty());
+        return !(targetFinder.filterPlayersOnSameCar(actor, game.getPlayers()).isEmpty());
     }
 
     @Override
     public List<Positionable> simulate(Positionable actor) {
-        return findTargets(actor);
+        return new ArrayList<Positionable>( targetFinder.filterPlayersOnSameCar(actor, game.getPlayers()) );
     }
 }

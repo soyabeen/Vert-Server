@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
-import ch.uzh.ifi.seal.soprafs16.model.Meeple;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
