@@ -40,9 +40,8 @@ public class MovePlayerSimRule implements SimulationRule {
         if (!(player instanceof Player || player instanceof Marshal)) {
             return false;
         }
-        Player targetPlayer = (Player) player;
-        return RuleUtils.isOnSameLevel(targetPlayer, level)
-                && RuleUtils.isPlacedOnTrain(targetPlayer, trainLength);
+        return RuleUtils.isOnSameLevel(player, level)
+                && RuleUtils.isPlacedOnTrain(player, trainLength);
     }
 
 
@@ -53,19 +52,35 @@ public class MovePlayerSimRule implements SimulationRule {
      * @param direction
      * @return
      */
-    private List<Positionable> getPossiblePositions(Player player, int boardLength, int distance, int direction) {
+    private List<Positionable> getPossiblePositions(Positionable player, int boardLength, int distance, int direction) {
         ArrayList<Positionable> emulatedPlayerPositions = new ArrayList<>();
+        Positionable marshalOrPlayer = player;
         int playerPosition = player.getCar();
         for (int i = 1;
              i <= distance
                      && playerPosition + (direction * i) < boardLength
                      && playerPosition + (direction * i) >= 0;
              i++) {
-            Player emulated = new Player();
-            emulated.setUsername(player.getUsername());
-            emulated.setLevel(player.getLevel());
-            emulated.setCar(playerPosition + (direction * i));
-            emulatedPlayerPositions.add(emulated);
+
+            // used to distinguish between Player and Marshal, since a Marshal is not a player
+            // fixme: How to convert from Player to Positionable?
+            if(player instanceof Player) {
+                // only need Player instance to set username...
+                Player emulated = new Player();
+                emulated.setUsername( ((Player)player).getUsername());
+
+                // after username is set continue with Positionable reference
+                marshalOrPlayer = emulated;
+            } else if (player instanceof Marshal) {
+                // create new Positionable instance for emulation
+                Positionable marshal = new Marshal(player.getCar());
+                marshalOrPlayer = marshal;
+            }
+
+            marshalOrPlayer.setLevel(player.getLevel());
+            marshalOrPlayer.setCar(playerPosition + (direction * i));
+            emulatedPlayerPositions.add(marshalOrPlayer);
+
         }
         return emulatedPlayerPositions;
     }
@@ -74,8 +89,8 @@ public class MovePlayerSimRule implements SimulationRule {
     public List<Positionable> simulate(Positionable player) {
         ArrayList<Positionable> emulatedPlayers = new ArrayList<>();
         if (evaluate(player)) {
-            emulatedPlayers.addAll(getPossiblePositions((Player) player, trainLength, distanceToMove, Direction.TO_HEAD.intValue()));
-            emulatedPlayers.addAll(getPossiblePositions((Player) player, trainLength, distanceToMove, Direction.TO_TAIL.intValue()));
+            emulatedPlayers.addAll(getPossiblePositions(player, trainLength, distanceToMove, Direction.TO_HEAD.intValue()));
+            emulatedPlayers.addAll(getPossiblePositions(player, trainLength, distanceToMove, Direction.TO_TAIL.intValue()));
         }
         return emulatedPlayers;
     }
