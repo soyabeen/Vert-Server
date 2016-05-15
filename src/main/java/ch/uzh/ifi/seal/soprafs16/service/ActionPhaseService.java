@@ -273,7 +273,7 @@ public class ActionPhaseService {
             // get round end event
             RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
             // execute round end event
-            rd.execute(game, new ArrayList<>( game.getPlayers() ));
+            //rd.execute(game, new ArrayList<>( game.getPlayers() ));
 
             game.startNewRound();
 
