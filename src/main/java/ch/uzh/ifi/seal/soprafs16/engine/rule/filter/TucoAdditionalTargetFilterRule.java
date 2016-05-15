@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import ch.uzh.ifi.seal.soprafs16.utils.TargetFinder;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,8 +32,14 @@ public class TucoAdditionalTargetFilterRule implements FilterRule {
     @Override
     public List<Positionable> filter(List<Positionable> actors) {
         if(evaluate(actors)){
+
+            // cast this stuff
             List<Player> players = new ArrayList<>();
-            players.addAll((Collection<? extends Player>) actors);
+            for (Positionable p : actors) {
+                if(p instanceof Player){
+                    players.add((Player) p);
+                }
+            }
 
             List<Positionable> result = new ArrayList<>();
             result.addAll(actors);
