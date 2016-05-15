@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.utils;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
@@ -172,5 +173,16 @@ public class InputArgValidator {
     public static void checkIfOwnerHasCharacter(Player owner) {
         if (owner.getCharacter() != null) return;
         throw  new InvalidInputException(MESSAGE_START + " Owner must choose a character before starting the game");
+    }
+
+    public static void checkIfGameIsInPlanningPhase(Game game) {
+        if (!game.getStatus().equals(GameStatus.PLANNINGPHASE)) {
+            throw new InvalidInputException(MESSAGE_START + "Game is not in Planningphase");
+        }
+    }
+
+    public static void checkIfPlayerHasCharacter(Player player) {
+        if (player.getCharacter() == null) return;
+        throw  new InvalidInputException(MESSAGE_START + " Player already has a character");
     }
 }

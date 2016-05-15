@@ -25,6 +25,7 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     private Card lastPlayedCard;
     private List<Player> players;
     private List<Loot> loots;
+    private int positionMarshal;
 
     @Override
     public String toString() {
@@ -37,6 +38,7 @@ public class GameWithLastPlayedCardDTO implements Serializable {
                 ", roundId=" + roundId +
                 ", turnId=" + turnId +
                 ", nrOfCars=" + nrOfCars +
+                ", positionMarshal=" + positionMarshal +
                 ", status=" + status +
                 ", lastPlayedCard=" + lastPlayedCard +
                 ", players=" + players +
@@ -133,4 +135,8 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     public int getTurnId() {return turnId;}
 
     public void setTurnId(int turnId) {this.turnId = turnId;}
+
+    public int getPositionMarshal() {return positionMarshal;}
+
+    public void setPositionMarshal(int positionMarshal) {this.positionMarshal = positionMarshal;}
 }

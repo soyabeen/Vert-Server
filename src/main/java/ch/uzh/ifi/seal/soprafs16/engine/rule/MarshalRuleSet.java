@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerBottomSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Marshal;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +43,19 @@ public class MarshalRuleSet extends RuleSet {
         List<Positionable> result = new ArrayList<>();
         MovePlayerExecRule playerMove = new MovePlayerExecRule();
         FindMarshalTargets marshalTargets = new FindMarshalTargets();
-        MarshalRepRule marshalReplace = new MarshalRepRule(command.getGame());
+        Game tmpGame = command.getGame();
 
         logger.debug("eval: " + marshalTargets.evaluate(command));
 
         // marshal move
         if (playerMove.evaluate(command)) {
             result.addAll(playerMove.execute(command));
+
+            // when marshal moved, update his position in game
+            // TODO: refactor!
+            tmpGame.setPositionMarshal( result.get(0).getCar() );
+            MarshalRepRule marshalReplace = new MarshalRepRule(tmpGame);
+
             // marshal move consequence
             result.addAll(marshalReplace.replace( marshalTargets.execute(command) ));
         }

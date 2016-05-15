@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.*;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
@@ -79,12 +80,14 @@ public class ActionPhaseServiceTest {
         player1.setUsername("P1");
         player1.setCar(1);
         player1.setLevel(Positionable.Level.BOTTOM);
+        player1.setCharacter(Character.BELLE);
 
         Player player2 = new Player();
         player2.setId(2L);
         player2.setUsername("P2");
         player2.setCar(2);
         player2.setLevel(Positionable.Level.BOTTOM);
+        player2.setCharacter(Character.DJANGO);
 
         game.addPlayer(player1);
         game.addPlayer(player2);
