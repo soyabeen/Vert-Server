@@ -271,7 +271,7 @@ public class ActionPhaseService {
         } else if (game.getRoundId() < RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
             //TODO: add round end event measures
             // get round end event
-            RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
+                RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
             // execute round end event
             //rd.execute(game, new ArrayList<>( game.getPlayers() ));
 
