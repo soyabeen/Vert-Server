@@ -17,6 +17,12 @@ public class TargetFinder {
 
     private static final Logger logger = LoggerFactory.getLogger(TargetFinder.class);
 
+    private Positionable.Level getOppositeLevel(Positionable.Level level) {
+        if(Positionable.Level.BOTTOM.equals(level)) {
+            return Positionable.Level.TOP;
+        }
+        return Positionable.Level.BOTTOM;
+    }
 
     private List<Player> filterPlayersByLevel(List<Player> players, Positionable.Level level) {
         List<Player> result = new ArrayList<>();
@@ -98,6 +104,10 @@ public class TargetFinder {
 
     public List<Player> filterPlayersOnSameFloor(Positionable actor, List<Player> players) {
         return filterPlayersOnSameCar(actor, filterPlayersByLevel(players, actor.getLevel()));
+    }
+
+    public List<Player> filterPlayersOnOppositeFloor(Positionable actor, List<Player> players) {
+        return filterPlayersOnSameCar(actor, filterPlayersByLevel(players, getOppositeLevel(actor.getLevel())));
     }
 
     /**
