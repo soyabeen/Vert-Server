@@ -11,6 +11,8 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
+import ch.uzh.ifi.seal.soprafs16.service.roundend.RoundEnd;
+import ch.uzh.ifi.seal.soprafs16.service.roundend.RoundEndFactory;
 import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -258,6 +259,11 @@ public class ActionPhaseService {
                     get(round.getPointerOnDeck()).getOwnerId());
         } else if (game.getRoundId() < RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
             //TODO: add round end event measures
+            // get round end event
+            RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
+            // execute round end event
+            rd.execute(game, new ArrayList<>( game.getPlayers() ));
+
             game.incrementRound();
             game.setStatus(GameStatus.PLANNINGPHASE);
             game.setTurnId(1);
@@ -266,5 +272,4 @@ public class ActionPhaseService {
             game.setStatus(GameStatus.FINISHED);
         }
     }
-
 }
