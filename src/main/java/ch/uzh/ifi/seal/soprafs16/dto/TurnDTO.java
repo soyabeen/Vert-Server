@@ -22,7 +22,7 @@ public class TurnDTO implements Serializable {
 
     private boolean punchRight;
 
-    private Long lootID;
+    private Long lootId;
 
     private int positionMarshal;
 
@@ -61,12 +61,12 @@ public class TurnDTO implements Serializable {
         this.punchRight = punchRight;
     }
 
-    public Long getLootID() {
-        return lootID;
+    public Long getLootId() {
+        return lootId;
     }
 
-    public void setLootID(Long lootID) {
-        this.lootID = lootID;
+    public void setLootId(Long lootID) {
+        this.lootId = lootID;
     }
 
     public List<Loot> getLoots() {
