@@ -1,10 +1,13 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleSet;
+import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Marshal;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -66,14 +69,26 @@ public class MarshalRuleSetTest {
         Assert.assertThat(result.get(0).getCar(), is(1));
 
         // Marshal in middle waggon moving 1 to TAIL
+        // + Player in target waggon
+        PlayerBuilder playerbuilder = new PlayerBuilder();
+        Player player = playerbuilder.init().getPlayerNoPersistence(Character.BELLE);
+        player.setCar(2);
+        player.setLevel(Positionable.Level.BOTTOM);
+        game.addPlayer(player);
+
+        // Updates
+        game.setPositionMarshal(1);
+
         current = new Marshal(1);
         target = new Marshal(2);
         ac = new ActionCommand(CardType.MARSHAL, game, current, target);
 
         result = mrs.execute(ac);
-        Assert.assertThat(result.size(), is(1));
+        Assert.assertThat(result.size(), is(2));
 
+        // Update game after rule
         Assert.assertThat(result.get(0).getCar(), is(2));
+        Assert.assertEquals(result.get(1).getLevel(), Positionable.Level.TOP);
 
         // Marshal in last waggon moving outside of waggon
         current = new Marshal(2);
@@ -82,5 +97,7 @@ public class MarshalRuleSetTest {
 
         result = mrs.execute(ac);
         Assert.assertThat(result.size(), is(0));
+
+
     }
 }
