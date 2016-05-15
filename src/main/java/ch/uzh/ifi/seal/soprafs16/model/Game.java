@@ -51,6 +51,7 @@ public class Game implements Serializable {
     private List<Player> players;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "gameId")
+//    @Where(clause="game_id is null")
     private List<Loot> loots;
 
     @Column
@@ -83,7 +84,13 @@ public class Game implements Serializable {
     }
 
     public List<Loot> getLoots() {
-        return loots;
+        List<Loot> lootsOnTrain = new ArrayList<>();
+        for(Loot l: loots) {
+            if (l.getOwnerId() == null) {
+                lootsOnTrain.add(l);
+            }
+        }
+        return lootsOnTrain;
     }
 
     public Long getId() {

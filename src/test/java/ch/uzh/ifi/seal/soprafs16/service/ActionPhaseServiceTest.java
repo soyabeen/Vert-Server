@@ -114,6 +114,16 @@ public class ActionPhaseServiceTest {
         loot.setOwnerId(2L);
         List<Loot> loots = new ArrayList<>();
         loots.add(loot);
+
+        Loot loot2 = new Loot(LootType.JEWEL, 1L, 500, 1, Positionable.Level.BOTTOM);
+        loot2.setId(2L);
+        loots.add(loot2);
+
+        Loot loot3 = new Loot(LootType.JEWEL, 1L, 500, 1, Positionable.Level.BOTTOM);
+        loot3.setId(3L);
+        loots.add(loot3);
+        game.setLoots(loots);
+
         game.setLoots(loots);
 
         when(mockedGameRepo.findOne(1L)).thenReturn(game);
@@ -125,6 +135,8 @@ public class ActionPhaseServiceTest {
         when(mockedPlayerRepo.findOne(1L)).thenReturn(player1);
         when(mockedPlayerRepo.findOne(2L)).thenReturn(player2);
         when(mockedLootRepo.findOne(1L)).thenReturn(loot);
+        when(mockedLootRepo.findOne(2L)).thenReturn(loot2);
+        when(mockedLootRepo.findOne(3L)).thenReturn(loot3);
     }
 
     @Test
@@ -202,7 +214,7 @@ public class ActionPhaseServiceTest {
 
         ActionCommand command = new ActionCommand(CardType.ROBBERY,game,
                 mockedPlayerRepo.findOne(game.getCurrentPlayerId()),null);
-        command.setTargetLoot(mockedLootRepo.findOne(1L));
+        command.setTargetLoot(mockedLootRepo.findOne(2L));
 
         mockedGameEngine = new GameEngine();
         Loot resLoot = new Loot(LootType.JEWEL,1L,1);
@@ -216,14 +228,14 @@ public class ActionPhaseServiceTest {
 
         TurnDTO dto = new TurnDTO();
         dto.setType(CardType.ROBBERY);
-        dto.setLootId(1L);
+        dto.setLootId(3L);
 
         actionService.executeDTO(1L,dto);
 
         Assert.assertTrue("The player 1 has picked up the loot",
                 mockedPlayerRepo.findOne(1L).getLoots().get(0).getValue() == resLoot.getValue());
         Assert.assertTrue("Loot has now OwnerId 1",
-                resLoot.getOwnerId().equals(mockedLootRepo.findOne(1L).getOwnerId()));
+                resLoot.getOwnerId().equals(mockedLootRepo.findOne(3L).getOwnerId()));
 
     }
 
