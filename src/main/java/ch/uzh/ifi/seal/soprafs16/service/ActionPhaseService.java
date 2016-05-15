@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.Direction;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
@@ -112,6 +113,11 @@ public class ActionPhaseService {
                 targetPlayer.setId(game.getCurrentPlayerId());
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
+            } else if (type.equals(CardType.PUNCH)){
+                actionCommand = new ActionCommand(type, game,
+                        playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
+                actionCommand.setDirection(turnDTO.isPunchRight() ? Direction.TO_HEAD : Direction.TO_TAIL);
+                actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootID()));
             } else {
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));

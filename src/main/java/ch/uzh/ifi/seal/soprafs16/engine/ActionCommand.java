@@ -57,6 +57,10 @@ public class ActionCommand {
         return direction;
     }
 
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
 
 
 }
