@@ -78,11 +78,11 @@ public class GameConfiguratorTest {
     }
 
     @Test
-    public void fourPlayersWillPlayWithFourCars() {
+    public void fourPlayersWillPlayWithFiveCars() {
         Game game = configurator.configureGameForNrOfPlayers(dummyGame, 4);
         Assert.assertNotNull("Game should not be null", game);
         Assert.assertThat(game.getNumberOfPlayers(), is(4));
-        Assert.assertThat(game.getNrOfCars(), is(4));
+        Assert.assertThat(game.getNrOfCars(), is(5));
     }
 
     @Test
