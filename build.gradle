@@ -58,6 +58,9 @@ test {
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
+
+    exclude 'ch.uzh.ifi.seal.soprafs16.acceptance/**'
+
 }
 
 sonarqube {
