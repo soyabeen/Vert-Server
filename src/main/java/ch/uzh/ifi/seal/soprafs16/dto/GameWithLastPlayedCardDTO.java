@@ -4,8 +4,10 @@ import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -125,7 +127,13 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     }
 
     public List<Loot> getLoots() {
-        return loots;
+        List<Loot> lootsOnTrain = new ArrayList<>();
+        for(Loot l: loots) {
+            if (l.getOwnerId() == null) {
+                lootsOnTrain.add(l);
+            }
+        }
+        return lootsOnTrain;
     }
 
     public void setLoots(List<Loot> loots) {
