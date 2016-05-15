@@ -162,6 +162,7 @@ public class ActionPhaseServiceTest {
         game.setRoundId(2);
         game.setCurrentPlayerId(2L);
         round2.addNewlyPlayedCard(new Card(CardType.MOVE, 2L));
+        round2.addNewlyPlayedCard(new Card(CardType.MOVE, 1L));
 
         Player targetPlayer = getPlayersFromSimulateMove().get(0);
 
@@ -195,6 +196,7 @@ public class ActionPhaseServiceTest {
         game.setRoundId(2);
         game.setCurrentPlayerId(1L);
         round2.addNewlyPlayedCard(new Card(CardType.ROBBERY, 1L));
+        round2.addNewlyPlayedCard(new Card(CardType.MOVE, 2L));
 
         ActionCommand command = new ActionCommand(CardType.ROBBERY,game,
                 mockedPlayerRepo.findOne(game.getCurrentPlayerId()),null);
@@ -274,6 +276,7 @@ public class ActionPhaseServiceTest {
         round4.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
         round4.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
         round4.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round4.setEnd(RoundEndEvent.ANGRY_MARSHAL);
         game.setTurnId(5);
         game.setStatus(GameStatus.ACTIONPHASE);
 
@@ -319,6 +322,7 @@ public class ActionPhaseServiceTest {
         round5.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
         round5.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
         round5.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        round5.setEnd(RoundEndEvent.ANGRY_MARSHAL);
         game.setTurnId(5);
         game.setStatus(GameStatus.ACTIONPHASE);
 

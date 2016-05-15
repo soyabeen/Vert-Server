@@ -51,7 +51,7 @@ public class BrakingTest {
         for (int i=0; i < result.size(); i++) {
             logger.debug(players.get(i).getCharacter() + " is in Car: " + players.get(i).getCar());
             logger.debug( ((Player)result.get(i)).getCharacter() + " is in Car: " + result.get(i).getCar());
-            Assert.assertEquals(players.get(i).getCar(), result.get(i).getCar() + 1);
+            Assert.assertEquals(players.get(i).getCar(), result.get(i).getCar());
         }
     }
 
