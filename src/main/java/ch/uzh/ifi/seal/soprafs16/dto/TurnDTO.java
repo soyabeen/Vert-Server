@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.dto;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Marshal;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 
 import java.io.Serializable;
@@ -20,16 +21,16 @@ public class TurnDTO implements Serializable {
 
     private List<Loot> loots;
 
+    private List<Integer> marshals;
+
     private boolean punchRight;
 
     private Long lootId;
 
-    private int positionMarshal;
-
-
     public TurnDTO() {
         loots = new ArrayList<>();
         players = new ArrayList<>();
+        marshals = new ArrayList<>();
     }
 
     public TurnDTO(CardType type, List<Player> positionables) {
@@ -81,7 +82,13 @@ public class TurnDTO implements Serializable {
         loots =loot;
     }
 
-    public int getPositionMarshal() { return positionMarshal; }
+    public List<Integer> getMarshal() {return marshals;}
 
-    public void setPositionMarshal(int positionMarshal) { this.positionMarshal = positionMarshal; }
+    public void addMarshal(Marshal marshal) {this.marshals.add(marshal.getCar());}
+
+    public void addMarshalAsList(List<Marshal> marshals) {
+        for(Marshal m: marshals) {
+            this.marshals.add(m.getCar());
+        }
+    }
 }
