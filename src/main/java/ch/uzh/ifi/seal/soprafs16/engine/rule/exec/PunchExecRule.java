@@ -5,7 +5,6 @@ import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import org.jboss.logging.annotations.Pos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,6 @@ public class PunchExecRule implements ExecutionRule {
     }
 
     private Player moveVictim(Player victim, ActionCommand command) {
-        List<Positionable> result = new ArrayList<>();
         Player emVictim = new Player();
         emVictim.setLevel(victim.getLevel());
         // TODO: check if emVictim is at beginning or at end of train
