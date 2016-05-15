@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -36,35 +36,28 @@ public class ServerAcceptanceTest {
     private RestTemplate temp;
 
     @Before
-    private void setUp() {
+    public void setUp() throws MalformedURLException {
         temp = new RestTemplate();
-        base = new URL("http://localhost:" + port );
+        base = new URL("http://localhost:" + port);
     }
 
 
     private Player createPlayer(String name) {
-        Player ownerShell = new Player("player-1");
-        Player owner = temp.postForObject(createUserUri, ownerShell, Player.class);
+        Player playerShell = new Player(name);
+        Player player = temp.postForObject(base + "/users", playerShell, Player.class);
 
-        Assert.assertNotNull("Created owner is not null.", owner);
-        Assert.assertNotNull("Owner id not null.", owner.getId());
-        Assert.assertNotNull("Owner token not null.", owner.getToken());
-        Assert.assertEquals("Owner name is player-1.", "player-1", owner.getUsername());
+        Assert.assertNotNull("Created player is not null.", player);
+        Assert.assertNotNull("Player id not null.", player.getId());
+        Assert.assertNotNull("Player token not null.", player.getToken());
+        Assert.assertEquals("Player name is " + name , name, player.getUsername());
 
+        return player;
     }
 
     @Test
     public void runAcceptanceTest() throws URISyntaxException {
 
-        URI createUserUri = new URI("http://localhost:" + port + "/users");
-        Player ownerShell = new Player("player-1");
-        Player owner = temp.postForObject(createUserUri, ownerShell, Player.class);
-
-        Assert.assertNotNull("Created owner is not null.", owner);
-        Assert.assertNotNull("Owner id not null.", owner.getId());
-        Assert.assertNotNull("Owner token not null.", owner.getToken());
-        Assert.assertEquals("Owner name is player-1.", "player-1", owner.getUsername());
-
+        Player owner = createPlayer("player-1");
         logger.debug(owner.toString());
 
 
