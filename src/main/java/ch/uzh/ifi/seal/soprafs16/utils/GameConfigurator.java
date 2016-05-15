@@ -1,10 +1,14 @@
 package ch.uzh.ifi.seal.soprafs16.utils;
 
-import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.model.*;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * This class handles the initialisation and configuration of a game.
@@ -14,6 +18,7 @@ public class GameConfigurator {
     public static final Integer MIN_PLAYERS = 2;
     public static final Integer MAX_PLAYERS = 4;
     public static final Integer MIN_CARS_PER_GAME = 3;
+    public static final Integer LOCOMOTIVE = 1;
 
     public static final Integer LOOT_MAX_PURSES_IN_GAME = 18;
     public static final Integer LOOT_MAX_JEWELS_IN_GAME = 6;
@@ -146,7 +151,7 @@ public class GameConfigurator {
             throw new IllegalArgumentException("Game object must have an id");
         }
 
-        int nrOfCars = nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame;
+        int nrOfCars = nrOfPlayersForGame < MIN_CARS_PER_GAME ? MIN_CARS_PER_GAME : nrOfPlayersForGame + LOCOMOTIVE;
 
         game.setNumberOfPlayers(nrOfPlayersForGame);
         game.setNrOfCars(nrOfCars);
