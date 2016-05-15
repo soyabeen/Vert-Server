@@ -176,8 +176,13 @@ public class InputArgValidator {
     }
 
     public static void checkIfGameIsInPlanningPhase(Game game) {
-        if(!game.getStatus().equals(GameStatus.PLANNINGPHASE)) {
+        if (!game.getStatus().equals(GameStatus.PLANNINGPHASE)) {
             throw new InvalidInputException(MESSAGE_START + "Game is not in Planningphase");
         }
+    }
+
+    public static void checkIfPlayerHasCharacter(Player player) {
+        if (player.getCharacter() == null) return;
+        throw  new InvalidInputException(MESSAGE_START + " Player already has a character");
     }
 }

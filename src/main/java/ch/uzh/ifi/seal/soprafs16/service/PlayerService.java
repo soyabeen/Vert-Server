@@ -100,10 +100,12 @@ public class PlayerService {
         InputArgValidator.checkIfPositiveNumber(gameId, "gameid");
         InputArgValidator.checkNotNull(player, "player");
         InputArgValidator.checkNotNull(character, "character");
+        InputArgValidator.checkIfPlayerHasCharacter(player);
 
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
 
         InputArgValidator.checkIfCharacterAvailable(game,character);
+
 
         if (game != null && game.getPlayers().size() < GameConfigurator.MAX_PLAYERS
                 && characterService.listAvailableCharactersByGame(gameId).contains(character)) {
@@ -136,11 +138,13 @@ public class PlayerService {
 
         InputArgValidator.checkIfCharacterAvailable(game,character);
 
-        // give player the start loot
-        Loot loot = new Loot(LootType.PURSE_SMALL, gameId, LootType.PURSE_SMALL.value());
-        loot.setOwnerId(player.getId());
-        loot = lootRepo.save(loot);
-        player.addLoot(loot);
+        if(player.getLoots().size() == 0) {
+            // give player the start loot
+            Loot loot = new Loot(LootType.PURSE_SMALL, gameId, LootType.PURSE_SMALL.value());
+            loot.setOwnerId(player.getId());
+            loot = lootRepo.save(loot);
+            player.addLoot(loot);
+        }
 
         player.setCharacter(character);
         return playerRepo.save(player);
