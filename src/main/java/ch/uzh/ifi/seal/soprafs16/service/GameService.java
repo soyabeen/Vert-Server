@@ -137,6 +137,12 @@ public class GameService {
         logger.debug("game with loots and cars" + game.toString());
         logger.debug("input val ok.");
 
+        //Add players loots to game
+        /*for (Player p: game.getPlayers()) {
+            for(Loot l: p.getLoots()) {
+                game.addLoot(l);
+            }
+        }*/
 
         // Build decks for players in game
         players.forEach(this::buildPlayerDeck);
@@ -144,8 +150,7 @@ public class GameService {
         pendingGame.setStatus(GameStatus.PLANNINGPHASE);
 
         //Set start player
-        game.setCurrentPlayerId(logicService.getInitialPlayerId(game))
-        ;
+        game.setCurrentPlayerId(logicService.getInitialPlayerId(game));
         gameRepo.save(game);
 
         //Choose, initialize and save rounds for the new game

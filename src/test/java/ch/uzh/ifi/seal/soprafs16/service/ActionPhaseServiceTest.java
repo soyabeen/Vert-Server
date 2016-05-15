@@ -59,6 +59,7 @@ public class ActionPhaseServiceTest {
     private Game game;
     private Round round1;
     private Round round2;
+    private Round round3;
     private Round round4;
     private Round round5;
 
@@ -104,7 +105,7 @@ public class ActionPhaseServiceTest {
                 Turn.NORMAL,
                 Turn.NORMAL);
 
-
+        round3 = new Round(game.getId(), 3, turns4, null, "");
         round4 = new Round(game.getId(), 4, turns4, null, "");
         round5 = new Round(game.getId(), 5, turns5, null, "");
 
@@ -118,6 +119,7 @@ public class ActionPhaseServiceTest {
         when(mockedGameRepo.findOne(1L)).thenReturn(game);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 1)).thenReturn(round1);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 2)).thenReturn(round2);
+        when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 3)).thenReturn(round3);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 4)).thenReturn(round4);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 5)).thenReturn(round5);
         when(mockedPlayerRepo.findOne(1L)).thenReturn(player1);
@@ -294,6 +296,7 @@ public class ActionPhaseServiceTest {
         actionService.executeDTO(1L,dto2);
 
         TurnDTO emptyDTO = new TurnDTO();
+        emptyDTO.setType(CardType.DRAW);
         actionService.executeDTO(1L,emptyDTO);
         actionService.executeDTO(1L,emptyDTO);
         actionService.executeDTO(1L,emptyDTO);
@@ -340,6 +343,7 @@ public class ActionPhaseServiceTest {
         actionService.executeDTO(1L,dto2);
 
         TurnDTO emptyDTO = new TurnDTO();
+        emptyDTO.setType(CardType.DRAW);
         actionService.executeDTO(1L,emptyDTO);
         actionService.executeDTO(1L,emptyDTO);
         actionService.executeDTO(1L,emptyDTO);
@@ -348,6 +352,33 @@ public class ActionPhaseServiceTest {
         actionService.executeDTO(1L,emptyDTO);
 
         Assert.assertTrue("Status changed to finished after actionphase at round 5", game.getStatus().equals(GameStatus.FINISHED));
+    }
+
+    @Test
+    public void testHasNoTarget() {
+
+        game.setRoundId(3);
+        game.setCurrentPlayerId(1L);
+        round3.addNewlyPlayedCard(new Card(CardType.FIRE, 1L));
+        round3.addNewlyPlayedCard(new Card(CardType.PUNCH, 2L));
+        round3.addNewlyPlayedCard(new Card(CardType.DRAW, 1L));
+        round3.addNewlyPlayedCard(new Card(CardType.DRAW, 2L));
+        game.setTurnId(3);
+        game.setStatus(GameStatus.ACTIONPHASE);
+
+
+        TurnDTO dto1 = new TurnDTO();
+        dto1.setType(CardType.FIRE);
+        actionService.executeDTO(1L,dto1);
+
+        Assert.assertTrue("Fire with no targets does nothing", game.getCurrentPlayerId().equals(2L));
+
+        TurnDTO dto2 = new TurnDTO();
+        dto2.setType(CardType.PUNCH);
+        actionService.executeDTO(1L,dto2);
+
+        Assert.assertTrue("Punch with no targets does nothing", game.getCurrentPlayerId().equals(1L));
+
     }
 
     private List<Player> getPlayersFromSimulateMove() {

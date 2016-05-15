@@ -15,7 +15,7 @@ public class BelleNoTargetFilterRule implements FilterRule {
     @Override
     public boolean evaluate(List<Positionable> actors) {
         // Belles special ability only triggers if there are other possible targets.
-        if(actors.size() <= 1) {
+        if (actors.size() <= 1) {
             return false;
         }
         return true;
@@ -23,12 +23,16 @@ public class BelleNoTargetFilterRule implements FilterRule {
 
     @Override
     public List<Positionable> filter(List<Positionable> actors) {
-        List<Positionable> filteredRes = new ArrayList<>();
-        for (Positionable pos : actors) {
-            if (Character.BELLE != ((Player) pos).getCharacter()) {
-                filteredRes.add(pos);
+        if (evaluate(actors)) {
+            List<Positionable> filteredRes = new ArrayList<>();
+            for (Positionable pos : actors) {
+                if (Character.BELLE != ((Player) pos).getCharacter()) {
+                    filteredRes.add(pos);
+                }
             }
+            return filteredRes;
+        } else {
+            return actors;
         }
-        return filteredRes;
     }
 }

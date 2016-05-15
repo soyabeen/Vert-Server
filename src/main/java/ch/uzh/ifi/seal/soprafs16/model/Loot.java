@@ -2,10 +2,7 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -34,7 +31,7 @@ public class Loot implements Positionable, Serializable {
     /**
      * The id of the game to which the loot belongs.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, name = "GAME_ID")
     private Long gameId;
 
     /**
@@ -49,7 +46,7 @@ public class Loot implements Positionable, Serializable {
     @Column
     private int car;
 
-    @Column
+    @Column(name = "OWNER_ID")
     private Long ownerId;
 
     protected Loot() {
@@ -77,7 +74,13 @@ public class Loot implements Positionable, Serializable {
 
     @Override
     public String toString() {
-        return "Loot (id:" + id + ", type:" + type + ", value:" + value + ", car:" + car + ", level:" + level + ")";
+        return "Loot (id:" + id
+                + ", type:" + type
+                + ", gameId:"+ gameId
+                + ", ownerId:"+ ownerId
+                + ", value:" + value
+                + ", car:" + car
+                + ", level:" + level + ")";
     }
 
     /**
@@ -88,7 +91,9 @@ public class Loot implements Positionable, Serializable {
         return car;
     }
 
-    public void setCar(int car) {this.car = car;}
+    public void setCar(int car) {
+        this.car = car;
+    }
 
     /**
      * @return Level The level of the car for llot.
@@ -177,20 +182,27 @@ public class Loot implements Positionable, Serializable {
         this.ownerId = ownerId;
     }
 
+    public Long getGameId() { return gameId; }
+
+    public void setGameId(Long gameId) { this.gameId = gameId; }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Loot)) {
             return false;
         }
 
-        Loot card = (Loot) o;
-        return (card.getOwnerId().equals(this.getOwnerId()) && card.getType().equals(this.getType()));
+        Loot loot = (Loot) o;
+        return (this.equals(loot.getId())
+                && loot.getOwnerId().equals(this.getOwnerId())
+                && loot.getType().equals(this.getType()));
     }
 
     @Override
     public int hashCode() {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
+        result = 4 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
 

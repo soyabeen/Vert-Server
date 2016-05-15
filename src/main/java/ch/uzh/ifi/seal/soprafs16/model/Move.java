@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.model;
 
-import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
