@@ -216,7 +216,7 @@ public class ActionPhaseServiceTest {
 
         TurnDTO dto = new TurnDTO();
         dto.setType(CardType.ROBBERY);
-        dto.setLootID(1L);
+        dto.setLootId(1L);
 
         actionService.executeDTO(1L,dto);
 

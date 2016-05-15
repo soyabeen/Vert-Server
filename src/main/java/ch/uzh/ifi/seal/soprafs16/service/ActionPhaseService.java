@@ -104,7 +104,7 @@ public class ActionPhaseService {
             }
 
             if (type.equals(CardType.ROBBERY)) {
-                Long lootId = turnDTO.getLootID();
+                Long lootId = turnDTO.getLootId();
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), null);
                 actionCommand.setTargetLoot(lootRepo.findOne(lootId));
@@ -117,7 +117,7 @@ public class ActionPhaseService {
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
                 actionCommand.setDirection(turnDTO.isPunchRight() ? Direction.TO_HEAD : Direction.TO_TAIL);
-                actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootID()));
+                actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootId()));
             } else {
                 actionCommand = new ActionCommand(type, game,
                         playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
