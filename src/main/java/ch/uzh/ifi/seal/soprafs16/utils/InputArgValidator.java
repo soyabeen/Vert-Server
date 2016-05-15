@@ -173,4 +173,9 @@ public class InputArgValidator {
         if (owner.getCharacter() != null) return;
         throw  new InvalidInputException(MESSAGE_START + " Owner must choose a character before starting the game");
     }
+
+    public static void checkIfPlayerHasCharacter(Player player) {
+        if (player.getCharacter() == null) return;
+        throw  new InvalidInputException(MESSAGE_START + " Player already has a character");
+    }
 }
