@@ -74,8 +74,7 @@ public class ActionPhaseService {
             List<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
             possibilitites.addPlayersAsList(getPlayersFromPositionableList(positionables) );
             possibilitites.addLootsAsList(getLootsFromPositionableList(positionables));
-            if(null != getMarshalFromPositionableList(positionables))
-                possibilitites.setPositionMarshal(getMarshalFromPositionableList(positionables).getCar());
+            possibilitites.addMarshalAsList(getMarshalFromPositionableList(positionables));
 
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
@@ -100,32 +99,35 @@ public class ActionPhaseService {
 
             //special marshal card
             if (type.equals(CardType.MARSHAL)) {
-                game.setPositionMarshal(turnDTO.getPlayers().get(0).getCar());
-            }
-
-            if (type.equals(CardType.ROBBERY)) {
-                Long lootId = turnDTO.getLootId();
+                Positionable marshalCurr = new Marshal(game.getPositionMarshal());
+                Positionable marshalTarget = new Marshal(turnDTO.getMarshal().get(0));
                 actionCommand = new ActionCommand(type, game,
-                        playerRepo.findOne(game.getCurrentPlayerId()), null);
-                actionCommand.setTargetLoot(lootRepo.findOne(lootId));
-            } else if (turnDTO.getPlayers().get(0) == null){
-                Player targetPlayer = turnDTO.getPlayers().get(0);
-                targetPlayer.setId(game.getCurrentPlayerId());
-                actionCommand = new ActionCommand(type, game,
-                        playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
-            } else if (type.equals(CardType.PUNCH)){
-                actionCommand = new ActionCommand(type, game,
-                        playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
-                actionCommand.setDirection(turnDTO.isPunchRight() ? Direction.TO_HEAD : Direction.TO_TAIL);
-                actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootId()));
+                        marshalCurr, marshalTarget);
             } else {
-                actionCommand = new ActionCommand(type, game,
-                        playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
-            }
 
+                if (type.equals(CardType.ROBBERY)) {
+                    Long lootId = turnDTO.getLootId();
+                    actionCommand = new ActionCommand(type, game,
+                            playerRepo.findOne(game.getCurrentPlayerId()), null);
+                    actionCommand.setTargetLoot(lootRepo.findOne(lootId));
+                } else if (turnDTO.getPlayers().get(0) == null) {
+                    Player targetPlayer = turnDTO.getPlayers().get(0);
+                    targetPlayer.setId(game.getCurrentPlayerId());
+                    actionCommand = new ActionCommand(type, game,
+                            playerRepo.findOne(game.getCurrentPlayerId()), targetPlayer);
+                } else if (type.equals(CardType.PUNCH)) {
+                    actionCommand = new ActionCommand(type, game,
+                            playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
+                    actionCommand.setDirection(turnDTO.isPunchRight() ? Direction.TO_HEAD : Direction.TO_TAIL);
+                    actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootId()));
+                } else {
+                    actionCommand = new ActionCommand(type, game,
+                            playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
+                }
+            }
             List<Player> players;
             List<Loot> loots;
-            Marshal marshal;
+            List<Marshal> marshal;
 
             try {
                 ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
@@ -152,8 +154,8 @@ public class ActionPhaseService {
                 updateLoot(l.getId(), l);
             }
 
-            if (null != marshal) {
-                game.setPositionMarshal(marshal.getCar());
+            if (marshal.size() != 0) {
+                game.setPositionMarshal(marshal.get(0).getCar());
             }
         }
 
@@ -161,9 +163,6 @@ public class ActionPhaseService {
 
         roundRepo.save(round);
         gameRepo.save(game);
-
-        //Usage of logic service
-        //logicService.advancePlayer(gameId, game.getRoundId());
 
 
     }
@@ -195,18 +194,19 @@ public class ActionPhaseService {
      * @param positionables List of players and loots
      * @return marshal in list
      */
-    private Marshal getMarshalFromPositionableList(List<Positionable> positionables) {
+    private List<Marshal> getMarshalFromPositionableList(List<Positionable> positionables) {
+        List<Marshal> marshals = new ArrayList<>();
 
         for(Positionable pos : positionables) {
             if (pos instanceof Marshal) {
-                return (Marshal) pos;
+                marshals.add((Marshal) pos);
             } else if (pos instanceof Loot) {
             } else if (pos instanceof Player) {
             } else {
                 throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
         }
-        return null;
+        return marshals;
     }
 
 
@@ -275,9 +275,8 @@ public class ActionPhaseService {
             // execute round end event
             rd.execute(game, new ArrayList<>( game.getPlayers() ));
 
-            game.incrementRound();
-            game.setStatus(GameStatus.PLANNINGPHASE);
-            game.setTurnId(1);
+            game.startNewRound();
+
         } else if (round.getPointerOnDeck() == round.getCardStack().size() && game.getRoundId() == RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
             //TODO: determine revolverheld? update money?
             game.setStatus(GameStatus.FINISHED);

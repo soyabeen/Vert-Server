@@ -77,6 +77,14 @@ public class Game implements Serializable {
                 '}';
     }
 
+    public void startNewRound() {
+        this.incrementRound();
+        this.setStatus(GameStatus.PLANNINGPHASE);
+        this.setTurnId(1);
+        for(Player p: players) {
+            p.drawHandForStart();
+        }
+    }
 
     public void addLoot(Loot loot) {
         loots.add(loot);
