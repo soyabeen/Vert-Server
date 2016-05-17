@@ -48,7 +48,9 @@ public class ActionPhaseService {
     @Autowired
     private PhaseLogicService logicService;
 
-    ActionPhaseService() {logicService = new PhaseLogicService();}
+    ActionPhaseService() {
+        logicService = new PhaseLogicService();
+    }
 
     /**
      * Send the calculated possbilities from the rule engine to the client.
@@ -61,7 +63,7 @@ public class ActionPhaseService {
 
         GameEngine gameEngine = new GameEngine();
         Game game = gameRepo.findOne(gameId);
-        Round round = roundRepo.findByGameIdAndNthRound(gameId,game.getRoundId());
+        Round round = roundRepo.findByGameIdAndNthRound(gameId, game.getRoundId());
         CardType type = round.getCardStack().get(round.getPointerOnDeck()).getType();
 
         possibilitites.setType(type);
@@ -72,7 +74,7 @@ public class ActionPhaseService {
         try {
 
             List<Positionable> positionables = new ArrayList<>(gameEngine.simulateAction(actionCommand));
-            possibilitites.addPlayersAsList(getPlayersFromPositionableList(positionables) );
+            possibilitites.addPlayersAsList(getPlayersFromPositionableList(positionables));
             possibilitites.addLootsAsList(getLootsFromPositionableList(positionables));
             possibilitites.addMarshalAsList(getMarshalFromPositionableList(positionables));
 
@@ -109,7 +111,7 @@ public class ActionPhaseService {
                             playerRepo.findOne(game.getCurrentPlayerId()), null);
 
                     // lootId can be null, eg. if the player has no loot, or the car floor is empty
-                    if(turnDTO.getLootId() != null) {
+                    if (turnDTO.getLootId() != null) {
                         actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootId()));
                     }
                 } else if (turnDTO.getPlayers().get(0) == null) {
@@ -122,7 +124,7 @@ public class ActionPhaseService {
                             playerRepo.findOne(game.getCurrentPlayerId()), turnDTO.getPlayers().get(0));
                     actionCommand.setDirection(turnDTO.isPunchRight() ? Direction.TO_HEAD : Direction.TO_TAIL);
                     // lootId can be null, eg. if the player has no loot, or the car floor is empty
-                    if(turnDTO.getLootId() != null) {
+                    if (turnDTO.getLootId() != null) {
                         actionCommand.setTargetLoot(lootRepo.findOne(turnDTO.getLootId()));
                     }
                 } else {
@@ -135,6 +137,9 @@ public class ActionPhaseService {
             List<Marshal> marshal;
 
             try {
+                logger.debug("action command: card {} , actor {}, target {}, lootid {}",
+                        actionCommand.getCard(), actionCommand.getCurrentPlayer(), actionCommand.getTargetPlayer(),
+                        actionCommand.getTargetLoot());
                 ArrayList<Positionable> positionables = new ArrayList<>(gameEngine.executeAction(actionCommand));
 
                 for (Positionable p : positionables) {
@@ -173,6 +178,7 @@ public class ActionPhaseService {
 
     /**
      * Extracts Player from an positionable list
+     *
      * @param positionables List of players and loots
      * @return players from the list
      */
@@ -180,7 +186,7 @@ public class ActionPhaseService {
 
         List<Player> players = new ArrayList<>();
 
-        for(Positionable pos : positionables) {
+        for (Positionable pos : positionables) {
             if (pos instanceof Player) {
                 players.add((Player) pos);
             } else if (pos instanceof Loot) {
@@ -195,13 +201,14 @@ public class ActionPhaseService {
 
     /**
      * Extracts Marshal from an positionable list
+     *
      * @param positionables List of players and loots
      * @return marshal in list
      */
     private List<Marshal> getMarshalFromPositionableList(List<Positionable> positionables) {
         List<Marshal> marshals = new ArrayList<>();
 
-        for(Positionable pos : positionables) {
+        for (Positionable pos : positionables) {
             if (pos instanceof Marshal) {
                 marshals.add((Marshal) pos);
             } else if (pos instanceof Loot) {
@@ -216,6 +223,7 @@ public class ActionPhaseService {
 
     /**
      * Extracts Loot from an positionable list
+     *
      * @param positionables List of players and loots
      * @return loots from the list
      */
@@ -223,7 +231,7 @@ public class ActionPhaseService {
 
         List<Loot> loots = new ArrayList<>();
 
-        for(Positionable pos : positionables) {
+        for (Positionable pos : positionables) {
             if (pos instanceof Loot) {
                 loots.add((Loot) pos);
             } else if (pos instanceof Player) {
@@ -239,6 +247,7 @@ public class ActionPhaseService {
 
     /**
      * Updates a player in the database
+     *
      * @param oldPlayerId   id of to be updated player
      * @param updatedPlayer player object with updated attributes
      * @return updated and saved Player
@@ -251,7 +260,8 @@ public class ActionPhaseService {
 
     /**
      * Updates a loot in the database
-     * @param oldLootId id of the to be updated loot
+     *
+     * @param oldLootId   id of the to be updated loot
      * @param updatedLoot updated loot object
      * @return updated and saved loot
      */
@@ -264,18 +274,19 @@ public class ActionPhaseService {
     /**
      * Set next player and
      * Transition form Action- to PlanningPhase and EndOfGame
+     *
      * @param game
      * @param round
      */
     private Game setNextPlayerAndChangeState(Game game, Round round) {
         round.incrementPointer();
-        if(round.getPointerOnDeck() < round.getCardStack().size()) {
+        if (round.getPointerOnDeck() < round.getCardStack().size()) {
             game.setCurrentPlayerId(round.getCardStack().
                     get(round.getPointerOnDeck()).getOwnerId());
         } else if (game.getRoundId() < RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
             //TODO: add round end event measures
             // get round end event
-                RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
+            RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
             // execute round end event
             //rd.execute(game, new ArrayList<>( game.getPlayers() ));
 
@@ -291,7 +302,7 @@ public class ActionPhaseService {
 
     private boolean hasNoTarget(TurnDTO dto) {
         if ((dto.getType().equals(CardType.FIRE) || dto.getType().equals(CardType.PUNCH))
-        && dto.getPlayers().size() == 0) {
+                && dto.getPlayers().size() == 0) {
             return true;
         }
         return false;
