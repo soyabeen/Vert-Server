@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import ch.uzh.ifi.seal.soprafs16.utils.TargetFinder;
-import org.hibernate.cfg.NotYetImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,6 @@ public class PunchSimRule implements SimulationRule {
 
     @Override
     public List<Positionable> simulate(Positionable actor) {
-        return new ArrayList<Positionable>( targetFinder.filterPlayersOnSameCar(actor, game.getPlayers()) );
+        return new ArrayList<Positionable>( targetFinder.filterPlayersOnSameFloor(actor, game.getPlayers()) );
     }
 }
