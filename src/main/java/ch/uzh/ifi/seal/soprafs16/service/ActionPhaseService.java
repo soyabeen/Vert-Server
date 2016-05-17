@@ -77,9 +77,8 @@ public class ActionPhaseService {
             possibilitites.addMarshalAsList(getMarshalFromPositionableList(positionables));
 
         } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
-            logger.error("Get possibilities from GameEngine failed because of " + cause);
-            throw new IllegalStateException("Get possibilities from GameEngine failed - IllegalState");
+            logger.error("Get possibilities from GameEngine failed because of ", e);
+            throw new IllegalStateException("Get possibilities from GameEngine failed - IllegalState", e.getCause());
         }
 
         return possibilitites;
@@ -141,9 +140,8 @@ public class ActionPhaseService {
                 marshal = getMarshalFromPositionableList(positionables);
 
             } catch (InvocationTargetException e) {
-                Throwable cause = e.getCause();
-                logger.error("Get update from GameEngine failed because of " + cause);
-                throw new IllegalStateException("Get update from GameEngine failed - IllegalState");
+                logger.error("Get update from GameEngine failed.", e);
+                throw new IllegalStateException("Get update from GameEngine failed - IllegalState", e.getCause());
             }
 
             //update players and loots
