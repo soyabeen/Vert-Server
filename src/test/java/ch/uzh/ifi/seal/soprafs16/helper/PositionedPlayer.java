@@ -13,11 +13,17 @@ public class PositionedPlayer {
     }
 
     public static class Builder {
+        private Long id;
         private String username;
         private Positionable.Level level;
         private int car;
 
         public Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder withUserName(String username) {
@@ -39,6 +45,7 @@ public class PositionedPlayer {
 
         public Player build() {
             Player p = new Player();
+            p.setId(id);
             p.setUsername(username);
             p.setLevel(level);
             p.setCar(car);

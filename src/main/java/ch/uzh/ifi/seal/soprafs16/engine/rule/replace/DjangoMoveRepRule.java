@@ -49,9 +49,9 @@ public class DjangoMoveRepRule implements ReplaceRule {
     private Direction getDirectionToMove(Player source, Player target) {
         int raw = source.getCar() - target.getCar();
         if (raw < 0) {
-            return Direction.TO_HEAD;
+            return Direction.TO_TAIL;
         }
-        return Direction.TO_TAIL;
+        return Direction.TO_HEAD;
     }
 
     @Override
