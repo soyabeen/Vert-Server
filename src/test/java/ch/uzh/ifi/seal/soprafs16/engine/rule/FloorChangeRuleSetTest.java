@@ -22,7 +22,7 @@ import static org.hamcrest.core.Is.is;
 public class FloorChangeRuleSetTest {
 
     @Test
-    public void simFloorChange() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+    public void simFloorChangeBotToTop() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         RuleSet mrs = RuleSet.createRuleSet(CardType.FLOORCHANGE);
         Game game = new Game();
         game.setNrOfCars(3);
@@ -36,6 +36,23 @@ public class FloorChangeRuleSetTest {
         Player result = (Player) resultList.get(0);
         Assert.assertEquals("Kept username.", "actor", result.getUsername());
         Assert.assertEquals("Floor has changed.", Positionable.Level.TOP,  result.getLevel());
+    }
+
+    @Test
+    public void simFloorChangeTopToBot() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+        RuleSet mrs = RuleSet.createRuleSet(CardType.FLOORCHANGE);
+        Game game = new Game();
+        game.setNrOfCars(3);
+
+        Player player = PositionedPlayer.builder()
+                .withUserName("actor")
+                .onUpperLevelAt(2).build();
+
+        List<Positionable> resultList = mrs.simulate(game, player);
+        Assert.assertThat(resultList.size(), is(1));
+        Player result = (Player) resultList.get(0);
+        Assert.assertEquals("Kept username.", "actor", result.getUsername());
+        Assert.assertEquals("Floor has changed.", Positionable.Level.BOTTOM,  result.getLevel());
     }
 
     @Test
