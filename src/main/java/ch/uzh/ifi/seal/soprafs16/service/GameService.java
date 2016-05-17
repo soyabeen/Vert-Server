@@ -155,7 +155,10 @@ public class GameService {
 
         //Choose, initialize and save rounds for the new game
         List<Round> rounds = configurator.generateRoundsForGame(game);
-        roundRepo.save(rounds);
+        logger.error("Rounds size" + rounds.size());
+        for (Round r : rounds) {
+            roundRepo.save(r);
+        }
 
 
         setPositionOfPlayers(game, players);

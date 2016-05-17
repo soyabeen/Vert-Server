@@ -34,6 +34,9 @@ public class RoundEndFactory {
             case HOSTAGE:
                 return new Hostage();
 
+            case NONE:
+                return new None();
+
             default:
                 // TODO: What to do?
                 return null;

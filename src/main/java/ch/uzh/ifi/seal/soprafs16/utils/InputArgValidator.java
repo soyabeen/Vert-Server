@@ -185,4 +185,10 @@ public class InputArgValidator {
         if (player.getCharacter() == null) return;
         throw  new InvalidInputException(MESSAGE_START + " Player already has a character");
     }
+
+    public static void checkCorrectRound(Game game, int nthRound) {
+        if(game.getRoundId() != nthRound)
+            throw new InvalidInputException(MESSAGE_START + "You idiot, check your endpoint ROUNDID");
+
+    }
 }

@@ -84,6 +84,8 @@ public class RoundService {
         InputArgValidator.checkIfIdGreaterZero(nthRound, "ntRound");
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
         InputArgValidator.checkIfGameIsInPlanningPhase(game);
+        InputArgValidator.checkCorrectRound(game, nthRound);
+
 
         move.setGame(game);
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
