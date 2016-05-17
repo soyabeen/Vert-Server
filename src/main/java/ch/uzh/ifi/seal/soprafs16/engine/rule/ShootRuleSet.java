@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs16.engine.rule.filter.BelleNoTargetFilterRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.filter.TucoAdditionalTargetFilterRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.ShootPlayerSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public class ShootRuleSet extends RuleSet {
     public List<Positionable> simulate(Game game, Positionable player) {
         ShootPlayerSimRule shoot = new ShootPlayerSimRule(game);
         BelleNoTargetFilterRule belle = new BelleNoTargetFilterRule();
+        TucoAdditionalTargetFilterRule tuco = new TucoAdditionalTargetFilterRule(game, (Player) player);
 
-        return belle.filter(shoot.simulate(player));
+        return belle.filter(tuco.filter(shoot.simulate(player)));
     }
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
         ShootExecRule shoot = new ShootExecRule();
-        TucoAdditionalTargetFilterRule tuco = new TucoAdditionalTargetFilterRule(command);
-        return tuco.filter(shoot.execute(command));
+        return shoot.execute(command);
     }
 }
