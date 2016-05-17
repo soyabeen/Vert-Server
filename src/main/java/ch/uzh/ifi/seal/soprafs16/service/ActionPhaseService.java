@@ -163,10 +163,10 @@ public class ActionPhaseService {
             }
         }
 
-        setNextPlayerAndChangeState(game, round);
+        Game g = setNextPlayerAndChangeState(game, round);
 
         roundRepo.save(round);
-        gameRepo.save(game);
+        gameRepo.save(g);
 
 
     }
@@ -267,7 +267,7 @@ public class ActionPhaseService {
      * @param game
      * @param round
      */
-    private void setNextPlayerAndChangeState(Game game, Round round) {
+    private Game setNextPlayerAndChangeState(Game game, Round round) {
         round.incrementPointer();
         if(round.getPointerOnDeck() < round.getCardStack().size()) {
             game.setCurrentPlayerId(round.getCardStack().
@@ -285,6 +285,8 @@ public class ActionPhaseService {
             //TODO: determine revolverheld? update money?
             game.setStatus(GameStatus.FINISHED);
         }
+
+        return game;
     }
 
     private boolean hasNoTarget(TurnDTO dto) {
