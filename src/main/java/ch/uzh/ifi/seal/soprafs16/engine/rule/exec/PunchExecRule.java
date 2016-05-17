@@ -28,13 +28,14 @@ public class PunchExecRule implements ExecutionRule {
         if (evaluate(command)) {
             Player victim = (Player) command.getTargetPlayer();
 
-            victim.dropLoot(command.getTargetLoot());
-            Loot targetLoot = new Loot(command.getTargetLoot().getType(), command.getGame().getId(), command.getTargetLoot().getValue());
-            targetLoot.setCar(victim.getCar());
-            targetLoot.setLevel(victim.getLevel());
-            targetLoot.setId(command.getTargetLoot().getId());
-
-            result.add(targetLoot);
+            if (command.getTargetPlayer() != null) {
+                victim.dropLoot(command.getTargetLoot());
+                Loot targetLoot = new Loot(command.getTargetLoot().getType(), command.getGame().getId(), command.getTargetLoot().getValue());
+                targetLoot.setCar(victim.getCar());
+                targetLoot.setLevel(victim.getLevel());
+                targetLoot.setId(command.getTargetLoot().getId());
+                result.add(targetLoot);
+            }
             result.add(moveVictim(victim, command));
         }
 
