@@ -16,8 +16,8 @@ public class PunchExecRule implements ExecutionRule {
 
     @Override
     public boolean evaluate(ActionCommand command) {
-        Player result = (Player) command.getTargetPlayer();
-        return !(result.getLoots().isEmpty());
+        return command.getCurrentPlayer() instanceof  Player
+                && command.getTargetPlayer() instanceof  Player;
     }
 
 
@@ -28,7 +28,7 @@ public class PunchExecRule implements ExecutionRule {
         if (evaluate(command)) {
             Player victim = (Player) command.getTargetPlayer();
 
-            if (command.getTargetPlayer() != null) {
+            if (command.getTargetPlayer() != null && !victim.getLoots().isEmpty()) {
                 victim.dropLoot(command.getTargetLoot());
                 Loot targetLoot = new Loot(command.getTargetLoot().getType(), command.getGame().getId(), command.getTargetLoot().getValue());
                 targetLoot.setCar(victim.getCar());
@@ -45,13 +45,9 @@ public class PunchExecRule implements ExecutionRule {
     private Player moveVictim(Player victim, ActionCommand command) {
         Player emVictim = new Player();
         emVictim.setLevel(victim.getLevel());
-        // TODO: check if emVictim is at beginning or at end of train
         emVictim.setCar(victim.getCar() + command.getDirection().intValue());
 
         ActionCommand copy = new ActionCommand(CardType.MOVE, command.getGame(), victim, emVictim);
-
-        MovePlayerExecRule moveVictim = new MovePlayerExecRule();
-        return (Player) moveVictim.execute(copy).get(0);
-
+        return (Player) new MovePlayerExecRule().execute(copy).get(0);
     }
 }
