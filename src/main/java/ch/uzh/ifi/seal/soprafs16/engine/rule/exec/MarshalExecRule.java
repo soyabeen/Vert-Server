@@ -13,13 +13,13 @@ import java.util.List;
 /**
  * Created by devuser on 08.05.2016.
  */
-public class FindMarshalTargets implements ExecutionRule {
+public class MarshalExecRule implements ExecutionRule {
 
     private static final Logger logger = LoggerFactory.getLogger(MovePlayerExecRule.class);
 
     private TargetFinder targetFinder;
 
-    public FindMarshalTargets() {
+    public MarshalExecRule() {
         targetFinder = new TargetFinder();
     }
 

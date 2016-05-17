@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.FindMarshalTargets;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.MarshalExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.MovePlayerExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerBottomSimRule;
@@ -42,7 +42,7 @@ public class MarshalRuleSet extends RuleSet {
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
         MovePlayerExecRule playerMove = new MovePlayerExecRule();
-        FindMarshalTargets marshalTargets = new FindMarshalTargets();
+        MarshalExecRule marshalTargets = new MarshalExecRule();
         Game tmpGame = command.getGame();
 
         logger.debug("eval: " + marshalTargets.evaluate(command));
