@@ -169,20 +169,6 @@ public class TargetFinder {
         }
     }
 
-    public List<Player> findTargetToPunch(Player actor, List<Player> players) {
-        List<Player> result = new ArrayList<>();
-        for (Player pos : players) {
-            if (actor.getCharacter() != pos.getCharacter()) {
-                if (actor.getCar() == pos.getCar()) {
-                    if (actor.getLevel() == pos.getLevel()) {
-                        result.add(pos);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     /**
      * Helper class to sort players by car nr.
      */
