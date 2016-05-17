@@ -26,6 +26,7 @@ public class FloorChangeSimRule implements SimulationRule {
         Player emulated = new Player();
         emulated.setUsername(tmp.getUsername());
         emulated.setCar(tmp.getCar());
+        emulated.setLevel(tmp.getLevel());
         emPlayers.add(RuleUtils.swapLevel(emulated));
 
         return emPlayers;
