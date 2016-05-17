@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule.exec;
 import ch.uzh.ifi.seal.soprafs16.constant.Distance;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.RuleUtils;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +41,13 @@ public class MovePlayerExecRule implements ExecutionRule {
 
     @Override
     public List<Positionable> execute(ActionCommand command) {
-
-        Positionable newState = command.getCurrentPlayer();
-        newState.setCar(command.getTargetPlayer().getCar());
-
         List<Positionable> result = new ArrayList<>();
-        result.add(newState);
+
+        if (evaluate(command)) {
+            Positionable newState = command.getCurrentPlayer();
+            newState.setCar(command.getTargetPlayer().getCar());
+            result.add(newState);
+        }
 
         return result;
     }
