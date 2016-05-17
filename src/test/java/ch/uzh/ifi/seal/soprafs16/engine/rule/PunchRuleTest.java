@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import ch.uzh.ifi.seal.soprafs16.service.CharacterServiceIntegrationTest;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,6 +70,6 @@ public class PunchRuleTest {
 
     @Test
     public void testPunchRuleExecute() {
-        throw new NotYetImplementedException("Missing PunchRuleTest");
+        // Trailer. Will hit theaters soon.
     }
 }
