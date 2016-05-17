@@ -1,12 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.service.ActionPhaseService;
-import ch.uzh.ifi.seal.soprafs16.service.PhaseLogicService;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +54,8 @@ public class ActionPhaseController extends GenericController {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
+        InputArgValidator.checkGameState(game, GameStatus.ACTIONPHASE);
+
         //TODO: Check if DTO is valid if necessary
         actionService.executeDTO(gameId, turnDTO);
     }

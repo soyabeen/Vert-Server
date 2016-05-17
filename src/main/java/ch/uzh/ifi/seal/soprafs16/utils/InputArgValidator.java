@@ -131,7 +131,14 @@ public class InputArgValidator {
     public static void checkItIsPlayersTurn(Player player, Game game) {
 
         if (!game.getCurrentPlayerId().equals(player.getId())) {
-            throw new InvalidInputException(MESSAGE_START + " It is not the player's turn");
+            throw new IllegalStateException("It is not the player's " + player.getUsername() +" turn.");
+        }
+
+    }
+
+    public static void checkGameState(Game game, GameStatus status) {
+        if (!status.equals(game.getStatus())) {
+            throw new IllegalStateException("Not in correct game state (is:"+game.getStatus()+", should:"+status+").");
         }
 
     }
