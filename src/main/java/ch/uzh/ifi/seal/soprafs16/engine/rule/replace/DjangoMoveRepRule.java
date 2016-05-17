@@ -63,7 +63,6 @@ public class DjangoMoveRepRule implements ReplaceRule {
 
     @Override
     public List<Positionable> replace(List<Positionable> actors) {
-        List<Positionable> result = new ArrayList<>();
         if (evaluate(actors)) {
             Player django = filterById((Player) command.getCurrentPlayer(), actors);
             Player target = filterById((Player) command.getTargetPlayer(), actors);
@@ -74,9 +73,12 @@ public class DjangoMoveRepRule implements ReplaceRule {
             newTargetPosition.setCar(target.getCar() + dirToMove.intValue());
 
             ActionCommand moveCommand = new ActionCommand(CardType.MOVE, command.getGame(), target, newTargetPosition);
+
+            List<Positionable> result = new ArrayList<>();
             result.addAll(new MovePlayerExecRule().execute(moveCommand));
             result.add(django);
+            return result;
         }
-        return result;
+        return actors;
     }
 }
