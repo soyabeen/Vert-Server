@@ -29,7 +29,7 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Card> deck;
 
     @Column
@@ -211,8 +211,8 @@ public class Player extends Meeple {
     @JsonProperty
     public List<Card> getHand() {
         List<Card> onHand = new ArrayList<>();
-        for(Card c: deck) {
-            if(c.isOnHand()) onHand.add(c);
+        for (Card c : deck) {
+            if (c.isOnHand()) onHand.add(c);
         }
         return onHand;
     }
@@ -226,22 +226,25 @@ public class Player extends Meeple {
         //In player attribute
         bullets = p.getBullets();
 
-        if(!(p.getDeck().size() == deck.size()))
+        if (!(p.getDeck().size() == deck.size()))
             deck.addAll(p.getDeck());
 
         loots = p.getLoots();
 
     }
+
     /**
      * Adds 3 or rest Cards from card deck to players hand.
      */
-    public void take3Cards() { this.drawCard(3);}
+    public void take3Cards() {
+        this.drawCard(3);
+    }
 
     public void take3Cards(List<Card> cards) {
         List<Card> currentDeck = getCardsInDeck();
-        for (Card c1: cards) {
-            for(Card c2: currentDeck) {
-                if(c1.getId().equals(c2.getId())) {
+        for (Card c1 : cards) {
+            for (Card c2 : currentDeck) {
+                if (c1.getId().equals(c2.getId())) {
                     c2.setOnHand(true);
                     continue;
                 }
@@ -251,7 +254,7 @@ public class Player extends Meeple {
 
     public void removeCardFromHand(Card card) {
         int i = 0;
-        while(!(deck.get(i).getType().equals(card.getType()) && deck.get(i).isOnHand())) {
+        while (!(deck.get(i).getType().equals(card.getType()) && deck.get(i).isOnHand())) {
             ++i;
         }
         deck.get(i).setOnHand(false);
@@ -260,14 +263,15 @@ public class Player extends Meeple {
     /**
      * Draws card to start each round
      */
-    public void drawHandForStart(){
-        for(Card c: deck) c.setOnHand(false);
-        if(this.character.equals(Character.DOC)) drawCard(7);
+    public void drawHandForStart() {
+        for (Card c : deck) c.setOnHand(false);
+        if (this.character.equals(Character.DOC)) drawCard(7);
         else drawCard(6);
     }
 
     /**
      * Draws n many cards form deck randomly.
+     *
      * @param numOfCards defines how many cards to draw.
      * @return returns ArrayList of cards on hand of player.
      */
@@ -278,7 +282,7 @@ public class Player extends Meeple {
 
         Collections.shuffle(currentDeck);
 
-        for(int i = 0; i < numOfCards; i++) {
+        for (int i = 0; i < numOfCards; i++) {
             currentDeck.get(i).setOnHand(true);
         }
     }
@@ -286,9 +290,20 @@ public class Player extends Meeple {
     @JsonIgnore
     public List<Card> getCardsInDeck() {
         List<Card> currentDeck = new ArrayList<>();
-        for (Card c: deck) {
-            if(!c.isOnHand()) currentDeck.add(c);
+        for (Card c : deck) {
+            if (!c.isOnHand()) currentDeck.add(c);
         }
         return currentDeck;
+    }
+
+    @JsonProperty
+    public int getInjuries() {
+        int nrOfInjuries = 0;
+        for (Card c : deck) {
+            if (CardType.BULLET.equals(c.getType())) {
+                nrOfInjuries = nrOfInjuries + 1;
+            }
+        }
+        return nrOfInjuries;
     }
 }
