@@ -193,7 +193,7 @@ public class Loot implements Positionable, Serializable {
         }
 
         Loot loot = (Loot) o;
-        return (this.equals(loot.getId())
+        return (this.getId().equals(loot.getId())
                 && loot.getOwnerId().equals(this.getOwnerId())
                 && loot.getType().equals(this.getType()));
     }
