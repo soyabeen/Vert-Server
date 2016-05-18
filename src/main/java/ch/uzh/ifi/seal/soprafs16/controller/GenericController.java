@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-
 public abstract class GenericController {
 
 	private static final Logger genLogger = LoggerFactory.getLogger(GenericController.class);
@@ -29,6 +27,16 @@ public abstract class GenericController {
 		genLogger.info("handleInvalidInputException ....");
 
 		return new ErrorResource("Invalid input argument", exception.getMessage());
+	}
+
+	@ExceptionHandler(IllegalStateException.class)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE, reason = "Request currently not accepted")
+	public ErrorResource handleIllegalStateException(Exception exception) {
+		genLogger.error("", exception);
+		genLogger.info("handleIllegalStateException ....");
+
+		return new ErrorResource("Request currently not accepted", exception.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)

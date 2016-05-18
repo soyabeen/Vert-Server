@@ -22,17 +22,13 @@ import org.springframework.web.bind.annotation.*;
 public class ActionPhaseController extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(ActionPhaseController.class);
-
+    private final String CONTEXT = "/games/{gameId}/actions";
     @Autowired
     private ActionPhaseService actionService;
-
     @Autowired
     private PlayerRepository playerRepo;
-
     @Autowired
     private GameRepository gameRepo;
-
-    private final String CONTEXT = "/games/{gameId}/actions";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -42,6 +38,7 @@ public class ActionPhaseController extends GenericController {
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
+        InputArgValidator.checkGameState(game, GameStatus.ACTIONPHASE);
         return actionService.sendPossibilities(gameId);
     }
 
