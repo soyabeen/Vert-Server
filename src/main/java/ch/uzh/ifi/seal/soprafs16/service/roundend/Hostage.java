@@ -14,17 +14,21 @@ import java.util.List;
  */
 public class Hostage implements RoundEnd {
 
+    /**
+     * All players positioned on the locomotive (pos 0) get an additional loot with value 250.
+     *
+     * @param game
+     * @return
+     */
     @Override
     public List<Positionable> execute(Game game) {
-        // all players get 250$ reward
         List<Positionable> result = new ArrayList<>();
-
-        List<Player> allPlayers = game.getPlayers();
-        for(Player player : allPlayers) {
-            player.addLoot(new Loot(LootType.PURSE_SMALL, game.getId(), LootType.PURSE_SMALL.value()));
-            result.add(player);
+        for (Player player : game.getPlayers()) {
+            if (0 == player.getCar()) {
+                player.addLoot(new Loot(LootType.PURSE_SMALL, game.getId(), LootType.PURSE_SMALL.value()));
+                result.add(player);
+            }
         }
-
         return result;
     }
 }
