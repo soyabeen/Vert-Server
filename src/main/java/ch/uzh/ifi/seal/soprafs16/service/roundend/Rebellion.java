@@ -20,10 +20,11 @@ public class Rebellion implements RoundEnd {
         List<Positionable> result = new ArrayList<>();
 
         TargetFinder targetFinder = new TargetFinder();
-        Marshal marshal = new Marshal(game.getPositionMarshal());
         List<Player> playersInsideTrain = new ArrayList<>();
-        // all players on same floor as marshal (= inside of train)
-        playersInsideTrain.addAll( targetFinder.filterPlayersOnSameFloor(marshal, game.getPlayers()) );
+        // all players inside of train
+        for (int i = 0; i < game.getNrOfCars(); ++i) {
+            playersInsideTrain.addAll(targetFinder.filterPlayersOnSameFloor(new Marshal(i), game.getPlayers()));
+        }
 
         for(Player target : playersInsideTrain) {
             target.getsShot();

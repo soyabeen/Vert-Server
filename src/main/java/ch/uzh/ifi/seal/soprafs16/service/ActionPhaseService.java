@@ -305,12 +305,10 @@ public class ActionPhaseService {
             // get round end event
             RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
             // execute round end event and save it t db
-            /*List<Positionable> positionables = rd.execute(game, new ArrayList<>( game.getPlayers() ));
+            List<Positionable> positionables = rd.execute(game, new ArrayList<>( game.getPlayers() ));
               if(positionables.size() != 0) {
-                updatePositionableList(positionables);
+                  updatePositionableList(game, positionables);
               }
-             */
-
             game.startNewRound();
 
         } else if (round.getPointerOnDeck() == round.getCardStack().size() && game.getRoundId() == RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
