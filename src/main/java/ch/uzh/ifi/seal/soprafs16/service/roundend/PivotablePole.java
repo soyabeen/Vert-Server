@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service.roundend;
 
 import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Marshal;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import ch.uzh.ifi.seal.soprafs16.utils.TargetFinder;
 
@@ -13,22 +13,26 @@ import java.util.List;
  */
 public class PivotablePole implements RoundEnd {
 
+    private TargetFinder targetFinder;
+
+    public PivotablePole() {
+        targetFinder = new TargetFinder();
+    }
+
+    /**
+     * All players on the top, will be moved to the last car.
+     *
+     * @param game
+     * @return list of players moved.
+     */
     @Override
     public List<Positionable> execute(Game game) {
-        // all players on the roof will be positioned on last waggon
         List<Positionable> result = new ArrayList<>();
-
-        TargetFinder targetFinder = new TargetFinder();
-        Marshal marshal = new Marshal(game.getPositionMarshal());
-        List<Positionable> affectedPlayers = new ArrayList<>();
-        // all players on oppsite floor of marshal (=roof)
-        affectedPlayers.addAll( targetFinder.filterPlayersOnOppositeFloor(marshal, game.getPlayers()) );
-
-        for(Positionable player : affectedPlayers) {
-            player.setCar(game.getNrOfCars());
+        List<Player> playersOnRoof = targetFinder.filterPlayersByLevel(game.getPlayers(), Positionable.Level.TOP);
+        for (Player player : playersOnRoof) {
+            player.setCar(game.getNrOfCars() - 1);
             result.add(player);
         }
-
         return result;
     }
 }

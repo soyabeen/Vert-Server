@@ -24,7 +24,7 @@ public class TargetFinder {
         return Positionable.Level.BOTTOM;
     }
 
-    private List<Player> filterPlayersByLevel(List<Player> players, Positionable.Level level) {
+    public List<Player> filterPlayersByLevel(List<Player> players, Positionable.Level level) {
         List<Player> result = new ArrayList<>();
         for (Player player : players) {
             if (level == player.getLevel()) {
