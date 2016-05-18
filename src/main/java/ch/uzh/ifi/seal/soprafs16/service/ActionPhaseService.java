@@ -271,6 +271,23 @@ public class ActionPhaseService {
         return lootRepo.save(loot);
     }
 
+    private void updatePositionableList(Game game, List<Positionable> positionables) {
+        List<Player> players = getPlayersFromPositionableList(positionables);
+        List<Loot> loots = getLootsFromPositionableList(positionables);
+        List<Marshal> marshal = getMarshalFromPositionableList(positionables);
+
+        for (Player p : players) {
+            updatePlayer((p.getId() == null) ? playerRepo.findOne(game.getCurrentPlayerId()).getId() : p.getId(), p);
+        }
+        for (Loot l : loots) {
+            updateLoot(l.getId(), l);
+        }
+        if (marshal.size() != 0) {
+            game.setPositionMarshal(marshal.get(0).getCar());
+        }
+
+    }
+
     /**
      * Set next player and
      * Transition form Action- to PlanningPhase and EndOfGame
@@ -287,9 +304,11 @@ public class ActionPhaseService {
             //TODO: add round end event measures
             // get round end event
             RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
-            // execute round end event
-            //rd.execute(game, new ArrayList<>( game.getPlayers() ));
-
+            // execute round end event and save it t db
+            List<Positionable> positionables = rd.execute(game, new ArrayList<>( game.getPlayers() ));
+              if(positionables.size() != 0) {
+                  updatePositionableList(game, positionables);
+              }
             game.startNewRound();
 
         } else if (round.getPointerOnDeck() == round.getCardStack().size() && game.getRoundId() == RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
