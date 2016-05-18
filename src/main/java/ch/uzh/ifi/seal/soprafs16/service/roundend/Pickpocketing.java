@@ -14,7 +14,7 @@ import java.util.List;
 public class Pickpocketing implements RoundEnd {
 
     @Override
-    public List<Positionable> execute(Game game, List<Positionable> players) {
+    public List<Positionable> execute(Game game) {
         // all players which are alone can pick up loot (if there is any)
         List<Positionable> result = new ArrayList<>();
 

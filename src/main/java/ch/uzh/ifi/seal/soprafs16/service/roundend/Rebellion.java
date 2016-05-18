@@ -15,7 +15,7 @@ import java.util.List;
 public class Rebellion implements RoundEnd {
 
     @Override
-    public List<Positionable> execute(Game game, List<Positionable> players) {
+    public List<Positionable> execute(Game game) {
         // all players inside the train get a bullet card
         List<Positionable> result = new ArrayList<>();
 
