@@ -29,7 +29,7 @@ public class GetItAllTest {
         game.setPositionMarshal(2);
 
         GetItAll event = new GetItAll();
-        List<Positionable> result = event.execute(game, new ArrayList<>());
+        List<Positionable> result = event.execute(game);
 
         Assert.assertEquals(1,result.size());
 
