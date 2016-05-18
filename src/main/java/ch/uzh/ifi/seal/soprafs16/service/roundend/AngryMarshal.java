@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service.roundend;
 
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Marshal;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
@@ -23,6 +24,11 @@ public class AngryMarshal implements RoundEnd{
                 ((Player) player).getsShot();
                 result.add(player);
             }
+        }
+
+        //Move marshal to end of train
+        if (game.getPositionMarshal() != game.getNrOfCars() - 1) {
+            result.add(new Marshal(game.getPositionMarshal() + 1));
         }
         return result;
     }
