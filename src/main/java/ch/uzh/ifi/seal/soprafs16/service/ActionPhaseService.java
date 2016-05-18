@@ -282,7 +282,6 @@ public class ActionPhaseService {
         for (Loot l : loots) {
             updateLoot(l.getId(), l);
         }
-
         if (marshal.size() != 0) {
             game.setPositionMarshal(marshal.get(0).getCar());
         }
@@ -307,7 +306,9 @@ public class ActionPhaseService {
             RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
             // execute round end event and save it t db
             /*List<Positionable> positionables = rd.execute(game, new ArrayList<>( game.getPlayers() ));
-              updatePositionableList(positionables);
+              if(positionables.size() != 0) {
+                updatePositionableList(positionables);
+              }
              */
 
             game.startNewRound();
