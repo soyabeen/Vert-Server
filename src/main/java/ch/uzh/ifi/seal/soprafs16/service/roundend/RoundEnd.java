@@ -9,5 +9,5 @@ import java.util.List;
  * Created by devuser on 15.05.2016.
  */
 public interface RoundEnd {
-    List<Positionable> execute(Game game, List<Positionable> players);
+    List<Positionable> execute(Game game);
 }

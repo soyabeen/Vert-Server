@@ -15,13 +15,13 @@ import java.util.List;
 public class Hostage implements RoundEnd {
 
     @Override
-    public List<Positionable> execute(Game game, List<Positionable> players) {
+    public List<Positionable> execute(Game game) {
         // all players get 250$ reward
         List<Positionable> result = new ArrayList<>();
 
         List<Player> allPlayers = game.getPlayers();
         for(Player player : allPlayers) {
-            player.addLoot(new Loot(LootType.PURSE_SMALL, game.getId(), 250));
+            player.addLoot(new Loot(LootType.PURSE_SMALL, game.getId(), LootType.PURSE_SMALL.value()));
             result.add(player);
         }
 

@@ -12,11 +12,11 @@ import java.util.List;
 public class Braking implements RoundEnd {
 
     @Override
-    public List<Positionable> execute(Game game, List<Positionable> players) {
+    public List<Positionable> execute(Game game) {
         List<Positionable> result = new ArrayList<>();
 
         // all players on the roof will be positioned 1 waggon ahead (TO_HEAD)
-        for(Positionable player : players) {
+        for (Positionable player : game.getPlayers()) {
             if(player.getLevel() == Positionable.Level.TOP) {
                 int currentCar = player.getCar();
                 player.setCar( currentCar <= 0 ? 0: currentCar-1 );

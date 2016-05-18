@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Round;
@@ -38,11 +39,37 @@ public class LastPlayedCardTest {
     }
 
     @Test
-    public void playThreeCardsWithTwoPlayers () {
+    public void execThreePlayedCardInActionPhase() {
         // init
         Game game = new Game();
         game.setId(1L);
         game.setRoundId(1);
+        game.setStatus(GameStatus.ACTIONPHASE);
+
+        Round round = new Round(game.getId(), game.getRoundId(), null, null, "");
+        round.addNewlyPlayedCard(new Card(CardType.FIRE, 2L));
+        round.addNewlyPlayedCard(new Card(CardType.DRAW, 3L));
+        round.addNewlyPlayedCard(new Card(CardType.PUNCH, 2L));
+        round.setPointerOnDeck(1);
+
+        when(mockedGameRepo.findOne(1L)).thenReturn(game);
+        when(mockedRoundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId())).thenReturn(round);
+
+        // execute
+        Optional<Card> currentCard = gameService.getCurrentCardForGame(game.getId());
+        Assert.assertTrue("Current card should not be empty.", currentCard.isPresent());
+        Card card = currentCard.get();
+        Assert.assertThat("Is DRAW card.", card.getType(), is(CardType.DRAW));
+        Assert.assertThat("Is owner id is 3.", card.getOwnerId(), is(3L));
+    }
+
+    @Test
+    public void playThreeCardsWithTwoPlayersInPlanning() {
+        // init
+        Game game = new Game();
+        game.setId(1L);
+        game.setRoundId(1);
+        game.setStatus(GameStatus.PLANNINGPHASE);
 
         Round round = new Round(game.getId(), game.getRoundId(), null, null, "");
         round.addNewlyPlayedCard(new Card(CardType.FIRE, 2L));
@@ -53,7 +80,7 @@ public class LastPlayedCardTest {
         when(mockedRoundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId())).thenReturn(round);
 
         // execute
-        Optional<Card> lastPlayed = gameService.getLastPlayedCardForGame(game.getId());
+        Optional<Card> lastPlayed = gameService.getCurrentCardForGame(game.getId());
         Assert.assertTrue("LastPlayed should not be empty.", lastPlayed.isPresent());
         Card card = lastPlayed.get();
         Assert.assertThat("Is PINCH card.", card.getType(), is(CardType.PUNCH));
@@ -61,7 +88,7 @@ public class LastPlayedCardTest {
     }
 
     @Test
-    public void noPlayedCardYetGivesEmptyOptional () {
+    public void noPlayedCardYetGivesEmptyOptional() {
         // init
         Game game = new Game();
         game.setId(1L);
@@ -71,7 +98,7 @@ public class LastPlayedCardTest {
         when(mockedRoundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId())).thenReturn(null);
 
         // execute
-        Optional<Card> lastPlayed = gameService.getLastPlayedCardForGame(game.getId());
+        Optional<Card> lastPlayed = gameService.getCurrentCardForGame(game.getId());
         Assert.assertFalse("LastPlayed optional should be empty.", lastPlayed.isPresent());
     }
 

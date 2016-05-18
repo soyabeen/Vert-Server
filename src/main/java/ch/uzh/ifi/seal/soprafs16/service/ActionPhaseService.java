@@ -305,7 +305,7 @@ public class ActionPhaseService {
             // get round end event
             RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
             // execute round end event and save it t db
-            List<Positionable> positionables = rd.execute(game, new ArrayList<>( game.getPlayers() ));
+            List<Positionable> positionables = rd.execute(game);
               if(positionables.size() != 0) {
                   updatePositionableList(game, positionables);
               }

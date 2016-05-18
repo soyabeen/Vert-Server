@@ -12,7 +12,7 @@ import java.util.List;
 public class None implements RoundEnd {
 
     @Override
-    public List<Positionable> execute(Game game, List<Positionable> players) {
+    public List<Positionable> execute(Game game) {
         return new ArrayList<>();
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class GetItAll implements RoundEnd {
 
     @Override
-    public List<Positionable> execute(Game game, List<Positionable> players) {
+    public List<Positionable> execute(Game game) {
         // put strongbox in waggon where the marshal is
         // !! always the same additional strongbox, do not introduce a new one !!
         List<Positionable> result = new ArrayList<>();

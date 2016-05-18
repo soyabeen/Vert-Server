@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
-import ch.uzh.ifi.seal.soprafs16.dto.GameWithLastPlayedCardDTO;
+import ch.uzh.ifi.seal.soprafs16.dto.GameWithCurrentCardDTO;
 import ch.uzh.ifi.seal.soprafs16.dto.mapper.GameWithLastPlayedCardMapper;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
@@ -22,17 +22,14 @@ public class GameQueryController
         extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(GameQueryController.class);
-
+    private static final String CONTEXT = "/games";
     @Autowired
     private GameRepository gameRepo;
 
+    //    @Autowired
+//    private GameWithLastPlayedCardMapper gameMapper;
     @Autowired
     private GameService gameService;
-
-//    @Autowired
-//    private GameWithLastPlayedCardMapper gameMapper;
-
-    private static final String CONTEXT = "/games";
 
     /**
      * Context: /games
@@ -49,15 +46,15 @@ public class GameQueryController
      */
     @RequestMapping(value = CONTEXT + "/{gameId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public GameWithLastPlayedCardDTO getGame(@PathVariable Long gameId) {
+    public GameWithCurrentCardDTO getGame(@PathVariable Long gameId) {
         logger.debug("GET:{} - Args. gameId <{}>.", CONTEXT, gameId);
 
         Game game = gameService.loadGameFromRepo(gameId);
-        GameWithLastPlayedCardDTO dto = GameWithLastPlayedCardMapper.INSTANCE.toDTO(game);
+        GameWithCurrentCardDTO dto = GameWithLastPlayedCardMapper.INSTANCE.toDTO(game);
 
-        Optional op = gameService.getLastPlayedCardForGame(gameId);
+        Optional op = gameService.getCurrentCardForGame(gameId);
         if (op.isPresent()) {
-            dto.setLastPlayedCard((Card) op.get());
+            dto.setCurrentCard((Card) op.get());
         }
 
         logger.debug("dto a: " + dto.toString());

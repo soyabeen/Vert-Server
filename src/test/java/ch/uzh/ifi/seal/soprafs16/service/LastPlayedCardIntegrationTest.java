@@ -42,9 +42,9 @@ public class LastPlayedCardIntegrationTest {
     private PlayerBuilder playerBuilder;
 
 
-    private Card getAPlayableCard (Player p, int id) {
-        for(Card c : p.getDeck()) {
-            if(c.isOnHand() && c.getId() > id) {
+    private Card getAPlayableCard(Player p, int id) {
+        for (Card c : p.getDeck()) {
+            if (c.isOnHand() && c.getId() > id) {
                 return c;
             }
         }
@@ -60,7 +60,7 @@ public class LastPlayedCardIntegrationTest {
     }
 
     @Test
-    public void playedCardInCorrectOrder () {
+    public void playedCardInCorrectOrder() {
 
         boolean isPersistent = true;
 
@@ -84,7 +84,7 @@ public class LastPlayedCardIntegrationTest {
         Move m1 = buildMove(playableGame, playable1, c1);
         roundService.makeAMove(playableGame.getId(), playableGame.getRoundId(), m1);
 
-        Optional<Card> o1 = gameService.getLastPlayedCardForGame(playableGame.getId());
+        Optional<Card> o1 = gameService.getCurrentCardForGame(playableGame.getId());
         Assert.assertTrue("First played card optional not empty.", o1.isPresent());
         Assert.assertThat("First played card id.", o1.get().getId(), is(c1.getId()));
         Assert.assertThat("First played card type.", o1.get().getType(), is(c1.getType()));
@@ -94,17 +94,17 @@ public class LastPlayedCardIntegrationTest {
         Move m2 = buildMove(playableGame, playable2, c2);
         roundService.makeAMove(playableGame.getId(), playableGame.getRoundId(), m2);
 
-        Optional<Card> o2 = gameService.getLastPlayedCardForGame(playableGame.getId());
+        Optional<Card> o2 = gameService.getCurrentCardForGame(playableGame.getId());
         Assert.assertTrue("Second played card optional not empty.", o2.isPresent());
         Assert.assertThat("Second played card id.", o2.get().getId(), is(c2.getId()));
         Assert.assertThat("Second played card type.", o2.get().getType(), is(c2.getType()));
 
         // play card 3
-        Card c3 = getAPlayableCard(playable1, Integer.parseInt(c1.getId()+""));
+        Card c3 = getAPlayableCard(playable1, Integer.parseInt(c1.getId() + ""));
         Move m3 = buildMove(playableGame, playable1, c3);
         roundService.makeAMove(playableGame.getId(), playableGame.getRoundId(), m3);
 
-        Optional<Card> o3 = gameService.getLastPlayedCardForGame(playableGame.getId());
+        Optional<Card> o3 = gameService.getCurrentCardForGame(playableGame.getId());
         Assert.assertTrue("Third played card optional not empty.", o3.isPresent());
         Assert.assertThat("Third played card id.", o3.get().getId(), is(c3.getId()));
         Assert.assertThat("Third played card type.", o3.get().getType(), is(c3.getType()));

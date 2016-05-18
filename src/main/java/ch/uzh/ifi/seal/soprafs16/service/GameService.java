@@ -3,7 +3,9 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.*;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.CardConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
@@ -30,9 +32,6 @@ public class GameService {
     private PlayerService playerService;
 
     @Autowired
-    private LootService lootService;
-
-    @Autowired
     private PhaseLogicService logicService;
 
     @Autowired
@@ -47,15 +46,7 @@ public class GameService {
     @Autowired
     private PlayerRepository playerRepo;
 
-    @Autowired
-    private LootRepository lootRepo;
-
-    @Autowired
-    private CardRepository cardRepo;
-
     private GameConfigurator gameConf;
-
-    private CardConfigurator cardConf;
 
     public GameService() {
         gameConf = new GameConfigurator();
@@ -72,7 +63,7 @@ public class GameService {
         return result;
     }
 
-    private Game createGame(String gameName, Player owner, int players) {
+    private Game createGame(String gameName, Player owner) {
         Game gameShell = new Game();
         gameShell.setStatus(GameStatus.PENDING);
         gameShell.setName(gameName);
@@ -100,7 +91,7 @@ public class GameService {
 
         int players = (nrOfPlayers < GameConfigurator.MIN_PLAYERS)
                 ? GameConfigurator.MAX_PLAYERS : nrOfPlayers;
-        return createGame(game.getName(), tokenOwner, players);
+        return createGame(game.getName(), tokenOwner);
     }
 
     public void startGame(Long gameId, String userToken) {
@@ -137,13 +128,6 @@ public class GameService {
         logger.debug("game with loots and cars" + game.toString());
         logger.debug("input val ok.");
 
-        //Add players loots to game
-        /*for (Player p: game.getPlayers()) {
-            for(Loot l: p.getLoots()) {
-                game.addLoot(l);
-            }
-        }*/
-
         // Build decks for players in game
         players.forEach(this::buildPlayerDeck);
 
@@ -160,11 +144,8 @@ public class GameService {
             roundRepo.save(r);
         }
 
-
         setPositionOfPlayers(game, players);
         playerRepo.save(players);
-
-
     }
 
     private void setPositionOfPlayers(Game game, List<Player> players) {
@@ -196,17 +177,33 @@ public class GameService {
         return (Game) InputArgValidator.checkAvailabeId(gameIdToLoad, gameRepo, "gameId");
     }
 
+    private Card getCurrentCardForPlanningPhase(Round round) {
+        if (round != null) {
+            List<Card> cards = round.getCardStack();
+            return cards == null || cards.isEmpty() ? null : cards.get(cards.size() - 1);
+        }
+        return null;
+    }
 
-    public Optional<Card> getLastPlayedCardForGame(Long gameId) {
+    private Card getCurrentCardForActionPhase(Round round) {
+        if (round != null) {
+            return round.getCardStack().get(round.getPointerOnDeck());
+        }
+        return null;
+    }
+
+    public Optional<Card> getCurrentCardForGame(Long gameId) {
         Optional<Card> opt = Optional.empty();
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameId");
+        Card currentCard = null;
         if (game.getRoundId() > 0) {
-            Round r = roundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId());
-            if(r !=null ) {
-                List<Card> cards = r.getCardStack();
-                return cards == null || cards.isEmpty() ? opt : Optional.of(cards.get(cards.size() - 1));
+            Round round = roundService.getRoundByGameIdAndRoundNr(game.getId(), game.getRoundId());
+            if (GameStatus.PLANNINGPHASE.equals(game.getStatus())) {
+                currentCard = getCurrentCardForPlanningPhase(round);
+            } else if (GameStatus.ACTIONPHASE.equals(game.getStatus())) {
+                currentCard = getCurrentCardForActionPhase(round);
             }
         }
-        return opt;
+        return currentCard == null ? opt : Optional.of(currentCard);
     }
 }

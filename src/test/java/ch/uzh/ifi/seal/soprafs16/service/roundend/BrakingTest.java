@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +45,7 @@ public class BrakingTest {
         List<Positionable> result;
 
         Braking brakingEvent = new Braking();
-        result = brakingEvent.execute(gayyyme, new ArrayList<Positionable>(players));
+        result = brakingEvent.execute(gayyyme);
 
         for (int i=0; i < result.size(); i++) {
             logger.debug(players.get(i).getCharacter() + " is in Car: " + players.get(i).getCar());
