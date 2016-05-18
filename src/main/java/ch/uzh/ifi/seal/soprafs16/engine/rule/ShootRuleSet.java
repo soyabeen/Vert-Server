@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.ShootExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.filter.BelleNoTargetFilterRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.filter.TucoAdditionalTargetFilterRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.DjangoMoveRepRule;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.ShootPlayerSimRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -29,6 +30,7 @@ public class ShootRuleSet extends RuleSet {
     public List<Positionable> execute(ActionCommand command) {
         ShootExecRule shoot = new ShootExecRule();
         DjangoMoveRepRule django = new DjangoMoveRepRule(command);
-        return django.replace(shoot.execute(command));
+        MarshalRepRule marshal = new MarshalRepRule(command.getGame());
+        return marshal.replace(django.replace(shoot.execute(command)));
     }
 }
