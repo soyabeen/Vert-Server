@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
-import ch.uzh.ifi.seal.soprafs16.dto.GameWithLastPlayedCardDTO;
+import ch.uzh.ifi.seal.soprafs16.dto.GameWithCurrentCardDTO;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
@@ -125,8 +125,8 @@ public class GameQueryControllerTest {
         Long gameId = game3.getId();
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(base.toString() + "/" + gameId);
-        ResponseEntity<GameWithLastPlayedCardDTO> response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), GameWithLastPlayedCardDTO.class);
-        GameWithLastPlayedCardDTO result = response.getBody();
+        ResponseEntity<GameWithCurrentCardDTO> response = template.getForEntity(uriBuilder.build().encode().toUri().toString(), GameWithCurrentCardDTO.class);
+        GameWithCurrentCardDTO result = response.getBody();
 
         Assert.assertThat(game3.getId(), is(result.getId()));
         Assert.assertThat(game3.getName(), is(result.getName()));

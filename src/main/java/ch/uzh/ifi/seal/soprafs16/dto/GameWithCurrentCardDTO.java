@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by soyabeen on 02.05.16.
  */
-public class GameWithLastPlayedCardDTO implements Serializable {
+public class GameWithCurrentCardDTO implements Serializable {
 
     private Long id;
     private String name;
@@ -22,14 +22,14 @@ public class GameWithLastPlayedCardDTO implements Serializable {
     private int turnId;
     private int nrOfCars;
     private GameStatus status;
-    private Card lastPlayedCard;
+    private Card currentCard;
     private List<Player> players;
     private List<Loot> loots;
     private int positionMarshal;
 
     @Override
     public String toString() {
-        return "GameWithLastPlayedCardDTO{" +
+        return "GameWithCurrentCard{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", owner='" + owner + '\'' +
@@ -40,7 +40,7 @@ public class GameWithLastPlayedCardDTO implements Serializable {
                 ", nrOfCars=" + nrOfCars +
                 ", positionMarshal=" + positionMarshal +
                 ", status=" + status +
-                ", lastPlayedCard=" + lastPlayedCard +
+                ", currentCard=" + currentCard +
                 ", players=" + players +
                 ", loots=" + loots +
                 '}';
@@ -110,12 +110,12 @@ public class GameWithLastPlayedCardDTO implements Serializable {
         this.status = status;
     }
 
-    public Card getLastPlayedCard() {
-        return lastPlayedCard;
+    public Card getCurrentCard() {
+        return currentCard;
     }
 
-    public void setLastPlayedCard(Card lastPlayedCard) {
-        this.lastPlayedCard = lastPlayedCard;
+    public void setCurrentCard(Card currentCard) {
+        this.currentCard = currentCard;
     }
 
     public List<Player> getPlayers() {
