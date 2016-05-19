@@ -14,12 +14,18 @@ public class PositionedLoot {
     }
 
     public static class Builder {
+        private Long id;
         private long gameId = 1L;
         private LootType type;
         private Positionable.Level level;
         private int car;
 
         public Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder withType(LootType type) {
@@ -40,7 +46,9 @@ public class PositionedLoot {
         }
 
         public Loot build() {
-            return new Loot(type, gameId, type.value(), car, level);
+            Loot l = new Loot(type, gameId, type.value(), car, level);
+            l.setId(id);
+            return l;
         }
     }
 
