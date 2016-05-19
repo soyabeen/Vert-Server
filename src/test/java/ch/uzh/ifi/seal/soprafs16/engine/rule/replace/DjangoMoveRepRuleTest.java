@@ -21,6 +21,53 @@ import static org.hamcrest.core.Is.is;
 public class DjangoMoveRepRuleTest {
 
     @Test
+    public void checkEval() {
+
+        Player notDjango = PositionedPlayer.builder()
+                .withUserName("notDjango")
+                .onLowerLevelAt(0)
+                .id(1L)
+                .build();
+
+        Player target = PositionedPlayer.builder()
+                .withUserName("target")
+                .onLowerLevelAt(1)
+                .id(2L)
+                .build();
+
+        ArrayList<Positionable> actors = new ArrayList<>();
+        actors.add(notDjango);
+        actors.add(target);
+
+        Game game = new Game();
+        game.setNrOfCars(3);
+
+        ActionCommand command = new ActionCommand(CardType.FIRE, game, notDjango, target);
+        DjangoMoveRepRule repRule = new DjangoMoveRepRule(command);
+        List<Positionable> result = repRule.replace(actors);
+
+        Assert.assertThat("Result list has size 2.", result.size(), is(2));
+        Player resNot = null;
+        Player resTarget = null;
+        for (Positionable pos : result) {
+            if (pos instanceof Player) {
+                Player p = (Player) pos;
+                if (p.getId().equals(1L)) {
+                    resNot = p;
+                }
+                if (p.getId().equals(2L)) {
+                    resTarget = p;
+                }
+            }
+        }
+        Assert.assertNotNull("NonDjango not null", resNot);
+        Assert.assertEquals("NonDjango still on car 0", 0, resNot.getCar());
+        Assert.assertNotNull("Target not null", resTarget);
+        Assert.assertEquals("Target still on car 1", 1, resTarget.getCar());
+        Assert.assertEquals("Target still on lower level.", Positionable.Level.BOTTOM, resTarget.getLevel());
+    }
+
+    @Test
     public void moveDjangosTargetByOne() {
 
         Player django = PositionedPlayer.builder()
