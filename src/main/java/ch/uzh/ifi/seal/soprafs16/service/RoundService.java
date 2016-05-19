@@ -79,7 +79,7 @@ public class RoundService {
     public String makeAMove(Long gameId, Integer nthRound, Move move) {
         // holds playerId to lookup player in repo
         Long tmpId;
-        
+
         InputArgValidator.checkIfIdGreaterZero(nthRound, "ntRound");
         Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkIfGameIsInPlanningPhase(game);
@@ -193,7 +193,10 @@ public class RoundService {
         if (turnId == 1 && playerRepo.findOne(playedCard.getOwnerId()).getCharacter().equals(Character.GHOST)) {
             playedCard.setFaceDown(true);
             return playedCard;
-        } else if (!turns.contains(Turn.HIDDEN)) return playedCard;
+        } else if (!turns.contains(Turn.HIDDEN)) {
+            playedCard.setFaceDown(false);
+            return playedCard;
+        }
         //find what turn number is hidden
         int i = 1;
         List<Integer> turnNumberHidden = new ArrayList<>();
@@ -206,8 +209,10 @@ public class RoundService {
         if(turnNumberHidden.contains(turnId)) {
             playedCard.setFaceDown(true);
             return playedCard;
-        } else
+        } else {
+            playedCard.setFaceDown(false);
             return playedCard;
+        }
 
     }
 
