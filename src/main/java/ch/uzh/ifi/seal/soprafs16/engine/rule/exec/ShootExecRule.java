@@ -34,14 +34,15 @@ public class ShootExecRule implements ExecutionRule {
     @Override
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
-        Player actor = (Player) command.getCurrentPlayer();
-        actor.shoots();
-        result.add(actor);
+        if (evaluate(command)) {
+            Player actor = (Player) command.getCurrentPlayer();
+            actor.shoots();
+            result.add(actor);
 
-        Player target = (Player) command.getTargetPlayer();
-        target.getsShot();
-        result.add(target);
-
+            Player target = (Player) command.getTargetPlayer();
+            target.getsShot();
+            result.add(target);
+        }
         return result;
     }
 }
