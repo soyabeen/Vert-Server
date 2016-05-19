@@ -3,7 +3,6 @@ package ch.uzh.ifi.seal.soprafs16.utils;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;

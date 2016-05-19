@@ -1,8 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.when;
 
 /**

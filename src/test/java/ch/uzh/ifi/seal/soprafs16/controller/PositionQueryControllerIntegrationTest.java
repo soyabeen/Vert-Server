@@ -2,9 +2,9 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

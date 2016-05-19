@@ -9,7 +9,6 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.service.ActionPhaseService;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
-import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.*;
+import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
@@ -28,31 +28,24 @@ import static org.mockito.Mockito.when;
  */
 public class PhaseLogicServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
-
+    List<Turn> turns;
     @InjectMocks
     private PhaseLogicService phaseLogic;
-
     @Mock
     private RoundRepository roundRepo;
-
     @Mock
     private GameRepository gameRepo;
-
     @Mock
     private PlayerRepository playerRepo;
-
     @Mock
     private Round round;
-
     @Mock
     private Card card1, card2;
-
     private Player expectedPlayer1, expectedPlayer2, expectedPlayer3;
     private Integer nthRound;
     private Game game;
     private Loot loot;
     private List<Card> starterDeck;
-    List<Turn> turns;
 
     @Before
     public void init() {

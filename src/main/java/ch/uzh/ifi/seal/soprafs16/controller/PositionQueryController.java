@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,11 +16,9 @@ import java.util.List;
 @RestController
 public class PositionQueryController extends GenericController {
     private static final Logger logger = LoggerFactory.getLogger(PositionQueryController.class);
-
+    private static final String CONTEXT = "/games/{gameId}/positions";
     @Autowired
     private PositionService positionService;
-
-    private static final String CONTEXT = "/games/{gameId}/positions";
 
     @RequestMapping(value = CONTEXT, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)

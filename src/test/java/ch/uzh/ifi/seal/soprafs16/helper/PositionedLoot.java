@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.helper;
 
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 /**

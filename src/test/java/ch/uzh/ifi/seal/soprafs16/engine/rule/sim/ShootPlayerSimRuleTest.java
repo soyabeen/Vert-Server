@@ -1,11 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule.sim;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
-import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
 import org.junit.Test;
 

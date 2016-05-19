@@ -2,35 +2,27 @@ package ch.uzh.ifi.seal.soprafs16.controller;
 
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.Round;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import ch.uzh.ifi.seal.soprafs16.service.GameService;
-import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
-import ch.uzh.ifi.seal.soprafs16.utils.RoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class GameCommandController
         extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(GameCommandController.class);
-
+    private static final String CONTEXT = "/games";
     @Autowired
     private GameService gameService;
     @Autowired
     private PlayerRepository playerRepo;
     @Autowired
     private GameRepository gameRepo;
-
-    private static final String CONTEXT = "/games";
 
     @RequestMapping(
             value = CONTEXT,

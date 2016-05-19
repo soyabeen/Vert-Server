@@ -2,7 +2,10 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -129,15 +132,6 @@ public class Loot implements Positionable, Serializable {
     }
 
     /**
-     * Sets type of this loot.
-     *
-     * @param type type of this loot.
-     */
-    public void setType(LootType type) {
-        this.type = type;
-    }
-
-    /**
      * Returns type of loot.
      *
      * @return type of loot.
@@ -148,12 +142,12 @@ public class Loot implements Positionable, Serializable {
     }
 
     /**
-     * Sets value of this loot.
+     * Sets type of this loot.
      *
-     * @param value value of this loot.
+     * @param type type of this loot.
      */
-    public void setValue(int value) {
-        this.value = value;
+    public void setType(LootType type) {
+        this.type = type;
     }
 
     /**
@@ -164,6 +158,15 @@ public class Loot implements Positionable, Serializable {
     public int getValue() {
 
         return value;
+    }
+
+    /**
+     * Sets value of this loot.
+     *
+     * @param value value of this loot.
+     */
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public Long getId() {

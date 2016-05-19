@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
-import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.model.Card;

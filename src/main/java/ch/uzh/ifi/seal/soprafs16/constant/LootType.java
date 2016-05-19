@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs16.constant;
 
-import ch.uzh.ifi.seal.soprafs16.model.Loot;
-
 import java.util.Random;
 
 /**
@@ -20,13 +18,15 @@ public enum LootType {
         this.value = value;
     }
 
-    public int value() {return value;}
-
     public static LootType getRandomPurseType() {
         int rnd = new Random().nextInt();
         if(rnd % 2 == 0) {
             return PURSE_BIG;
         }
         return PURSE_SMALL;
+    }
+
+    public int value() {
+        return value;
     }
 }

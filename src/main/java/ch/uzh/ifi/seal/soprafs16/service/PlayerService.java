@@ -1,13 +1,14 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
-import ch.uzh.ifi.seal.soprafs16.utils.CardConfigurator;
-import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
-import ch.uzh.ifi.seal.soprafs16.model.*;
+import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
+import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs16.utils.GameConfigurator;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

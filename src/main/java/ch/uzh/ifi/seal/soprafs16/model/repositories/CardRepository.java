@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs16.model.repositories;
 
 import ch.uzh.ifi.seal.soprafs16.model.Card;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import org.springframework.data.repository.CrudRepository;
 
 /**

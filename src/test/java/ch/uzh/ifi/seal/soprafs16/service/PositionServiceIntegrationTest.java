@@ -1,17 +1,12 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.Application;
-import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
-import ch.uzh.ifi.seal.soprafs16.helper.LootBuilder;
 import ch.uzh.ifi.seal.soprafs16.helper.PlayerBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

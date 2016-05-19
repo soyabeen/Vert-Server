@@ -4,7 +4,6 @@ import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Direction;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 /**

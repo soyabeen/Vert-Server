@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerBottomSimRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.MovePlayerTopSimRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.sim.SimulationRule;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

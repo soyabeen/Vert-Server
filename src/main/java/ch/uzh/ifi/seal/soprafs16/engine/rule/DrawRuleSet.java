@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
-import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 
 import java.util.ArrayList;

@@ -2,7 +2,10 @@ package ch.uzh.ifi.seal.soprafs16.model;
 
 import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -13,38 +16,26 @@ import java.io.Serializable;
 @Entity
 public class Card implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    /**
-     * Defines type of this card.
-     */
-    @Column
-    private CardType type;
-
-    /**
-     * Defines owner of this card
-     */
-    @Column
-    private Long ownerId;
-
-    @Column
-    private boolean onHand;
-
     /**
      * Determines whether card was played face up or face down
      */
     @Column
     boolean isFaceDown;
-
-    public boolean isOnHand() {
-        return onHand;
-    }
-
-    public void setOnHand(boolean onHand) {
-        this.onHand = onHand;
-    }
+    @Id
+    @GeneratedValue
+    private Long id;
+    /**
+     * Defines type of this card.
+     */
+    @Column
+    private CardType type;
+    /**
+     * Defines owner of this card
+     */
+    @Column
+    private Long ownerId;
+    @Column
+    private boolean onHand;
 
     public Card() {
         onHand = false;
@@ -56,6 +47,14 @@ public class Card implements Serializable {
         isFaceDown = false;
         this.type = type;
         this.ownerId = ownerId;
+    }
+
+    public boolean isOnHand() {
+        return onHand;
+    }
+
+    public void setOnHand(boolean onHand) {
+        this.onHand = onHand;
     }
 
     /**

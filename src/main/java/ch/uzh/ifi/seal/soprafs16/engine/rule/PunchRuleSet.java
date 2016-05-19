@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.PunchExecRule;
-import ch.uzh.ifi.seal.soprafs16.engine.rule.exec.MovePlayerExecRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.filter.BelleNoTargetFilterRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.CheyennePunchRepRule;
 import ch.uzh.ifi.seal.soprafs16.engine.rule.replace.MarshalRepRule;
