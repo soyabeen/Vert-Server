@@ -280,7 +280,12 @@ public class ActionPhaseService {
             updatePlayer((p.getId() == null) ? playerRepo.findOne(game.getCurrentPlayerId()).getId() : p.getId(), p);
         }
         for (Loot l : loots) {
-            updateLoot(l.getId(), l);
+            if (null == l.getId()) {
+                Loot tmp = lootRepo.save(l);
+                updateLoot(tmp.getId(), tmp);
+            } else {
+                updateLoot(l.getId(), l);
+            }
         }
         if (marshal.size() != 0) {
             game.setPositionMarshal(marshal.get(0).getCar());
