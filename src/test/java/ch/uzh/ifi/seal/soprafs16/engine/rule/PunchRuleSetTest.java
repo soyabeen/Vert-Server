@@ -21,7 +21,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * Created by devuser on 16.05.2016.
  */
-public class PunchRuleTest {
+public class PunchRuleSetTest {
 
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
@@ -61,7 +61,7 @@ public class PunchRuleTest {
     public void testPunchRuleSimulate() {
         init();
         PunchRuleSet prs = new PunchRuleSet();
-        List<Positionable> players = new ArrayList<>( game.getPlayers() );
+        List<Positionable> players = new ArrayList<>(game.getPlayers());
         result = prs.simulate(game, players.get(0));
         logger.debug("Character " + players.get(0) + "\t is in " + players.get(0).getCar() + " before punch");
         Assert.assertThat(result.size(), is(0));
