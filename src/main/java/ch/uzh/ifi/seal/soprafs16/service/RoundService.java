@@ -79,10 +79,9 @@ public class RoundService {
     public String makeAMove(Long gameId, Integer nthRound, Move move) {
         // holds playerId to lookup player in repo
         Long tmpId;
-
-        InputArgValidator.checkIfIdGreaterZero(gameId, "gameid");
+        
         InputArgValidator.checkIfIdGreaterZero(nthRound, "ntRound");
-        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+        Game game = gameRepo.findOne(gameId);
         InputArgValidator.checkIfGameIsInPlanningPhase(game);
         InputArgValidator.checkCorrectRound(game, nthRound);
 

@@ -36,7 +36,7 @@ public class ActionPhaseController extends GenericController {
                                     @RequestParam("token") String userToken) {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
-        Game game = gameRepo.findOne(gameId);
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
         InputArgValidator.checkGameState(game, GameStatus.ACTIONPHASE);
         return actionService.sendPossibilities(gameId);
@@ -49,7 +49,7 @@ public class ActionPhaseController extends GenericController {
                                   @RequestBody TurnDTO turnDTO) {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
-        Game game = gameRepo.findOne(gameId);
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
         InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
         InputArgValidator.checkGameState(game, GameStatus.ACTIONPHASE);
 
