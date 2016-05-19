@@ -26,25 +26,16 @@ public class TucoAdditionalTargetFilterRule implements FilterRule {
 
     @Override
     public boolean evaluate(List<Positionable> actors) {
-        return Character.TUCO.equals(current.getCharacter())
-                && !actors.isEmpty();
+        return Character.TUCO.equals(current.getCharacter());
     }
 
     @Override
     public List<Positionable> filter(List<Positionable> actors) {
         if (evaluate(actors)) {
-
-            // cast this stuff
-            List<Player> players = new ArrayList<>();
-            for (Positionable p : actors) {
-                if (p instanceof Player) {
-                    players.add((Player) p);
-                }
-            }
-
             List<Positionable> result = new ArrayList<>();
             result.addAll(actors);
-            result.addAll(tFinder.filterPlayersOnOppositeFloor(current, players));
+            result.addAll(tFinder.filterPlayersOnOppositeFloor(current, game.getPlayers()));
+            return result;
         }
         return actors;
     }
