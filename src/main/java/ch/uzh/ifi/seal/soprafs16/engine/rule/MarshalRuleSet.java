@@ -41,15 +41,15 @@ public class MarshalRuleSet extends RuleSet {
     @Override
     public List<Positionable> execute(ActionCommand command) {
         List<Positionable> result = new ArrayList<>();
-        MovePlayerExecRule playerMove = new MovePlayerExecRule();
+        MovePlayerExecRule marshalMove = new MovePlayerExecRule();
         MarshalExecRule marshalTargets = new MarshalExecRule();
         Game tmpGame = command.getGame();
 
         logger.debug("eval: " + marshalTargets.evaluate(command));
 
         // marshal move
-        if (playerMove.evaluate(command)) {
-            result.addAll(playerMove.execute(command));
+        if (marshalMove.evaluate(command)) {
+            result.addAll(marshalMove.execute(command));
 
             // when marshal moved, update his position in game
             // TODO: refactor!
