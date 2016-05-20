@@ -15,8 +15,11 @@ import java.util.List;
  */
 @RestController
 public class PositionQueryController extends GenericController {
+
     private static final Logger logger = LoggerFactory.getLogger(PositionQueryController.class);
+
     private static final String CONTEXT = "/games/{gameId}/positions";
+
     @Autowired
     private PositionService positionService;
 
