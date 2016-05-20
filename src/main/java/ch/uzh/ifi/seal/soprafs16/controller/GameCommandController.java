@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.service.GameService;
+import ch.uzh.ifi.seal.soprafs16.utils.FastLaneRoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,15 @@ public class GameCommandController
         extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(GameCommandController.class);
+
     private static final String CONTEXT = "/games";
+
     @Autowired
     private GameService gameService;
+
     @Autowired
     private PlayerRepository playerRepo;
+
     @Autowired
     private GameRepository gameRepo;
 
@@ -40,6 +45,14 @@ public class GameCommandController
         logger.debug("POST:{} - startGame - token: {}, gameid: {}",  CONTEXT + "/{gameId}/start", userToken, gameId );
 
         gameService.startGame(gameId, userToken);
+    }
+
+    @RequestMapping(value = CONTEXT + "/{gameId}/fastlane", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void startFastlaneGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
+        logger.debug("POST:{} - startFastlaneGame - token: {}, gameid: {}", CONTEXT + "/{gameId}/fastlane", userToken, gameId);
+
+        gameService.startGame(gameId, userToken, new FastLaneRoundConfigurator());
     }
 
 

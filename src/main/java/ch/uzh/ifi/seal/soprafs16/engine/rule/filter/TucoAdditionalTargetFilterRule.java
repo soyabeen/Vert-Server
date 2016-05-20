@@ -15,7 +15,9 @@ import java.util.List;
 public class TucoAdditionalTargetFilterRule implements FilterRule {
 
     private TargetFinder tFinder;
+
     private Game game;
+
     private Player current;
 
     public TucoAdditionalTargetFilterRule(Game game, Player current) {
