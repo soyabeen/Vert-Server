@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoModeController extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoModeController.class);
-
+    private static final String CONTEXT = "/demos";
     @Autowired
     private DemoModeService demoService;
-
-    private static final String CONTEXT = "/demos";
 
     @RequestMapping(
             value = CONTEXT,
