@@ -115,6 +115,8 @@ public class RoundServiceTest {
         move.setPlayer(p);
         move.setPass(false);
         move.setPlayedCard(p.getHand().get(0));
+        move.setGame(game);
+        move.setId(1L);
 
         roundService.makeAMove(game.getId(),1,move);
 
