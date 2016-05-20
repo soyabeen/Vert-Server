@@ -26,6 +26,7 @@ public class GameWithCurrentCardDTO implements Serializable {
     private List<Player> players;
     private List<Loot> loots;
     private int positionMarshal;
+    private Long exitPlayerId;
 
     @Override
     public String toString() {
@@ -139,4 +140,8 @@ public class GameWithCurrentCardDTO implements Serializable {
     public int getPositionMarshal() {return positionMarshal;}
 
     public void setPositionMarshal(int positionMarshal) {this.positionMarshal = positionMarshal;}
+
+    public Long getExitPlayerId() {return exitPlayerId;}
+
+    public void setExitPlayerId(Long exitPlayerId) {this.exitPlayerId = exitPlayerId;}
 }

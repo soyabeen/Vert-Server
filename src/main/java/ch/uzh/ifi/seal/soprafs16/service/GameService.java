@@ -148,6 +148,19 @@ public class GameService {
         playerRepo.save(players);
     }
 
+    public void exitGame(Long gameId, String userToken) {
+
+        Player exitPlayer = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
+        Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
+        InputArgValidator.checkPlayerBelongsToGame(game, exitPlayer);
+
+        game.setExitPlayerId(exitPlayer.getId());
+        game.setStatus(GameStatus.FINISHED);
+
+        gameRepo.save(game);
+
+    }
+
     private void setPositionOfPlayers(Game game, List<Player> players) {
 
         int nrOfCars = game.getNrOfCars();

@@ -56,6 +56,9 @@ public class Game implements Serializable {
     @Column
     private int turnId;
 
+    @Column
+    private Long exitPlayerId;
+
     public Game() {
         this.players = new ArrayList<>();
         this.loots = new ArrayList<>();
@@ -186,4 +189,8 @@ public class Game implements Serializable {
     public int getPositionMarshal() {return positionMarshal;}
 
     public void setPositionMarshal(int positionMarshal) {this.positionMarshal = positionMarshal;}
+
+    public Long getExitPlayerId() {return exitPlayerId;}
+
+    public void setExitPlayerId(Long exitPlayerId) {this.exitPlayerId = exitPlayerId;}
 }

@@ -198,4 +198,11 @@ public class InputArgValidator {
             throw new InvalidInputException(MESSAGE_START + "You idiot, check your endpoint ROUNDID");
 
     }
+
+    public static void checkPlayerBelongsToGame(Game game, Player player) {
+        for (Player p: game.getPlayers()) {
+            if (p.getId().equals(player.getId())) return;
+        }
+        throw new InvalidInputException(MESSAGE_START + "Only a Player within the Game can exit the game");
+    }
 }

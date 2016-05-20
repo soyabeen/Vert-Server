@@ -56,4 +56,12 @@ public class GameCommandController
         }
     }
 
+    @RequestMapping(value = CONTEXT + "/{gameId}/exit", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void exitGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
+        logger.debug("exitGame: " + gameId);
+
+        gameService.exitGame(gameId, userToken);
+    }
+
 }
