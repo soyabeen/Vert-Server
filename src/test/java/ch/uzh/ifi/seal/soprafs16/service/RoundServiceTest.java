@@ -1,8 +1,10 @@
 package ch.uzh.ifi.seal.soprafs16.service;
 
+import ch.uzh.ifi.seal.soprafs16.Application;
 import ch.uzh.ifi.seal.soprafs16.constant.*;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
+import ch.uzh.ifi.seal.soprafs16.helper.GameBuilder;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.MoveRepository;
@@ -11,11 +13,17 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.RoundRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,106 +39,48 @@ import static org.mockito.Mockito.when;
 /**
  * Created by soyabeen on 29.03.16.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
+@WebAppConfiguration
+@IntegrationTest({"server.port=0"})
 public class RoundServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
 
-    @InjectMocks
+    //@InjectMocks
+    @Autowired
     private RoundService roundService;
 
-    @Mock
+    //@Mock
+    @Autowired
     private GameRepository gameRepo;
 
-    @Mock
+    //@Mock
+    @Autowired
     private RoundRepository roundRepo;
 
-    @Mock
-    private PlayerRepository playerRepo;
-
-    @Mock
-    private MoveRepository moveRepo;
+    @Autowired
+    private DemoModeService demoModeService;
 
 
-    @Mock
-    private Round round;
-
-    @Mock
-    private Card card1, card2;
-
-    private Player player;
     private Game game;
-    //private User user1;
-    private Loot loot;
-    private List<Card> starterDeck;
-    private Move move, movePass;
-    private Integer nthRound;
-    private List<Turn> turns;
-    private List<Card> hand;
 
     @Before
     public void init() {
-        MockitoAnnotations.initMocks(this);
 
-        game = new Game();
-        game.setId(1L);
+        game = demoModeService.initDemoGame();
+        game = gameRepo.save(game);
 
-        // List of turns needs to be generated
-        turns = Arrays.asList(
-                Turn.DOUBLE_TURNS,
-                Turn.NORMAL,
-                Turn.NORMAL,
-                Turn.HIDDEN);
-        nthRound = 1;
-        round = new Round(game.getId(), nthRound, turns,RoundEndEvent.REBELLION, "");
-
-
-
-        loot = new Loot(LootType.JEWEL, 1L, 1000, 0, Positionable.Level.BOTTOM);
-        starterDeck = new ArrayList<>();
-        starterDeck.add(card2);
-        starterDeck.add(card2);
-        starterDeck.add(card2);
-        starterDeck.add(card2);
-        starterDeck.add(card2);
-
-        player = new Player(loot, starterDeck);
-        player.setCharacter(Character.GHOST);
-        player.setToken(UUID.randomUUID().toString());
-
-        card1 = new Card();
-        card1.setOwnerId(player.getId());
-        card1.setType(CardType.MOVE);
-
-        card2 = new Card();
-        card2.setOwnerId(player.getId());
-        card2.setType(CardType.MOVE);
-
-        // player has 4 Move cards
-        hand = new ArrayList<>();
-        hand.add(card2);
-        hand.add(card2);
-        hand.add(card2);
-        hand.add(card2);
-
-        player.setDeck(hand);
-
-        move = new Move();
-        move.setGame(game);
-        move.setId(1L);
-
-        when(gameRepo.findOne(1L)).thenReturn(game);
-        when(roundRepo.findByGameIdAndNthRound(game.getId(), nthRound)).thenReturn(round);
-        when(playerRepo.findOne(anyLong())).thenReturn(player);
-        when(moveRepo.save((Move) any())).thenReturn(move);
     }
 
     @Test
     public void listTurnsForRoundReturnsCorrectOrder() {
-        List<Turn> result = roundService.listTurnsForRound(1L, 1);
+        List<Turn> result = roundService.listTurnsForRound(game.getId(), 1);
+        Round r = roundRepo.findByGameIdAndNthRound(game.getId(),1);
 
-        Assert.assertThat(result.size(), is(turns.size()));
+        Assert.assertEquals(result.size(), r.getTurns().size());
 
-        for(int i = 0; i < turns.size(); i++) {
-            Assert.assertThat(result.indexOf(i), is(turns.indexOf(i)));
+        for(int i = 0; i < result.size(); i++) {
+            Assert.assertThat(result.get(i), is(r.getTurns().get(i)));
         }
     }
 
@@ -145,81 +95,34 @@ public class RoundServiceTest {
         }
 
         try {
-            roundService.listTurnsForRound(1L, -1);
+            roundService.listTurnsForRound(game.getId(), -1);
             fail("Illegal nthRound, should throw InvalidInputException");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidInputException);
         }
     }
 
-    /*
+
     @Test
-    public void makeAMoveReturnsTurnId() {
-        move.setPlayer(player);
+    public void makeAMoveTurnIdAndDeck() {
+        Round r = roundRepo.findByGameIdAndNthRound(game.getId(), 1);
+        r.addNewlyPlayedCard(new Card(CardType.DRAW,1L));
+        r = roundRepo.save(r);
+
+        Player p = gameRepo.findOne(game.getId()).getPlayers().get(0);
+
+        Move move = new Move();
+        move.setPlayer(p);
         move.setPass(false);
-        move.setPlayedCard(card1);
+        move.setPlayedCard(p.getHand().get(0));
+
+        roundService.makeAMove(game.getId(),1,move);
+
+        Game g = gameRepo.findOne(game.getId());
+        Assert.assertEquals(g.getTurnId(),2);
 
 
-        String result = roundService.makeMove(1L, 1, move);
-
-        Assert.assertThat(result, is("1"));
-
-        try {
-            Integer.parseInt(result);
-        } catch (Exception x_x) {
-            Assert.assertFalse(x_x instanceof NumberFormatException);
-        }
-    }
-
-
-    @Test
-    public void makeAMovePlaysCard() {
-        move.setPlayer(player);
-        move.setPass(false);
-        move.setPlayedCard(card1);
-
-        int sizeBefore = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
-        roundService.makeMove(1L, 1, move);
-        int sizeAfter = playerRepo.findOne(move.getPlayedCard().getOwnerId()).getHand().size();
-
-        Assert.assertThat(sizeAfter, is(sizeBefore - 1));
-    }
-
-
-    @Test
-    public void makeAMovePassesTurn() {
-        move = new Move();
-        move.setPlayer(player);
-        move.setGame(game);
-        move.setId(1L);
-        move.setPass(true);
-
-        int sizeBefore = move.getPlayer().getHand().size();
-        roundService.makeMove(1L, 1, move);
-        int sizeAfter = move.getPlayer().getHand().size();
-
-        Assert.assertThat(sizeAfter, is(sizeBefore + 3));
-
-
-        try {
-            roundService.listTurnsForRound(null, 1);
-            fail("Illegal gameId, should throw InvalidInputException");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidInputException);
-        }
-
-        try {
-            roundService.listTurnsForRound(1L, null);
-            fail("Illegal gameId, should throw InvalidInputException");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidInputException);
-        }
-    }
-
-
-    @Test
-    public void testGetRoundById() {
 
     }
-    */
+
 }
