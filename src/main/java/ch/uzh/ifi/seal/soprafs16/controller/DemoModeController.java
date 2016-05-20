@@ -36,6 +36,6 @@ public class DemoModeController extends GenericController {
     @ResponseStatus(HttpStatus.CREATED)
     public Game createFastLaneGame(@RequestBody Game game, @RequestParam("token") String userToken) {
         logger.debug("POST:{} - createFastLaneGame : game={}, token={}", game, userToken);
-        return demoService.initDemoGame();
+        return demoService.initFastLaneGame(game, userToken);
     }
 }

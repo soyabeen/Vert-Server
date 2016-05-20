@@ -3,7 +3,9 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
+import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.DemoRoundConfigurator;
+import ch.uzh.ifi.seal.soprafs16.utils.FastLaneRoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import java.util.UUID;
 public class DemoModeService {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoModeService.class);
+
+    private static final int NR_OF_DEMO_PLAYERS = 2;
 
     @Autowired
     private GameService gameService;
@@ -51,15 +55,11 @@ public class DemoModeService {
         return g;
     }
 
+
     public Game initFastLaneGame(final Game gameShell, final String userToken) {
+        Game fastLaneGame = gameService.createGame(gameShell, userToken, -1);
 
-        InputArgValidator.checkNotEmpty(gameShell.getName(), "gamename");
-        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
-        InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
-
-        Game fastLaneGame = gameService.createGame(gameShell, tokenOwner);
-
-        gameService.startGame(fastLaneGame.getId(), tokenOwner.getToken(), new FastLaneRoundConfigurator());
+        gameService.startGame(fastLaneGame.getId(), userToken, new FastLaneRoundConfigurator());
         return gameService.loadGameFromRepo(fastLaneGame.getId());
     }
 
