@@ -26,11 +26,11 @@ public class BrakingTest {
     public BrakingTest() {
         PlayerBuilder pb = new PlayerBuilder();
         players = pb.getPlayersNoPersistence(Character.GHOST, Character.DJANGO, Character.BELLE, Character.DOC);
-        Random r4nd0m = new Random();
+        Random random = new Random();
 
         for (Player playerItem : players) {
-            //r4nd0m.nextInt((max - min) + 1) + min;
-            int randomCar = r4nd0m.nextInt(4);
+            //random.nextInt((max - min) + 1) + min;
+            int randomCar = random.nextInt(4);
             logger.debug("random generated car " + randomCar);
             playerItem.setCar(randomCar);
             playerItem.setLevel(Positionable.Level.TOP);
@@ -41,11 +41,11 @@ public class BrakingTest {
     @Test
     public void testAllPlayersMoveOneCar() {
         //printRandomCars();
-        Game gayyyme = new Game();
+        Game game = new Game();
         List<Positionable> result;
 
         Braking brakingEvent = new Braking();
-        result = brakingEvent.execute(gayyyme);
+        result = brakingEvent.execute(game);
 
         for (int i=0; i < result.size(); i++) {
             logger.debug(players.get(i).getCharacter() + " is in Car: " + players.get(i).getCar());
