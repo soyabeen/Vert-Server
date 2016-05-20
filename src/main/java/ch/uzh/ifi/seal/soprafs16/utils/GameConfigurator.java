@@ -20,10 +20,6 @@ public class GameConfigurator {
     public static final Integer MIN_CARS_PER_GAME = 3;
     public static final Integer LOCOMOTIVE = 1;
 
-    public static final Integer LOOT_MAX_PURSES_IN_GAME = 18;
-    public static final Integer LOOT_MAX_JEWELS_IN_GAME = 6;
-    public static final Integer LOOT_MAX_BOXES_IN_GAME = 2;
-
     private List<CarConfiguration> carConfigs;
 
     public GameConfigurator() {
@@ -45,9 +41,9 @@ public class GameConfigurator {
      * Generates loots for the given type and places them on the given car. <br/>
      * At game start, lots are placed on the lower level always.
      *
-     * @param gameId The id of the game to which the loot belongs.
-     * @param type The type of the loots to build.
-     * @param carNr The coordinate for the car where the loots are placed
+     * @param gameId           The id of the game to which the loot belongs.
+     * @param type             The type of the loots to build.
+     * @param carNr            The coordinate for the car where the loots are placed
      * @param nrOfLootsToBuild The nr of loots to buidl.
      * @return A list of loots with the given type, placed on the given car.
      */
@@ -66,7 +62,7 @@ public class GameConfigurator {
      * We create them randomly, like in the original game.<br/>
      * At game start, lots are placed on the lower level always.
      *
-     * @param gameId The id of the game to which the loot belongs.
+     * @param gameId           The id of the game to which the loot belongs.
      * @param carNr            The car coordinate on which the loot is places.
      * @param nrOfLootsToBuild The amount of loots to build.
      * @return List of loots with <code>PURSE_SMALL</code> or <code>PURSE_BIG</code> type.
@@ -90,8 +86,8 @@ public class GameConfigurator {
      * Builds the loots for the given <code>CarConfiguration</code>.
      *
      * @param gameId The id of the game to which the loot belongs.
-     * @param cc The CarConfiguration object.
-     * @param carNr The coordinate for the selected car.
+     * @param cc     The CarConfiguration object.
+     * @param carNr  The coordinate for the selected car.
      * @return A list of loots with different types, placed on the given car.
      */
     private List<Loot> buildLootsForCarConfiguration(Long gameId, CarConfiguration cc, int carNr) {
@@ -108,7 +104,7 @@ public class GameConfigurator {
      * The configuration objects will be chosen randomly. <br/>
      * The locomotive will always be placed on the first position of the car list.
      *
-     * @param gameId The id of the game to which the loot belongs.
+     * @param gameId   The id of the game to which the loot belongs.
      * @param nrOfCars The nr of cars to create (excluding the locomotive).
      * @return List of loots of all types and placed on different cars.
      */
@@ -131,12 +127,12 @@ public class GameConfigurator {
      * the train is locomotive + three cars. Even for two players.</br>
      * Attributes set in the shell:
      * <ul>
-     *     <li>nrOfPlayers</li>
-     *     <li>nrOfCars</li>
-     *     <li>list with loots</li>
+     * <li>nrOfPlayers</li>
+     * <li>nrOfCars</li>
+     * <li>list with loots</li>
      * </ul>
      *
-     * @param game The Game to configure.
+     * @param game               The Game to configure.
      * @param nrOfPlayersForGame The number of players for this game configuration.
      * @return game A configured game object.
      * @throws IllegalArgumentException if the number of players is not allowed.

@@ -8,8 +8,6 @@ import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.service.ActionPhaseService;
 import ch.uzh.ifi.seal.soprafs16.utils.InputArgValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ActionPhaseController extends GenericController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ActionPhaseController.class);
     private final String CONTEXT = "/games/{gameId}/actions";
+
     @Autowired
     private ActionPhaseService actionService;
+
     @Autowired
     private PlayerRepository playerRepo;
+
     @Autowired
     private GameRepository gameRepo;
 
@@ -37,7 +37,7 @@ public class ActionPhaseController extends GenericController {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
-        InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
+        InputArgValidator.checkItIsPlayersTurn(tokenOwner, game);
         InputArgValidator.checkGameState(game, GameStatus.ACTIONPHASE);
         return actionService.sendPossibilities(gameId);
     }
@@ -50,10 +50,9 @@ public class ActionPhaseController extends GenericController {
 
         Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
         Game game = (Game) InputArgValidator.checkAvailabeId(gameId, gameRepo, "gameid");
-        InputArgValidator.checkItIsPlayersTurn(tokenOwner,game);
+        InputArgValidator.checkItIsPlayersTurn(tokenOwner, game);
         InputArgValidator.checkGameState(game, GameStatus.ACTIONPHASE);
 
-        //TODO: Check if DTO is valid if necessary
         actionService.executeDTO(gameId, turnDTO);
     }
 
