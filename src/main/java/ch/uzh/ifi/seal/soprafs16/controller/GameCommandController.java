@@ -16,11 +16,15 @@ public class GameCommandController
         extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(GameCommandController.class);
+
     private static final String CONTEXT = "/games";
+
     @Autowired
     private GameService gameService;
+
     @Autowired
     private PlayerRepository playerRepo;
+
     @Autowired
     private GameRepository gameRepo;
 

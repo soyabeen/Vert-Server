@@ -22,12 +22,12 @@ public class GameQueryController
         extends GenericController {
 
     private static final Logger logger = LoggerFactory.getLogger(GameQueryController.class);
+
     private static final String CONTEXT = "/games";
+
     @Autowired
     private GameRepository gameRepo;
 
-    //    @Autowired
-//    private GameWithLastPlayedCardMapper gameMapper;
     @Autowired
     private GameService gameService;
 
