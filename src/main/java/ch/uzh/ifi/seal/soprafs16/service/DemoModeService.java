@@ -3,9 +3,7 @@ package ch.uzh.ifi.seal.soprafs16.service;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
-import ch.uzh.ifi.seal.soprafs16.model.repositories.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs16.utils.DemoRoundConfigurator;
-import ch.uzh.ifi.seal.soprafs16.utils.FastLaneRoundConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,6 @@ public class DemoModeService {
     @Autowired
     private PlayerService playerService;
 
-    @Autowired
-    private PlayerRepository playerRepo;
-
     private Player createRandomPlayer(String username) {
         Player p = new Player(username);
         return playerService.createPlayer(p);
@@ -53,14 +48,6 @@ public class DemoModeService {
         gameService.startGame(demo.getId(), owner.getToken(), new DemoRoundConfigurator());
         Game g = gameService.loadGameFromRepo(demo.getId());
         return g;
-    }
-
-
-    public Game initFastLaneGame(final Game gameShell, final String userToken) {
-        Game fastLaneGame = gameService.createGame(gameShell, userToken, -1);
-
-        gameService.startGame(fastLaneGame.getId(), userToken, new FastLaneRoundConfigurator());
-        return gameService.loadGameFromRepo(fastLaneGame.getId());
     }
 
 }
