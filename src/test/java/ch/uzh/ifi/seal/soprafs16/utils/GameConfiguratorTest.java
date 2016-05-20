@@ -119,8 +119,8 @@ public class GameConfiguratorTest {
                     hasPurseType = true;
             }
         }
-        Assert.assertTrue("Must contain jewel types.", hasJewelType);
         Assert.assertTrue("Must contain strong box types.", hasBoxType);
         Assert.assertTrue("Must contain purse types.", hasPurseType);
+        // jewels can be null.
     }
 }
