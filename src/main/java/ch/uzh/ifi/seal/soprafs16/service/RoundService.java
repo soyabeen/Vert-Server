@@ -85,6 +85,8 @@ public class RoundService {
         InputArgValidator.checkIfGameIsInPlanningPhase(game);
         InputArgValidator.checkCorrectRound(game, nthRound);
 
+        logger.debug("-> Play card {}", move.toString());
+
 
         move.setGame(game);
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthRound);
@@ -145,6 +147,9 @@ public class RoundService {
      * @return round
      */
     protected Round playACard(Round round, Card playedCard) {
+
+        logger.debug("Player {} plays card {} (game:{}, round:{})", playedCard.getOwnerId(), playedCard.getType(), round.getGameId(), round.getNthRound());
+
         // is it a hidden turn
         playedCard = setFaceDown(round.getTurns(), round.getCardStack().size(), round.getGameId(), playedCard);
 
@@ -175,6 +180,7 @@ public class RoundService {
      * @param currentPlayer
      */
     protected void passAndTake3(Round round, Player currentPlayer) {
+        logger.debug("player {} has passed (game:{}, round:{}", currentPlayer.getUsername(), round.getGameId(), round.getNthRound());
         round.addNewlyPlayedCard(new Card(CardType.DRAW, currentPlayer.getId()));
 
         //Cards can be not on hand but in deck

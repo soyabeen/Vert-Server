@@ -33,6 +33,15 @@ public class Move implements Serializable {
 		this.pass = false;
 	}
 
+	@Override
+	public String toString() {
+		return "Move (id:" + id
+				+ ", playedCard:" + playedCard.toString()
+				+ ", pass:" + pass
+				+ ", game:" + game.toString()
+				+ ", player:" + player.toString();
+	}
+
 	public Long getId() {
 		return id;
 	}

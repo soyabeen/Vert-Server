@@ -59,6 +59,8 @@ public class PhaseLogicService {
         InputArgValidator.checkIfPositiveNumber(gameId, "gameId");
         InputArgValidator.checkIfPositiveNumber(nthround.longValue(), "nthRound");
 
+        logger.debug("Advance player game:{}, round:{}", gameId, nthround);
+
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
 
@@ -189,6 +191,7 @@ public class PhaseLogicService {
         // if Round is over execute Round End Event and check if game is over else start new Round
         // if game is over collect all information and end game
 
+        logger.debug("Change state game:{}, round:{}", game.getId(), nthround);
 
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(),nthround);
         if (isTurnOver(game, round)) {
