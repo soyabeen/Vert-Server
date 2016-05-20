@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Used to initialise the demo game.
@@ -24,14 +21,21 @@ public class DemoModeController extends GenericController {
     @Autowired
     private DemoModeService demoService;
 
-    private static final String CONTEXT = "/demos";
-
     @RequestMapping(
-            value = CONTEXT,
+            value = "/demos",
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Game createDemoGame() {
         logger.debug("POST:{} - createDemoGame");
+        return demoService.initDemoGame();
+    }
+
+    @RequestMapping(
+            value = "/fastlanes",
+            method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Game createFastLaneGame(@RequestBody Game game, @RequestParam("token") String userToken) {
+        logger.debug("POST:{} - createFastLaneGame : game={}, token={}", game, userToken);
         return demoService.initDemoGame();
     }
 }

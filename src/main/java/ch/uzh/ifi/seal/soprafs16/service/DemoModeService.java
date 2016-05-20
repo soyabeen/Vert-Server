@@ -21,13 +21,14 @@ public class DemoModeService {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoModeService.class);
 
-    private static final int NR_OF_DEMO_PLAYERS = 2;
-
     @Autowired
     private GameService gameService;
 
     @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    private PlayerRepository playerRepo;
 
     private Player createRandomPlayer(String username) {
         Player p = new Player(username);
@@ -48,6 +49,18 @@ public class DemoModeService {
         gameService.startGame(demo.getId(), owner.getToken(), new DemoRoundConfigurator());
         Game g = gameService.loadGameFromRepo(demo.getId());
         return g;
+    }
+
+    public Game initFastLaneGame(final Game gameShell, final String userToken) {
+
+        InputArgValidator.checkNotEmpty(gameShell.getName(), "gamename");
+        Player tokenOwner = InputArgValidator.checkTokenHasValidPlayer(userToken, playerRepo, "token");
+        InputArgValidator.checkNotEmpty(tokenOwner.getUsername(), "owner");
+
+        Game fastLaneGame = gameService.createGame(gameShell, tokenOwner);
+
+        gameService.startGame(fastLaneGame.getId(), tokenOwner.getToken(), new FastLaneRoundConfigurator());
+        return gameService.loadGameFromRepo(fastLaneGame.getId());
     }
 
 }
