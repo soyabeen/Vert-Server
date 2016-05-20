@@ -47,7 +47,7 @@ public class GameCommandController
         gameService.startGame(gameId, userToken);
     }
 
-    @RequestMapping(value = CONTEXT + "/{gameId}/fastlane", method = RequestMethod.POST)
+    @RequestMapping(value = CONTEXT + "/{gameId}/fasttrack", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startFastlaneGame(@PathVariable Long gameId, @RequestParam("token") String userToken) {
         logger.debug("POST:{} - startFastlaneGame - token: {}, gameid: {}", CONTEXT + "/{gameId}/fastlane", userToken, gameId);
