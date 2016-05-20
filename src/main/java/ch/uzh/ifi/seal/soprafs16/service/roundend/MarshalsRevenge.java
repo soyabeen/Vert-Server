@@ -37,6 +37,7 @@ public class MarshalsRevenge implements RoundEnd {
                     Loot lostLoot = new Loot(tempLoot.getType(), game.getId(),
                             tempLoot.getValue(), victim.getCar(), victim.getLevel());
                     result.add( lostLoot );
+                    result.add( victim );
                 }
             }
         }
