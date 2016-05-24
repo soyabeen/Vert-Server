@@ -140,6 +140,7 @@ public class Player extends Meeple {
      * @param loot
      */
     public void addLoot(Loot loot) {
+        loot.setOwnerId(getId());
         loots.add(loot);
     }
 
