@@ -90,9 +90,7 @@ public class PhaseLogicService {
      */
     protected Long getNextPlayer(Game game, Integer nthround) {
         Long nextPlayerId = -1L;
-
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-
         switch ( round.getTurns().get(game.getTurnId()-1) ) {
             case DOUBLE_TURNS:
                 nextPlayerId = getPlayerForDoubleTurn(game, round);
@@ -106,7 +104,6 @@ public class PhaseLogicService {
                 nextPlayerId = getPlayerForNormalTurn(game);
                 break;
         }
-
         return nextPlayerId;
     }
 
@@ -196,14 +193,14 @@ public class PhaseLogicService {
             round.setPointerOnDeck(0);
         }
 
-        if(isGameOver(nthround)) {
+        if (isGameOver(game, nthround)) {
             logger.debug("Game " + game.getId() + ": State changed, Game is over");
             game.setStatus(GameStatus.FINISHED);
         }
 
         roundRepo.save(round);
+
         // still in turn, proceed normally
-        return;
     }
 
     protected boolean isTurnOver(Game game, Round round) {
@@ -228,12 +225,20 @@ public class PhaseLogicService {
         return false;
     }
 
-    protected boolean isGameOver(Integer nthround) {
-        //MAX_ROUNDS_FOR_GAME == 4 plus 1 Station Round = 5 Rounds total
-        if (nthround > RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
+    /**
+     * Checks if the game is over (meaning that all existing rounds in the game have been played).
+     * If for some reason, no rounds can be found in the db, we use <code>MAX_ROUNDS_FOR_GAME + 1 (station round card)</code>.
+     *
+     * @param game     The game to check for game end
+     * @param nthround The current round in the game
+     * @return True if all rounds for a game have been played. False otherwise.
+     */
+    protected boolean isGameOver(Game game, Integer nthround) {
+        List<Round> roundsForGame = roundRepo.findByGameId(game.getId());
+        int maxRounds = roundsForGame != null && !roundsForGame.isEmpty() ? roundsForGame.size() : RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1;
+        if (nthround > maxRounds) {
             return true;
         }
-
         return false;
     }
 
