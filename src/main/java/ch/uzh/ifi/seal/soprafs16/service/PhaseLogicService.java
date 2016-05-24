@@ -94,11 +94,6 @@ public class PhaseLogicService {
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
 
         switch ( round.getTurns().get(game.getTurnId()-1) ) {
-            case NORMAL:
-            case HIDDEN:
-                nextPlayerId = getPlayerForNormalTurn(game);
-                break;
-
             case DOUBLE_TURNS:
                 logger.error("HERE");
                 nextPlayerId = getPlayerForDoubleTurn(game, round);
@@ -109,7 +104,7 @@ public class PhaseLogicService {
                 break;
 
             default:
-                // TODO: what to do if program gets here?
+                nextPlayerId = getPlayerForNormalTurn(game);
                 break;
         }
 
