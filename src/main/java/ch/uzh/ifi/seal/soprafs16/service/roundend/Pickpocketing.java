@@ -40,6 +40,7 @@ public class Pickpocketing implements RoundEnd {
                                 player, null);
                         actionCommand.setTargetLoot(l);
                         result.addAll(execRule.execute(actionCommand));
+                        break;
                     }
                 }
 

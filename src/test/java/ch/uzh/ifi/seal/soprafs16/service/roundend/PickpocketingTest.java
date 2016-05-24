@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.core.Is.is;
+
 /**
  * Created by mirkorichter on 18.05.16.
  */
@@ -39,9 +41,11 @@ public class PickpocketingTest {
 
         Loot l1 = new Loot(LootType.PURSE_BIG, 1L, 500, 1, Positionable.Level.BOTTOM);
         Loot l2 = new Loot(LootType.JEWEL, 1L, 500, 1, Positionable.Level.BOTTOM);
+        Loot l3 = new Loot(LootType.PURSE_SMALL, 1L, 250, 1, Positionable.Level.BOTTOM);
 
         game.addLoot(l1);
         game.addLoot(l2);
+        game.addLoot(l3);
 
         Assert.assertEquals(0,p1.getLoots().size());
         Assert.assertEquals(0,p2.getLoots().size());
@@ -64,6 +68,7 @@ public class PickpocketingTest {
         }
 
         Assert.assertEquals(LootType.PURSE_BIG, players.get(0).getLoots().get(0).getType());
+        Assert.assertThat("Player has one new loot.", players.get(0).getLoots().size(), is(1));
 
     }
 
