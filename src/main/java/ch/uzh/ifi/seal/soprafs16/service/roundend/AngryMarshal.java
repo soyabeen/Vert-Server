@@ -1,5 +1,8 @@
 package ch.uzh.ifi.seal.soprafs16.service.roundend;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
+import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.engine.rule.MarshalRuleSet;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Marshal;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -27,9 +30,13 @@ public class AngryMarshal implements RoundEnd{
         }
 
         //Move marshal to end of train
-        if (game.getPositionMarshal() != game.getNrOfCars() - 1) {
-            result.add(new Marshal(game.getPositionMarshal() + 1));
-        }
+        Marshal current = new Marshal(game.getPositionMarshal());
+        Marshal target = new Marshal(game.getPositionMarshal() + 1);
+
+        ActionCommand ac = new ActionCommand(CardType.MARSHAL, game, current, target);
+        MarshalRuleSet mrs = new MarshalRuleSet();
+        result.addAll( new ArrayList<Positionable>(mrs.execute(ac)) );
+
         return result;
     }
 }
