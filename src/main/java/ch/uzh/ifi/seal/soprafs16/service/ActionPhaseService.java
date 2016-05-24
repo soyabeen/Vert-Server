@@ -303,32 +303,26 @@ public class ActionPhaseService {
     private Game setNextPlayerAndChangeState(Game game, Round round) {
         round.incrementPointer();
         if (round.getPointerOnDeck() < round.getCardStack().size()) {
+            // as long as we haven't played the last card, we set the next player
             game.setCurrentPlayerId(round.getCardStack().
                     get(round.getPointerOnDeck()).getOwnerId());
-        } else if (game.getRoundId() < RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
-            //TODO: add round end event measures
-            // get round end event
+        } else {
+            // execute the round end event, when all player actions have been processed.
             RoundEnd rd = RoundEndFactory.chooseEnd(round.getEnd());
-            // execute round end event and save it t db
             List<Positionable> positionables = rd.execute(game);
-              if(positionables.size() != 0) {
-                  updatePositionableList(game, positionables);
-              }
-            game.startNewRound();
+            if (positionables.size() != 0) {
+                updatePositionableList(game, positionables);
+            }
 
-        } else if (round.getPointerOnDeck() == round.getCardStack().size() && isGameInLastRound(game)) {
-            game.setStatus(GameStatus.FINISHED);
+            // set status to finished if last round, otherwise start new round
+            if (isGameInLastRound(game)) {
+                game.setStatus(GameStatus.FINISHED);
+            } else {
+                game.startNewRound();
+            }
         }
-
         return game;
     }
-
-    private boolean isGameInLastRound(Game game) {
-        List<Round> roundsForGame = roundRepo.findByGameId(game.getId());
-        int maxRounds = roundsForGame != null && !roundsForGame.isEmpty() ? roundsForGame.size() : RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1;
-        return game.getRoundId() == maxRounds;
-    }
-
 
     private boolean hasNoTarget(TurnDTO dto) {
         if ((dto.getType().equals(CardType.FIRE) || dto.getType().equals(CardType.PUNCH))
@@ -338,5 +332,13 @@ public class ActionPhaseService {
         return false;
 
     }
+
+    private boolean isGameInLastRound(Game game) {
+        List<Round> roundsForGame = roundRepo.findByGameId(game.getId());
+        int maxRounds = roundsForGame != null && !roundsForGame.isEmpty() ? roundsForGame.size() : RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1;
+        return game.getRoundId() == maxRounds;
+    }
+
+
 
 }
