@@ -36,10 +36,10 @@ public class Move implements Serializable {
 	@Override
 	public String toString() {
 		return "Move (id:" + id
-				+ ", playedCard:" + playedCard.toString()
+				+ ", playedCard:" + playedCard != null ? playedCard.toString() : ""
 				+ ", pass:" + pass
-				+ ", game:" + game.toString()
-				+ ", player:" + player.toString();
+				+ ", game:" + game != null ? game.toString() : ""
+				+ ", player:" + player != null ? player.toString() : "";
 	}
 
 	public Long getId() {
