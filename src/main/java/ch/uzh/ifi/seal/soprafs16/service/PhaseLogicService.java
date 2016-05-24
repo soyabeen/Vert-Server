@@ -95,7 +95,6 @@ public class PhaseLogicService {
 
         switch ( round.getTurns().get(game.getTurnId()-1) ) {
             case DOUBLE_TURNS:
-                logger.error("HERE");
                 nextPlayerId = getPlayerForDoubleTurn(game, round);
                 break;
 
@@ -200,8 +199,6 @@ public class PhaseLogicService {
         if(isGameOver(nthround)) {
             logger.debug("Game " + game.getId() + ": State changed, Game is over");
             game.setStatus(GameStatus.FINISHED);
-            // TODO: end game
-
         }
 
         roundRepo.save(round);
