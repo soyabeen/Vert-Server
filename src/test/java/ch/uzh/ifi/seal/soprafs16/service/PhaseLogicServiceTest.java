@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +25,7 @@ import static org.mockito.Mockito.when;
  * Created by antoio on 4/26/16.
  */
 public class PhaseLogicServiceTest {
-    private static final Logger logger = LoggerFactory.getLogger(CharacterServiceIntegrationTest.class);
+
     List<Turn> turns;
     @InjectMocks
     private PhaseLogicService phaseLogic;
@@ -196,4 +194,6 @@ public class PhaseLogicServiceTest {
         Assert.assertEquals(game.getCurrentPlayerId(), expectedPlayer3.getId());
         
     }
+
+
 }

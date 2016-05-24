@@ -316,13 +316,19 @@ public class ActionPhaseService {
               }
             game.startNewRound();
 
-        } else if (round.getPointerOnDeck() == round.getCardStack().size() && game.getRoundId() == RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1) {
-            //TODO: determine revolverheld? update money?
+        } else if (round.getPointerOnDeck() == round.getCardStack().size() && isGameInLastRound(game)) {
             game.setStatus(GameStatus.FINISHED);
         }
 
         return game;
     }
+
+    private boolean isGameInLastRound(Game game) {
+        List<Round> roundsForGame = roundRepo.findByGameId(game.getId());
+        int maxRounds = roundsForGame != null && !roundsForGame.isEmpty() ? roundsForGame.size() : RoundConfigurator.MAX_ROUNDS_FOR_GAME + 1;
+        return game.getRoundId() == maxRounds;
+    }
+
 
     private boolean hasNoTarget(TurnDTO dto) {
         if ((dto.getType().equals(CardType.FIRE) || dto.getType().equals(CardType.PUNCH))
