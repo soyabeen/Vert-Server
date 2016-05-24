@@ -112,6 +112,13 @@ public class ActionPhaseServiceTest {
         round4 = new Round(game.getId(), 4, turns4, null, "");
         round5 = new Round(game.getId(), 5, turns5, null, "");
 
+        List<Round> rounds = new ArrayList<>();
+        rounds.add(round1);
+        rounds.add(round2);
+        rounds.add(round3);
+        rounds.add(round4);
+        rounds.add(round5);
+
         Loot loot = new Loot(LootType.JEWEL, 1L, 500, 1, Positionable.Level.BOTTOM);
         loot.setId(1L);
         loot.setOwnerId(2L);
@@ -135,6 +142,7 @@ public class ActionPhaseServiceTest {
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 3)).thenReturn(round3);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 4)).thenReturn(round4);
         when(mockedRoundRepo.findByGameIdAndNthRound(game.getId(), 5)).thenReturn(round5);
+        when(mockedRoundRepo.findByGameId(game.getId())).thenReturn(rounds);
         when(mockedPlayerRepo.findOne(1L)).thenReturn(player1);
         when(mockedPlayerRepo.findOne(2L)).thenReturn(player2);
         when(mockedLootRepo.findOne(1L)).thenReturn(loot);
