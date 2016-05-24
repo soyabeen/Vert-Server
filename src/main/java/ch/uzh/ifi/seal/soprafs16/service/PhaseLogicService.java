@@ -215,7 +215,12 @@ public class PhaseLogicService {
             else changeTurn += nrOfPlayers;
         }
         logger.debug("Check isTurnOver - gameId:{}, roundnr:{}, stackSize:{}, changeTurn:{}", game.getId(), round.getNthRound(), stackSize, changeTurn);
-        if (stackSize >= changeTurn) return true;
+        if (stackSize >= changeTurn) {
+            if (stackSize > changeTurn) {
+                logger.warn("ATTENTION PLEASE! Stacksize:{} is bigger than the calculated changes:{}", stackSize, changeTurn);
+            }
+            return true;
+        }
         return false;
     }
 
