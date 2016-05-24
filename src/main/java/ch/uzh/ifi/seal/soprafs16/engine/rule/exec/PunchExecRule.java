@@ -29,6 +29,7 @@ public class PunchExecRule implements ExecutionRule {
             Player victim = (Player) command.getTargetPlayer();
 
             if (command.getTargetPlayer() != null && !victim.getLoots().isEmpty()) {
+                victim.getsPunchedInTheFace();
                 victim.dropLoot(command.getTargetLoot());
                 Loot targetLoot = new Loot(command.getTargetLoot().getType(), command.getGame().getId(), command.getTargetLoot().getValue());
                 targetLoot.setCar(victim.getCar());

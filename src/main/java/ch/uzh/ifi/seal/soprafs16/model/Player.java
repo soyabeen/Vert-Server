@@ -29,6 +29,9 @@ public class Player extends Meeple {
     @Column
     private int bullets;
 
+    @Column
+    private int brokenNoses;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Card> deck;
 
@@ -305,5 +308,17 @@ public class Player extends Meeple {
             }
         }
         return nrOfInjuries;
+    }
+
+    public int getBrokenNoses() {
+        return brokenNoses;
+    }
+
+    public void setBrokenNoses(int brokenNoses) {
+        this.brokenNoses = brokenNoses;
+    }
+
+    public void getsPunchedInTheFace() {
+        this.brokenNoses = brokenNoses + 1;
     }
 }
