@@ -61,15 +61,16 @@ public class PhaseLogicService {
 
         // initialize needed repositories
         Game game = gameRepo.findOne(gameId);
+        Game changedGame = game;
 
         //checkGameChangeState(game, nthround);
         if(game.getStatus() == GameStatus.PLANNINGPHASE) {
             game.setCurrentPlayerId(getNextPlayer(game, nthround));
-            changeState(game, nthround);
+            changedGame = changeState(game, nthround);
         }
 
         // save repositories
-        gameRepo.save(game);
+        gameRepo.save(changedGame);
     }
 
     protected void setCurrentPlayerId(Long gameId, Long playerId) {
@@ -173,7 +174,7 @@ public class PhaseLogicService {
         }
     }
 
-    protected void changeState(Game game, Integer nthround) {
+    protected Game changeState(Game game, Integer nthround) {
         // Order in which the game should be checked:
         // if Turn is over execute Action Phase
         // if Action Phase is over check if Round is over else start new turn
@@ -200,7 +201,7 @@ public class PhaseLogicService {
 
         roundRepo.save(round);
 
-        // still in turn, proceed normally
+        return game;
     }
 
     protected boolean isTurnOver(Game game, Round round) {
@@ -213,7 +214,8 @@ public class PhaseLogicService {
                 changeTurn += 2 * nrOfPlayers;
             else changeTurn += nrOfPlayers;
         }
-        if(stackSize == changeTurn) return true;
+        logger.debug("Check isTurnOver - gameId:{}, roundnr:{}, stackSize:{}, changeTurn:{}", game.getId(), round.getNthRound(), stackSize, changeTurn);
+        if (stackSize >= changeTurn) return true;
         return false;
     }
 
