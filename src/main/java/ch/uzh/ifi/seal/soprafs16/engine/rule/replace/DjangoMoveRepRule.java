@@ -75,7 +75,14 @@ public class DjangoMoveRepRule implements ReplaceRule {
             ActionCommand moveCommand = new ActionCommand(CardType.MOVE, command.getGame(), target, newTargetPosition);
 
             List<Positionable> result = new ArrayList<>();
-            result.addAll(new MovePlayerExecRule().execute(moveCommand));
+            List<Positionable> temp = new MovePlayerExecRule().execute(moveCommand);
+
+            if(temp.isEmpty()) {
+                result.add(target);
+            } else {
+                result.addAll(temp);
+            }
+
             result.add(django);
             return result;
         }
