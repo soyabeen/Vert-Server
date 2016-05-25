@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs16.service;
 
 import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.constant.Turn;
-import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.model.Card;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -66,24 +64,13 @@ public class PhaseLogicService {
         Game changedGame = game;
 
         //checkGameChangeState(game, nthround);
-        if(game.getStatus() == GameStatus.PLANNINGPHASE) {
+        if (game.getStatus() == GameStatus.PLANNINGPHASE) {
             game.setCurrentPlayerId(getNextPlayer(game, nthround));
             changedGame = changeState(game, nthround);
         }
 
         // save repositories
         gameRepo.save(changedGame);
-    }
-
-    protected void setCurrentPlayerId(Long gameId, Long playerId) {
-        InputArgValidator.checkAvailabeId(gameId, gameRepo, "Given gameId is no valid game for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService");
-        InputArgValidator.checkAvailabeId(playerId, playerRepo, "Given playerId is no valid player for method " +
-                "\'setCurrentPlayer()\' in PhaseLogicService");
-
-        Game game = gameRepo.findOne(gameId);
-        game.setCurrentPlayerId(playerId);
-        gameRepo.save(game);
     }
 
     /**
@@ -94,7 +81,7 @@ public class PhaseLogicService {
     protected Long getNextPlayer(Game game, Integer nthround) {
         Long nextPlayerId = -1L;
         Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-        switch ( round.getTurns().get(game.getTurnId()-1) ) {
+        switch (round.getTurns().get(game.getTurnId() - 1)) {
             case DOUBLE_TURNS:
                 nextPlayerId = getPlayerForDoubleTurn(game, round);
                 break;
@@ -113,6 +100,7 @@ public class PhaseLogicService {
     /**
      * Method used to access player Ids in List of players in Game.
      * List of players in Game can't be accessed directly.
+     *
      * @param players
      * @return
      */
@@ -151,8 +139,8 @@ public class PhaseLogicService {
         Player currentPlayer = playerRepo.findOne(game.getCurrentPlayerId());
         List<Card> stack = round.getCardStack();
 
-        if(stack.size() > 1)
-            if(stack.get(stack.size()-2).getOwnerId().equals(currentPlayer.getId()))
+        if (stack.size() > 1)
+            if (stack.get(stack.size() - 2).getOwnerId().equals(currentPlayer.getId()))
                 return getPlayerForNormalTurn(game);
             else
                 return currentPlayer.getId();
@@ -185,13 +173,13 @@ public class PhaseLogicService {
 
         logger.debug("Change state game:{}, round:{}", game.getId(), nthround);
 
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(),nthround);
+        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
         if (isTurnOver(game, round)) {
             logger.debug("Game " + game.getId() + ": State changed, Turn is over");
             game.setTurnId(game.getTurnId() + 1);
         }
 
-        if(isRoundOver(game,round)) {
+        if (isRoundOver(game, round)) {
             logger.debug("Game " + game.getId() + ": State changed, Round is over");
             game.setStatus(GameStatus.ACTIONPHASE);
             round.setPointerOnDeck(0);
@@ -212,8 +200,8 @@ public class PhaseLogicService {
         int stackSize = round.getCardStack().size();
         int nrOfPlayers = game.getPlayers().size();
         int changeTurn = 0;
-        for(int i = 0; i < game.getTurnId(); ++i) {
-            if(turns.get(i).equals(Turn.DOUBLE_TURNS))
+        for (int i = 0; i < game.getTurnId(); ++i) {
+            if (turns.get(i).equals(Turn.DOUBLE_TURNS))
                 changeTurn += 2 * nrOfPlayers;
             else changeTurn += nrOfPlayers;
         }
@@ -251,92 +239,5 @@ public class PhaseLogicService {
         }
         return false;
     }
-
-
-    /**
-     * Called from Client Request
-     * @param game
-     * @param nthround
-     */
-    protected void executeActionPhase(Game game, Integer nthround) {
-        // setup / prepare Phase
-        Round round = roundRepo.findByGameIdAndNthRound(game.getId(), nthround);
-        LinkedList<Card> cardStack = (LinkedList<Card>) round.getCardStack();
-        Card topCard;
-
-        // peek and set CurrentPlayer
-
-        // Program progress is driven ON REQUEST
-        if(!cardStack.isEmpty()) {
-            // setup of action phase
-
-            topCard = cardStack.peekFirst();
-            setCurrentPlayerId(game.getId(), topCard.getOwnerId());
-
-            // give Card to Rule Engine
-            ActionCommand result = receivePossibilities(topCard);
-
-
-            //ON REQUEST return something for client
-            // fixme: evaluate result from Rule Engine
-            evaluateResultRuleEngine(result);
-
-            // remove topCard from Stack
-            cardStack.pollFirst();
-        }
-
-
-        // increment nthRound
-        round.incrementNthRound();
-
-        //save repos
-        roundRepo.save(round);
-    }
-
-    /**
-     * Determine whether result from Rule Engine needs a decision from player or if game can be updated directly.
-     *
-     * @param result computed result from Rule Engine
-     */
-    protected void evaluateResultRuleEngine(ActionCommand result) {
-        throw new IllegalStateException("Not yet implemented");
-
-        // update Game
-        // or
-        // send result from Rule Engine to Client
-    }
-
-    /**
-     * Start computing possibilities for Player.
-     *
-     * @param topCard
-     */
-    protected ActionCommand receivePossibilities(Card topCard) {
-        throw new IllegalStateException("Not yet implemented");
-
-        // give played card to rule engine
-
-        // give back result
-        // return result;
-
-    }
-
-    /**
-     *
-     * @param game
-     * @param round
-     * @return
-     */
-    private int setTurnId(Game game, Round round) {
-        List<Turn> turns = round.getTurns();
-        int stackSize = round.getCardStack().size();
-        int nrOfPlayers = game.getPlayers().size();
-        int newTurnId = (stackSize / nrOfPlayers);
-        if(!turns.contains(Turn.DOUBLE_TURNS) || turns.indexOf(Turn.DOUBLE_TURNS) + 1 > newTurnId)
-            return newTurnId + 1;
-        else return newTurnId;
-
-    }
-
 
 }
