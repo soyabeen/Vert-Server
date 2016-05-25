@@ -27,6 +27,7 @@ public class Hostage implements RoundEnd {
             if (0 == player.getCar()) {
                 Loot ransom = new Loot(LootType.PURSE_SMALL, game.getId(), LootType.PURSE_SMALL.value());
                 ransom.setOwnerId(player.getId());
+                result.add(ransom);
                 player.addLoot(ransom);
                 result.add(player);
             }
