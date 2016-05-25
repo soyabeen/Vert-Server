@@ -6,7 +6,6 @@ import ch.uzh.ifi.seal.soprafs16.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs16.dto.TurnDTO;
 import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
 import ch.uzh.ifi.seal.soprafs16.engine.GameEngine;
-import ch.uzh.ifi.seal.soprafs16.exception.InvalidInputException;
 import ch.uzh.ifi.seal.soprafs16.model.*;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.GameRepository;
 import ch.uzh.ifi.seal.soprafs16.model.repositories.LootRepository;
@@ -189,10 +188,6 @@ public class ActionPhaseService {
         for (Positionable pos : positionables) {
             if (pos instanceof Player) {
                 players.add((Player) pos);
-            } else if (pos instanceof Loot) {
-            } else if (pos instanceof Marshal) {
-            } else {
-                throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
         }
         return players;
@@ -211,10 +206,6 @@ public class ActionPhaseService {
         for (Positionable pos : positionables) {
             if (pos instanceof Marshal) {
                 marshals.add((Marshal) pos);
-            } else if (pos instanceof Loot) {
-            } else if (pos instanceof Player) {
-            } else {
-                throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
         }
         return marshals;
@@ -234,10 +225,6 @@ public class ActionPhaseService {
         for (Positionable pos : positionables) {
             if (pos instanceof Loot) {
                 loots.add((Loot) pos);
-            } else if (pos instanceof Player) {
-            } else if (pos instanceof Marshal) {
-            } else {
-                throw new InvalidInputException("DTO has Unknown positionable object (no palyer/loot)");
             }
         }
 
@@ -281,8 +268,7 @@ public class ActionPhaseService {
         }
         for (Loot l : loots) {
             if (null == l.getId()) {
-                Loot tmp = lootRepo.save(l);
-                updateLoot(tmp.getId(), tmp);
+                lootRepo.save(l);
             } else {
                 updateLoot(l.getId(), l);
             }
