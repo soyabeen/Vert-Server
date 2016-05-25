@@ -1,7 +1,11 @@
 package ch.uzh.ifi.seal.soprafs16.engine.rule;
 
+import ch.uzh.ifi.seal.soprafs16.constant.CardType;
 import ch.uzh.ifi.seal.soprafs16.constant.Character;
+import ch.uzh.ifi.seal.soprafs16.constant.Direction;
 import ch.uzh.ifi.seal.soprafs16.constant.LootType;
+import ch.uzh.ifi.seal.soprafs16.engine.ActionCommand;
+import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
 import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
@@ -13,6 +17,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +74,33 @@ public class PunchRuleSetTest {
     }
 
     @Test
-    public void testPunchRuleExecute() {
-        // Trailer. Will hit theaters soon.
+    public void testPunchRuleExecute() throws InvocationTargetException {
+
+        RuleSet mrs = RuleSet.createRuleSet(CardType.PUNCH);
+        Game game = new Game();
+        game.setNrOfCars(3);
+
+        Player actor = PositionedPlayer.builder()
+                .withUserName("actor")
+                .onUpperLevelAt(0).build();
+        game.addPlayer(actor);
+
+        Player target = PositionedPlayer.builder()
+                .withUserName("target")
+                .onUpperLevelAt(0).build();
+        game.addPlayer(target);
+
+        ActionCommand command = new ActionCommand(CardType.PUNCH, game, actor, target);
+        command.setDirection(Direction.TO_TAIL);
+
+        List<Positionable> resultList = mrs.execute(command);
+        Assert.assertThat(resultList.size(), is(1));
+
+        Player punchedVictim = (Player) resultList.get(0);
+        Assert.assertEquals("Got punched.", 1, punchedVictim.getBrokenNoses());
+        Assert.assertEquals("New position car.", 1, punchedVictim.getCar());
+        Assert.assertEquals("New position level.", Positionable.Level.TOP, punchedVictim.getLevel());
+
     }
+    
 }

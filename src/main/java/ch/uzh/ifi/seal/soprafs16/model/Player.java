@@ -179,6 +179,7 @@ public class Player extends Meeple {
                 ", character=" + character +
                 ", bullets=" + bullets +
                 ", pos=" + getCar() + "/" + getLevel() +
+                ", brokenNoses=" + brokenNoses +
                 '}';
     }
 
@@ -234,6 +235,8 @@ public class Player extends Meeple {
             deck.addAll(p.getDeck());
 
         loots = p.getLoots();
+
+        brokenNoses = p.getBrokenNoses();
 
     }
 

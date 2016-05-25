@@ -73,6 +73,7 @@ public class PunchExecRuleTest {
         Assert.assertTrue(result.get(0) instanceof Loot);
         Assert.assertThat(result.get(1).getCar(), is(2));
         Assert.assertTrue(( (Player) result.get(1)).getLoots().isEmpty());
+        Assert.assertThat("Victim is injured.", ((Player) result.get(1)).getBrokenNoses(), is(1));
     }
 }
 
