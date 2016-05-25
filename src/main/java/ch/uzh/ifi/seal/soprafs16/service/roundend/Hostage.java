@@ -25,7 +25,9 @@ public class Hostage implements RoundEnd {
         List<Positionable> result = new ArrayList<>();
         for (Player player : game.getPlayers()) {
             if (0 == player.getCar()) {
-                player.addLoot(new Loot(LootType.PURSE_SMALL, game.getId(), LootType.PURSE_SMALL.value()));
+                Loot ransom = new Loot(LootType.PURSE_SMALL, game.getId(), LootType.PURSE_SMALL.value());
+                ransom.setOwnerId(player.getId());
+                player.addLoot(ransom);
                 result.add(player);
             }
         }

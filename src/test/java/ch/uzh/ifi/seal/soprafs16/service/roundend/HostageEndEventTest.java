@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs16.service.roundend;
 
+import ch.uzh.ifi.seal.soprafs16.constant.LootType;
 import ch.uzh.ifi.seal.soprafs16.helper.PositionedPlayer;
 import ch.uzh.ifi.seal.soprafs16.model.Game;
+import ch.uzh.ifi.seal.soprafs16.model.Loot;
 import ch.uzh.ifi.seal.soprafs16.model.Player;
 import ch.uzh.ifi.seal.soprafs16.model.Positionable;
 import org.junit.Assert;
@@ -74,5 +76,37 @@ public class HostageEndEventTest {
 
         Assert.assertNotNull("Players with ransom not null", playersWithRansom);
         Assert.assertEquals("3 players with ransom.", 3, playersWithRansom.size());
+    }
+
+    @Test
+    public void aPlayerWithLootsGetsAnAdditionalRansom() {
+
+        Game game = new Game();
+        game.setNrOfCars(3);
+
+        Loot loot = new Loot(LootType.PURSE_SMALL, 1L, LootType.PURSE_SMALL.value());
+
+        Player p0b = PositionedPlayer.builder()
+                .id(2L)
+                .withUserName("loc-0-bot")
+                .onLowerLevelAt(0).build();
+        p0b.addLoot(loot);
+        game.addPlayer(p0b);
+
+
+        Hostage hostage = new Hostage();
+        List<Positionable> result = hostage.execute(game);
+        for (Positionable pos : result) {
+            if (pos instanceof Player) {
+                Player p = (Player) pos;
+                for (Loot l : p.getLoots()) {
+                    Assert.assertEquals("Loots in player have players id.", p0b.getId(), l.getOwnerId());
+                }
+            }
+            if (pos instanceof Loot) {
+                Loot l = (Loot) pos;
+                Assert.assertEquals("Returned loot has player id.", p0b.getId(), l.getOwnerId());
+            }
+        }
     }
 }
