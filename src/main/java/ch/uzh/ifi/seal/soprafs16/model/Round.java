@@ -87,6 +87,7 @@ public class Round implements Serializable {
                 "game=" + gameId +
                 ", turns=" + turns +
                 ", end=" + end +
+                ", cardStack=" + cardStack +
                 '}';
     }
 
